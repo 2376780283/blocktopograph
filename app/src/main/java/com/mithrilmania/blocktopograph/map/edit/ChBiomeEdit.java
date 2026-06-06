@@ -22,9 +22,16 @@ public class ChBiomeEdit implements EditTarget.RandomAccessEdit {
 
     @Override
     public int edit(Chunk chunk, int x, int y, int z) {
-        if (mFrom == null || chunk.getBiome(x, z) == mFrom.id)
-            chunk.setBiome(x, z, mTo.id);
-        return 0;
+//        if (chunk.isData3d()) {
+//            int currentBiome = chunk.get3dBiome(x, y, z);
+//            if (mFrom == null || currentBiome == mFrom.id) {
+//                chunk.set3dBiome(x, y, z, mTo.id);
+//            }
+//        } else {
+            if (mFrom == null || chunk.getBiome(x, z) == mFrom.id)
+                chunk.setBiome(x, z, mTo.id);
+            return 0;
+//        }
     }
 
 }

@@ -2,8 +2,12 @@ package com.mithrilmania.blocktopograph;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -25,6 +30,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.litl.leveldb.Iterator;
 import com.mithrilmania.blocktopograph.chunk.NBTChunkData;
 import com.mithrilmania.blocktopograph.databinding.ActivityWorldBinding;
 import com.mithrilmania.blocktopograph.map.Dimension;
@@ -35,22 +41,35 @@ import com.mithrilmania.blocktopograph.map.renderer.MapType;
 import com.mithrilmania.blocktopograph.nbt.EditableNBT;
 import com.mithrilmania.blocktopograph.nbt.EditorFragment;
 import com.mithrilmania.blocktopograph.nbt.convert.DataConverter;
+import com.mithrilmania.blocktopograph.nbt.convert.LevelDataConverter;
 import com.mithrilmania.blocktopograph.nbt.convert.NBTConstants;
+import com.mithrilmania.blocktopograph.nbt.tags.ByteTag;
 import com.mithrilmania.blocktopograph.nbt.tags.CompoundTag;
+import com.mithrilmania.blocktopograph.nbt.tags.LongTag;
 import com.mithrilmania.blocktopograph.nbt.tags.Tag;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 public class WorldActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, WorldActivityInterface {
 
-    public static final String PREF_KEY_SHOW_MARKERS = "showMarkers";
+    public static final String PREF_KEY_SHOW_ENTITY_MARKERS = "showEntityMarkers";
+    public static final String PREF_KEY_SHOW_TILE_ENTITY_MARKERS = "showTileEntityMarkers";
+
     private World world;
     private ActivityWorldBinding mBinding;
 
     private MapFragment mapFragment;
+    public static Long WORLD_START_COUNT;
+//    public static boolean isEducation;
 
     @Override
     public void showActionBar() {
@@ -120,7 +139,8 @@ public class WorldActivity extends AppCompatActivity
             return;
         }
 
-        showMarkers = getPreferences(MODE_PRIVATE).getBoolean(PREF_KEY_SHOW_MARKERS, true);
+        showEntityMarkers = getPreferences(MODE_PRIVATE).getBoolean(PREF_KEY_SHOW_ENTITY_MARKERS, true);
+        showTileEntityMarkers = getPreferences(MODE_PRIVATE).getBoolean(PREF_KEY_SHOW_TILE_ENTITY_MARKERS, true);
 
         /*
                 Layout
@@ -176,6 +196,17 @@ public class WorldActivity extends AppCompatActivity
          */
         String worldSeed = String.valueOf(this.world.getWorldSeed());
         subtitle.setText(worldSeed);
+        LongTag worldStartCount = (LongTag) world.getLevel().getChildTagByKey("worldStartCount");
+        if(worldStartCount != null){
+            WORLD_START_COUNT = worldStartCount.getValue();
+        }
+
+//        ByteTag educationFeaturesEnabled = (ByteTag) world.getLevel().getChildTagByKey("educationFeaturesEnabled");
+//        if(educationFeaturesEnabled.getValue() == (byte) 0x00){
+//            isEducation = false;
+//        }else{
+//            isEducation = true;
+//        }
 
         // Open the world-map as default content
         openWorldMap();
@@ -183,8 +214,18 @@ public class WorldActivity extends AppCompatActivity
             world.getWorldData().load();
             world.getWorldData().openDB();
         } catch (Exception e) {
+            String msg = e.getMessage();
+            if(msg.contains("Permission denied")){
+                Toast.makeText(this,R.string.db_permission_denied,Toast.LENGTH_SHORT).show();
+//                onDBOccupied();
+            }else if(msg.contains("IO error: lock")){
+                Toast.makeText(this,R.string.db_occupied,Toast.LENGTH_SHORT).show();
+//                finish();
+
+            }
             e.printStackTrace();
             finish();
+
         }
 //
 //        new AsyncTask<Void, Void, Void>() {
@@ -213,8 +254,11 @@ public class WorldActivity extends AppCompatActivity
         // anonymous global counter of opened worlds
         Log.logFirebaseEvent(this, Log.CustomFirebaseEvent.WORLD_OPEN, bundle);
 
+        TileEntity.loadIcons(getAssets());
+
         Log.d(this, "World activity created");
     }
+
 
     @Override
     public void onStart() {
@@ -227,16 +271,16 @@ public class WorldActivity extends AppCompatActivity
     public void onResume() {
         Log.d(this, "World activity resuming...");
         super.onResume();
-//
         // anonymous global counter of resumed world-activities
         Log.logFirebaseEvent(this, Log.CustomFirebaseEvent.WORLD_RESUME);
 
         try {
             this.world.resume();
         } catch (WorldData.WorldDBException e) {
+            Log.d(this,"onResumeError: "+e.getMessage());
             this.onFatalDBError(e);
         }
-
+//        WorldData.setPaused(false);
         Log.d(this, "World activity resumed");
     }
 
@@ -244,7 +288,10 @@ public class WorldActivity extends AppCompatActivity
     public void onPause() {
         Log.d(this, "World activity pausing...");
         super.onPause();
-
+//        WorldData.setPaused(true);
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException ignored) {}
         try {
             this.world.pause();
         } catch (WorldData.WorldDBException e) {
@@ -331,18 +378,19 @@ public class WorldActivity extends AppCompatActivity
 
 
         switch (id) {
-            case (R.id.nav_world_show_map):
-                changeContentFragment(this::openWorldMap);
-                break;
-            case (R.id.nav_world_select):
-                //close activity; back to world selection screen
-                closeWorldActivity();
-                break;
+//            case (R.id.nav_world_show_map):
+//                changeContentFragment(this::openWorldMap);
+//                break;
+//            case (R.id.nav_world_select):
+//                //close activity; back to world selection screen
+//                closeWorldActivity();
+//                break;
             case (R.id.nav_singleplayer_nbt):
                 openPlayerEditor();
                 break;
             case (R.id.nav_multiplayer_nbt):
-                openMultiplayerEditor();
+//                openMultiplayerEditor();
+                searchKey(World.SpecialDBEntryType.MULTIPLAYER.keyBytes);
                 break;
             /*case(R.id.nav_inventory):
                 //TODO go to inventory editor
@@ -400,6 +448,9 @@ public class WorldActivity extends AppCompatActivity
             case (R.id.nav_end_heightmap):
                 changeMapType(MapType.END_HEIGHTMAP, Dimension.END);
                 break;
+//            case (R.id.nav_end_biome):
+//                changeMapType(MapType.END_BIOME, Dimension.END);
+//                break;
             case (R.id.nav_end_block_light):
                 changeMapType(MapType.END_BLOCK_LIGHT, Dimension.END);
                 break;
@@ -409,17 +460,47 @@ public class WorldActivity extends AppCompatActivity
                 //rerender tiles (tiles will render with toggled grid on it now)
                 if (this.mapFragment != null) this.mapFragment.resetTileView();
                 break;
-            case (R.id.nav_map_opt_filter_markers):
-                //toggle the grid
-                TileEntity.loadIcons(getAssets());
-                this.mapFragment.openMarkerFilter();
+            case (R.id.nav_map_opt_filter_entity_markers):
+                //toggle the grid entity
+
+                this.mapFragment.openEntityMarkerFilter();
                 break;
-            case (R.id.nav_map_opt_toggle_markers):
-                //toggle markers
-                showMarkers = !showMarkers;
+            case (R.id.nav_map_opt_filter_tile_entity_markers):
+                //toggle the grid tile entity
+
+                this.mapFragment.openTileEntityMarkerFilter();
+                break;
+            case (R.id.nav_map_opt_toggle_entity_markers):
+                //toggle markers;
+                showEntityMarkers = !showEntityMarkers;
+                if (showEntityMarkers) {
+                    Snackbar.make(mBinding.getRoot(),
+                                    R.string.opened,
+                                    Snackbar.LENGTH_SHORT).show();
+                } else {
+                    Snackbar.make(mBinding.getRoot(),
+                                    R.string.closed,
+                                    Snackbar.LENGTH_SHORT).show();
+                }
                 getPreferences(MODE_PRIVATE).edit()
-                        .putBoolean(PREF_KEY_SHOW_MARKERS, showMarkers).apply();
-                if (this.mapFragment != null) this.mapFragment.toggleMarkers();
+                        .putBoolean(PREF_KEY_SHOW_ENTITY_MARKERS, showEntityMarkers).apply();
+                if (this.mapFragment != null) this.mapFragment.toggleEntityMarkers();
+                break;
+            case (R.id.nav_map_opt_toggle_tile_entity_markers):
+                //toggle markers;
+                showTileEntityMarkers = !showTileEntityMarkers;
+                if (showTileEntityMarkers) {
+                    Snackbar.make(mBinding.getRoot(),
+                                    R.string.opened,
+                                    Snackbar.LENGTH_SHORT).show();
+                } else {
+                    Snackbar.make(mBinding.getRoot(),
+                                    R.string.closed,
+                                    Snackbar.LENGTH_SHORT).show();
+                }
+                getPreferences(MODE_PRIVATE).edit()
+                        .putBoolean(PREF_KEY_SHOW_TILE_ENTITY_MARKERS, showTileEntityMarkers).apply();
+                if (this.mapFragment != null) this.mapFragment.toggleTileEntityMarkers();
                 break;
             case (R.id.nav_biomedata_nbt):
                 changeContentFragment(() -> openSpecialDBEntry(World.SpecialDBEntryType.BIOME_DATA));
@@ -427,23 +508,38 @@ public class WorldActivity extends AppCompatActivity
             case (R.id.nav_overworld_nbt):
                 changeContentFragment(() -> openSpecialDBEntry(World.SpecialDBEntryType.OVERWORLD));
                 break;
+            case (R.id.nav_nether_nbt):
+                changeContentFragment(() -> openSpecialDBEntry(World.SpecialDBEntryType.NETHER));
+                break;
+            case (R.id.nav_end_nbt):
+                changeContentFragment(() -> openSpecialDBEntry(World.SpecialDBEntryType.THEEND));
+                break;
             case (R.id.nav_villages_nbt):
+                changeContentFragment(() -> searchKey(World.SpecialDBEntryType.VILLAGE.keyBytes));
+                break;
+            case (R.id.nav_old_villages_nbt):
                 changeContentFragment(() -> openSpecialDBEntry(World.SpecialDBEntryType.M_VILLAGES));
                 break;
             case (R.id.nav_portals_nbt):
                 changeContentFragment(() -> openSpecialDBEntry(World.SpecialDBEntryType.PORTALS));
                 break;
-            case (R.id.nav_dimension0_nbt):
-                changeContentFragment(() -> openSpecialDBEntry(World.SpecialDBEntryType.DIMENSION_0));
-                break;
-            case (R.id.nav_dimension1_nbt):
-                changeContentFragment(() -> openSpecialDBEntry(World.SpecialDBEntryType.DIMENSION_1));
-                break;
-            case (R.id.nav_dimension2_nbt):
-                changeContentFragment(() -> openSpecialDBEntry(World.SpecialDBEntryType.DIMENSION_2));
-                break;
+//            case (R.id.nav_dimension0_nbt):
+//                changeContentFragment(() -> openSpecialDBEntry(World.SpecialDBEntryType.DIMENSION_0));
+//                break;
+//            case (R.id.nav_dimension1_nbt):
+//                changeContentFragment(() -> openSpecialDBEntry(World.SpecialDBEntryType.DIMENSION_1));
+//                break;
+//            case (R.id.nav_dimension2_nbt):
+//                changeContentFragment(() -> openSpecialDBEntry(World.SpecialDBEntryType.DIMENSION_2));
+//                break;
             case (R.id.nav_autonomous_entities_nbt):
                 changeContentFragment(() -> openSpecialDBEntry(World.SpecialDBEntryType.AUTONOMOUS_ENTITIES));
+                break;
+            case (R.id.nav_map_nbt):
+                changeContentFragment(() -> searchKey(World.SpecialDBEntryType.MAP.keyBytes));
+                break;
+            case (R.id.nav_mcstructure_nbt):
+                changeContentFragment(() -> searchKey(World.SpecialDBEntryType.MCSTRUCTURE.keyBytes));
                 break;
             case (R.id.nav_open_nbt_by_name): {
 
@@ -457,7 +553,7 @@ public class WorldActivity extends AppCompatActivity
                 new AlertDialog.Builder(WorldActivity.this)
                         .setTitle(R.string.open_nbt_from_db)
                         .setView(keyEditText)
-                        .setPositiveButton(R.string.open, (dialog, which) -> changeContentFragment(() -> {
+                        .setPositiveButton(R.string.search, (dialog, which) -> changeContentFragment(() -> {
                             Editable keyNameEditable = keyEditText.getText();
                             String keyName = keyNameEditable == null
                                     ? null : keyNameEditable.toString();
@@ -467,19 +563,21 @@ public class WorldActivity extends AppCompatActivity
                                         Snackbar.LENGTH_LONG)
                                         .setAction("Action", null).show();
                             } else {
-                                try {
-                                    EditableNBT dbEntry = openEditableNbtDbEntry(keyName);
-                                    if (dbEntry == null) Snackbar.make(drawer,
-                                            R.string.cannot_find_db_entry_with_name,
-                                            Snackbar.LENGTH_LONG)
-                                            .setAction("Action", null).show();//TODO maybe add option to create it?
-                                    else openNBTEditor(dbEntry);
-                                } catch (Exception e) {
-                                    Snackbar.make(drawer,
-                                            R.string.invalid_keyname,
-                                            Snackbar.LENGTH_LONG)
-                                            .setAction("Action", null).show();
-                                }
+                                searchKey(keyName.getBytes());
+
+//                                try {
+//                                    EditableNBT dbEntry = openEditableNbtDbEntry(keyName);
+//                                    if (dbEntry == null) Snackbar.make(drawer,
+//                                            R.string.cannot_find_db_entry_with_name,
+//                                            Snackbar.LENGTH_LONG)
+//                                            .setAction("Action", null).show();//TODO maybe add option to create it?
+//                                    else openNBTEditor(dbEntry);
+//                                } catch (Exception e) {
+//                                    Snackbar.make(drawer,
+//                                            R.string.invalid_keyname,
+//                                            Snackbar.LENGTH_LONG)
+//                                            .setAction("Action", null).show();
+//                                }
                             }
                         }))
                         .setCancelable(true)
@@ -488,6 +586,15 @@ public class WorldActivity extends AppCompatActivity
 
                 break;
             }
+            case (R.id.nav_worldclock_nbt):
+                changeContentFragment(() -> openSpecialDBEntry(World.SpecialDBEntryType.WORLDCLOCKS));
+                break;
+            case (R.id.nav_schedulerwt_nbt):
+                changeContentFragment(() -> openSpecialDBEntry(World.SpecialDBEntryType.SCHEDULERWT));
+                break;
+            case (R.id.nav_postrackdb_nbt):
+                changeContentFragment(() -> searchKey(World.SpecialDBEntryType.POSTRACKDB.keyBytes));
+                break;
             default:
                 //Warning, we might have messed with the menu XML!
                 Log.d(this, "pressed unknown navigation-item in world-activity-drawer");
@@ -505,7 +612,101 @@ public class WorldActivity extends AppCompatActivity
             throws IOException {
         return openEditableNbtDbEntry(entryType.keyName);
     }
+    public void searchKey(byte[] key){
+        List<byte[]> list = world.getWorldData().findKeysWithPrefix(key);
+        showByteListDialog(list);
+    }
+    public void showByteListDialog(List<byte[]> byteList) {
+        final View content = mBinding.getRoot();
+        if(byteList.size() == 0){
+            Snackbar.make(content,
+                            R.string.no_search_result_found,
+                            Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            return;
+        }
 
+        String[] displayItems = new String[byteList.size()];
+        for (int i = 0; i < byteList.size(); i++) {
+            byte[] bytes = byteList.get(i);
+            String strContent = "";
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    strContent = new String(bytes, StandardCharsets.UTF_8);
+                }
+            } catch (Exception e) {
+                StringBuilder hexBuilder = new StringBuilder();
+                for (int j = 0; j < bytes.length; j++) {
+                    if (j > 0) hexBuilder.append(", ");
+                    hexBuilder.append(String.format("0x%02X", bytes[j] & 0xFF));
+                }
+                strContent = hexBuilder.toString();
+            }
+            displayItems[i] = "[" + i + "] " + strContent;
+        }
+
+        new AlertDialog.Builder(WorldActivity.this)
+                .setTitle("结果")
+                .setItems(displayItems, (dialog, which) -> {
+                    byte[] selectedBytes = byteList.get(which);
+                    try {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                            EditableNBT nbt = openEditableNbtDbEntry(new String(selectedBytes, StandardCharsets.UTF_8));
+                            openNBTEditor(nbt);
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    dialog.dismiss();
+                })
+                .setNegativeButton("取消", (dialog, which) -> dialog.dismiss())
+                .setCancelable(true)
+                .show();
+    }
+
+    public void onSaved(File file){
+        if (file == null)
+            Toast.makeText(this, R.string.general_failed, Toast.LENGTH_SHORT).show();
+        else {
+            Snackbar snackbar = Snackbar.make(
+                            this.getWindow().getDecorView(),
+                            getString(R.string.nbt_file_saved), Snackbar.LENGTH_SHORT)
+                    .setAction(R.string.general_share, v -> {
+                        Uri fileUri = FileProvider.getUriForFile(
+                            WorldActivity.this,
+                            getPackageName() + ".fileprovider",
+                                file
+                        );
+                        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                        shareIntent.setType("application/octet-stream");
+                        shareIntent.putExtra(Intent.EXTRA_STREAM,fileUri);
+                        shareIntent.putExtra(Intent.EXTRA_TITLE,file.getName());
+                        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                        WorldActivity.this.startActivity(Intent.createChooser(shareIntent, this.getString(R.string.share_nbt_title)));
+                    });
+            snackbar.show();
+        }
+    }
+    private File getUniqueFile(File directory, String fileName) {
+        File file = new File(directory, fileName);
+        if (!file.exists()) return file;
+
+        String name = fileName;
+        String ext = "";
+        int dot = fileName.lastIndexOf('.');
+        if (dot > 0) {
+            name = fileName.substring(0, dot);
+            ext = fileName.substring(dot);
+        }
+
+        int counter = 1;
+        while (file.exists()) {
+            file = new File(directory, name + "(" + counter + ")" + ext);
+            counter++;
+        }
+        return file;
+    }
     /**
      * Load NBT data of this key from the database, converting it into structured Java Objects.
      * These objects are wrapped in a nice EditableNBT, ready for viewing and editing.
@@ -545,6 +746,49 @@ public class WorldActivity extends AppCompatActivity
                     e.printStackTrace();
                 }
                 return false;
+            }
+            public boolean saveToFile() {
+                byte[] fileData = null;
+                try {
+                    fileData = DataConverter.write(workCopy);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                String safeFileName;
+                if(keyName.startsWith("structuretemplate_mystructure:")){
+                    safeFileName = keyName.substring(30)+".mcstructure";
+                }else{
+                    safeFileName = keyName.replaceAll("[/\\\\:?\"<>|]", "_") + ".nbt";
+                }
+
+//                File downloadFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), safeFileName);
+                File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                File downloadFile = getUniqueFile(downloadDir, safeFileName);
+                try (FileOutputStream fos = new FileOutputStream(downloadFile)) {
+                    try {
+                        fos.write(fileData);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                onSaved(downloadFile);
+//                Uri fileUri = FileProvider.getUriForFile(
+//                        getPackageName() + ".fileprovider",
+//                        downloadFile
+//                );
+//
+//                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+//                shareIntent.setType("application/octet-stream");
+//                shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
+//                shareIntent.putExtra(Intent.EXTRA_TITLE, safeFileName);
+//                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//
+
+                return true;
             }
 
             @Override
@@ -613,15 +857,25 @@ public class WorldActivity extends AppCompatActivity
     public void openSpecialDBEntry(final World.SpecialDBEntryType entryType) {
         try {
             EditableNBT editableEntry = openSpecialEditableNbtDbEntry(entryType);
-            if (editableEntry == null) {
-                this.openWorldMap();
-                //TODO better handling of db problems
-                //throw new Exception("\"" + entryType.keyName + "\" not found in DB.");
-            }
+//            if (editableEntry == null) {
+//                this.openWorldMap();
+//                //TODO better handling of db problems
+//                //throw new Exception("\"" + entryType.keyName + "\" not found in DB.");
+                  //Don't do anything.
+//            }
 
             Log.d(this, "Opening NBT editor for \"" + entryType.keyName + "\" from world database.");
+            if(editableEntry == null){
+                final View content = mBinding.getRoot();
+                Snackbar.make(content,
+                                R.string.empty_data,
+                                Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                return;
+            }else{
+                openNBTEditor(editableEntry);
+            }
 
-            openNBTEditor(editableEntry);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -782,6 +1036,33 @@ public class WorldActivity extends AppCompatActivity
                 workCopy.getValue().remove(tag);
                 workCopyContents.remove(tag);
             }
+
+            @Override
+            public boolean saveToFile() {
+                byte[] fileData = null;
+                try {
+                    fileData = LevelDataConverter.toLevelDatNBT(workCopy);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                String safeFileName = world.getWorldDisplayName() + "_level.dat";
+                File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                File downloadFile = getUniqueFile(downloadDir, safeFileName);
+                try (FileOutputStream fos = new FileOutputStream(downloadFile)) {
+                    try {
+                        fos.write(fileData);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                onSaved(downloadFile);
+
+                return true;
+            }
         };
 
         //if this editable nbt is only a view of a sub-tag, not the actual root
@@ -815,38 +1096,50 @@ public class WorldActivity extends AppCompatActivity
     //  which is not an easy task.
     public boolean showGrid = true;
 
-    public boolean showMarkers;
+    public boolean showEntityMarkers;
+    public boolean showTileEntityMarkers;
+
 
     @Override
     public boolean getShowGrid() {
         return showGrid;
     }
 
+
+
     @Override
-    public boolean getShowMarkers() {
-        return showMarkers;
+    public boolean getShowEntityMarkers() {
+        return showEntityMarkers;
     }
 
-
+    @Override
+    public boolean getShowTileEntityMarkers() { return showTileEntityMarkers; }
     private boolean fatal = false;
 
     @Override
     public void onFatalDBError(WorldData.WorldDBException worldDBException) {
 
-        Log.d(this, worldDBException.getMessage());
+        Log.d(this, "onFatalDBError: "+worldDBException.getMessage());
         worldDBException.printStackTrace();
 
         //already dead? (happens on multiple onFatalDBError(e) calls)
         if (fatal) return;
+        if(worldDBException.getMessage().contains("DB is null")){
 
-        fatal = true;
+        }else{
+            fatal = true;
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.error_cannot_open_world_close_and_try_again)
-                .setCancelable(false)
-                .setNeutralButton(android.R.string.ok, (dialog, id) -> WorldActivity.this.finish());
-        AlertDialog alert = builder.create();
-        alert.show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.error_cannot_open_world_close_and_try_again)
+                    .setCancelable(false)
+                    .setNeutralButton(android.R.string.ok, (dialog, id) -> {
+
+                        WorldActivity.this.finish();
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+
     }
 
     @Override
@@ -914,6 +1207,11 @@ public class WorldActivity extends AppCompatActivity
             Toast.makeText(this, "Empty data.", Toast.LENGTH_SHORT).show();
             return;
         }
+//        if (getSupportFragmentManager().findFragmentByTag("NBT_EDITOR") != null) {
+////            Snackbar.make(mBinding.getRoot(),R.string.cannot_open_multi_editor,Snackbar.LENGTH_SHORT);
+//            Toast.makeText(mBinding.getRoot().getContext(),R.string.cannot_open_multi_editor,Toast.LENGTH_SHORT).show();
+//            return;
+//        }
 
         // see changeContentFragment(callback)
         this.confirmContentClose = getString(R.string.confirm_close_nbt_editor);
@@ -922,7 +1220,10 @@ public class WorldActivity extends AppCompatActivity
         editorFragment.setNbt(editableNBT);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.world_content, editorFragment);
+//        transaction.replace(R.id.world_content, editorFragment);
+
+        transaction.add(R.id.world_content,editorFragment,"NBT_EDITOR");
+        transaction.hide(this.mapFragment);
         transaction.addToBackStack(null);
 
         transaction.commit();
@@ -1045,6 +1346,7 @@ public class WorldActivity extends AppCompatActivity
                     final String format = "%s (cX:%d;cZ:%d)";
                     switch ((nbtChunkData).dataType) {
                         case ENTITY:
+                        case NEWENTITY:
                             return String.format(format, getString(R.string.entity_chunk_data), chunkX, chunkZ);
                         case BLOCK_ENTITY:
                             return String.format(format, getString(R.string.tile_entity_chunk_data), chunkX, chunkZ);
@@ -1061,6 +1363,37 @@ public class WorldActivity extends AppCompatActivity
                 @Override
                 public void removeRootTag(Tag tag) {
                     workCopy.remove(tag);
+                }
+
+                @Override
+                public boolean saveToFile() {
+                    byte[] fileData = null;
+                    final List<Tag> saveCopy = new ArrayList<>();
+                    for (Tag tag : workCopy) {
+                        saveCopy.add(tag.getDeepCopy());
+                    }
+                    try {
+                        fileData = DataConverter.write(saveCopy);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    String safeFileName = (getRootTitle()+"_"+world.getWorldDisplayName() + ".nbt").replaceAll("[/\\\\:?\"<>|]", "_");
+                    File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                    File downloadFile = getUniqueFile(downloadDir, safeFileName);
+                    try (FileOutputStream fos = new FileOutputStream(downloadFile)) {
+                        try {
+                            fos.write(fileData);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    } catch (FileNotFoundException e) {
+                        throw new RuntimeException(e);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    onSaved(downloadFile);
+
+                    return true;
                 }
             };
 

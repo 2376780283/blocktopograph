@@ -27,6 +27,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class World implements Serializable {
 
@@ -54,7 +56,7 @@ public class World implements Serializable {
     private transient WorldData worldData;
     private transient MarkerManager markersManager;
 
-    private boolean mHaveBackgroundJob;
+    private final Set<String> mBackgroundJobList = new HashSet<>();
 
     public World(File worldFolder, String mark, @NonNull Context context) throws WorldLoadException {
 
@@ -73,7 +75,6 @@ public class World implements Serializable {
         else if (levelFile.exists())
             worldName = this.worldFolder.getName();// legacy way of naming worlds
         else worldName = context.getString(R.string.world_name_broken);
-
 
     }
 
@@ -99,6 +100,10 @@ public class World implements Serializable {
 
         LongTag seed = (LongTag) this.level.getChildTagByKey("RandomSeed");
         return seed == null ? 0 : seed.getValue();
+    }
+    public long getWorldStartCount(){
+        LongTag worldStartCount = (LongTag) this.level.getChildTagByKey("worldStartCount");
+        return worldStartCount.getValue();
     }
 
     @Nullable
@@ -245,6 +250,7 @@ public class World implements Serializable {
 
             ListTag posVec = (ListTag) player.getChildTagByKey("Pos");
             IntTag dimensionId = (IntTag) player.getChildTagByKey("DimensionId");
+            if(dimensionId == null) dimensionId = new IntTag("DefaultDimensionId",0);
             Dimension dimension = Dimension.getDimension(dimensionId.getValue());
             if (dimension == null) dimension = Dimension.OVERWORLD;
 
@@ -304,8 +310,11 @@ public class World implements Serializable {
         if (this.worldData != null) this.worldData.closeDB();
     }
 
+
+
+
     public void pause() throws WorldData.WorldDBException {
-        if (mHaveBackgroundJob)
+        if (!mBackgroundJobList.isEmpty())
             Log.d(this, "User is doing background job with the app really in background!");
         else
             closeDown();
@@ -343,8 +352,13 @@ public class World implements Serializable {
         }
     }
 
-    public void setHaveBackgroundJob(boolean haveBackgroundJob) {
-        mHaveBackgroundJob = haveBackgroundJob;
+    public void setHaveBackgroundJob(Object object ,boolean haveBackgroundJob) {
+        Log.d(this,"WorldHaveBackgroundjob Toggle to "+haveBackgroundJob);
+        if(haveBackgroundJob){
+            mBackgroundJobList.add(object.getClass().getName());
+        }else{
+            mBackgroundJobList.remove(object.getClass().getName());
+        }
     }
 
     public enum SpecialDBEntryType {
@@ -353,13 +367,24 @@ public class World implements Serializable {
         // (PascalCase, camelCase, snake_case, lowercase, m-prefix(Android), tilde-prefix; it's all there!)
         BIOME_DATA("BiomeData"),
         OVERWORLD("Overworld"),
+        NETHER("Nether"),
+        THEEND("TheEnd"),
+
         M_VILLAGES("mVillages"),
+        VILLAGE("VILLAGE"),
+        MULTIPLAYER("player"),
         PORTALS("portals"),
         LOCAL_PLAYER("~local_player"),
         AUTONOMOUS_ENTITIES("AutonomousEntities"),
-        DIMENSION_0("dimension0"),
-        DIMENSION_1("dimension1"),
-        DIMENSION_2("dimension2");
+//        DIMENSION_0("dimension0"),
+//        DIMENSION_1("dimension1"),
+//        DIMENSION_2("dimension2");
+        MAP("map_"),
+        WORLDCLOCKS("WorldClocks"),
+        SCHEDULERWT("schedulerWT"),
+
+        MCSTRUCTURE("structure"),
+        POSTRACKDB("Pos");
 
         public final String keyName;
         public final byte[] keyBytes;

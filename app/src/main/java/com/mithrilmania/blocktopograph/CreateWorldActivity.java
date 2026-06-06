@@ -33,6 +33,7 @@ import com.mithrilmania.blocktopograph.nbt.convert.LevelDataConverter;
 import com.mithrilmania.blocktopograph.nbt.convert.NBTConstants;
 import com.mithrilmania.blocktopograph.nbt.convert.NBTInputStream;
 import com.mithrilmania.blocktopograph.nbt.convert.NBTOutputStream;
+import com.mithrilmania.blocktopograph.nbt.tags.ByteTag;
 import com.mithrilmania.blocktopograph.nbt.tags.CompoundTag;
 import com.mithrilmania.blocktopograph.nbt.tags.LongTag;
 import com.mithrilmania.blocktopograph.nbt.tags.StringTag;
@@ -217,14 +218,19 @@ public final class CreateWorldActivity extends AppCompatActivity {
                 if (lsize != 4) mIsVanillaFlat = false;
                 else {
                     Layer ltest = layers.get(0);
-                    mIsVanillaFlat = ltest.block == ListingBlock.B_31_TALLGRASS && ltest.amount == 1
-                            && (ltest = layers.get(1)).block == ListingBlock.B_2_GRASS && ltest.amount == 1
+                    mIsVanillaFlat = ltest.block == ListingBlock.B_31_SHORT_GRASS && ltest.amount == 1
+                            && (ltest = layers.get(1)).block == ListingBlock.B_2_GRASS_BLOCK && ltest.amount == 1
                             && (ltest = layers.get(2)).block == ListingBlock.B_3_DIRT && ltest.amount == 29
                             && (ltest = layers.get(3)).block == ListingBlock.B_7_BEDROCK && ltest.amount == 1;
                 }
                 Layer[] alayers = new Layer[lsize < 3 ? 3 : lsize];
+                byte isEducation = (byte) 0;
+
                 for (int i = 0; i < lsize; i++) {
                     alayers[i] = layers.get(lsize - i - 1);
+                    if(alayers[i].isEducationBlock()){
+                        isEducation = (byte) 1;
+                    }
                 }
                 // Actually there have to be at least 3 layers, but we don't need to inform users.
                 for (int i = lsize; i < 3; i++) {
@@ -241,6 +247,8 @@ public final class CreateWorldActivity extends AppCompatActivity {
                 tag = rootTag.getChildTagByKey(Keys.LAST_PLAYED);
                 LongTag ltag = (LongTag) tag;
                 ltag.setValue(System.currentTimeMillis() / 1000);
+                ByteTag isEducationTag = new ByteTag("educationFeaturesEnabled",isEducation);
+                rootTag.addChildTag(isEducationTag);
             }
 
             // Write dat.
@@ -314,7 +322,7 @@ public final class CreateWorldActivity extends AppCompatActivity {
                         String nam;
                         if (maxlen <= 0) nam = "";
                         else {
-                            String namo = layer.block.getName();
+                            String namo = layer.block.getName(activity);
                             if (namo.length() >= maxlen) nam = namo.substring(0, maxlen);
                             else nam = namo;
                         }

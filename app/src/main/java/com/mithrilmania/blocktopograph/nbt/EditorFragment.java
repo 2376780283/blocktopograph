@@ -44,6 +44,7 @@ import com.mithrilmania.blocktopograph.nbt.tags.Tag;
 import com.unnamed.b.atv.model.TreeNode;
 import com.unnamed.b.atv.view.AndroidTreeView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -578,34 +579,52 @@ public class EditorFragment extends Fragment {
         fabSaveNBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                if (!nbt.isModified()) {
-                    Snackbar.make(view, R.string.no_data_changed_nothing_to_save, Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                } else {
+//                if (!nbt.isModified()) {
+//                    Snackbar.make(view, R.string.no_data_changed_nothing_to_save, Snackbar.LENGTH_LONG)
+//                            .setAction("Action", null).show();
+//                } else {
+//                }
                     new AlertDialog.Builder(activity)
                             .setTitle(R.string.nbt_editor)
-                            .setMessage(R.string.confirm_nbt_editor_changes)
+//                            .setMessage(R.string.confirm_nbt_editor_changes)
+                            .setMessage(R.string.choose_nbt_editor_save_type)
+
                             .setIcon(R.drawable.ic_action_save_b)
-                            .setPositiveButton(android.R.string.yes,
+                            .setNeutralButton(R.string.nbt_editor_export_to_file,
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                            Snackbar.make(view, "Exporting NBT data...", Snackbar.LENGTH_LONG)
+                                                    .setAction("Action", null).show();
+                                            nbt.saveToFile();
+                                        }
+                                    })
+
+                            .setPositiveButton(R.string.nbt_editor_save_to_original_position,
                                     new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int whichButton) {
-                                            Snackbar.make(view, "Saving NBT data...", Snackbar.LENGTH_LONG)
-                                                    .setAction("Action", null).show();
-                                            if (nbt.save()) {
-                                                //nbt is not "modified" anymore, in respect to the new saved data
-                                                nbt.modified = false;
+                                            if (!nbt.isModified()) {
+                                                Snackbar.make(view, R.string.no_data_changed_nothing_to_save, Snackbar.LENGTH_LONG)
+                                                        .setAction("Action", null).show();
+                                            }else{
+                                                Snackbar.make(view, "Saving NBT data...", Snackbar.LENGTH_LONG)
+                                                        .setAction("Action", null).show();
+                                                if (nbt.save()) {
+                                                    //nbt is not "modified" anymore, in respect to the new saved data
+                                                    nbt.modified = false;
 
-                                                Snackbar.make(view, "Saved NBT data!", Snackbar.LENGTH_LONG)
-                                                        .setAction("Action", null).show();
-                                                Log.logFirebaseEvent(activity, Log.CustomFirebaseEvent.NBT_EDITOR_SAVE);
-                                            } else {
-                                                Snackbar.make(view, "Error: failed to save the NBT data.", Snackbar.LENGTH_LONG)
-                                                        .setAction("Action", null).show();
+                                                    Snackbar.make(view, "Saved NBT data!", Snackbar.LENGTH_LONG)
+                                                            .setAction("Action", null).show();
+                                                    Log.logFirebaseEvent(activity, Log.CustomFirebaseEvent.NBT_EDITOR_SAVE);
+                                                } else {
+                                                    Snackbar.make(view, "Error: failed to save the NBT data.", Snackbar.LENGTH_LONG)
+                                                            .setAction("Action", null).show();
+                                                }
                                             }
+
                                         }
                                     })
                             .setNegativeButton(android.R.string.no, null).show();
-                }
 
             }
         });

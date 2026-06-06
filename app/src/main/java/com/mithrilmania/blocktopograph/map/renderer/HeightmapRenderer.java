@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.Version;
@@ -31,8 +32,7 @@ public class HeightmapRenderer implements MapRenderer {
 
                 //smooth step function: 6x^5 - 15x^4 + 10x^3
                 y = chunk.getHeightMapValue(x, z);
-
-                if (y < 0) continue;
+                if (y < -64) continue;
 
                 yNorm = (float) y / (float) dimension.chunkH;
                 yNorm2 = yNorm * yNorm;

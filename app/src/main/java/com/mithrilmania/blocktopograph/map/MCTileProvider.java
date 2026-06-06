@@ -9,6 +9,7 @@ import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 
+import com.mithrilmania.blocktopograph.World;
 import com.mithrilmania.blocktopograph.WorldActivityInterface;
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
@@ -21,7 +22,8 @@ import java.lang.ref.WeakReference;
 
 public class MCTileProvider implements BitmapProvider {
 
-
+    public static final String EntitySwitch = "entity";
+    public  static final  String TileEntitySwitch = "tileEntity";
     public static final int TILESIZE = 256,
 
 
@@ -71,7 +73,11 @@ public class MCTileProvider implements BitmapProvider {
     public Bitmap getBitmap(Tile tile, Context context) {
 
         Bitmap bm = tile.hasBitmap() ? tile.getBitmap() : Bitmap.createBitmap(tile.getWidth(), tile.getHeight(), Bitmap.Config.RGB_565);//getRecycledBitmap();
+//        WorldActivityInterface provider = this.worldProvider.get();
+//        if (provider == null) return null;
 
+//        World world = provider.getWorld();
+//        world.setHaveBackgroundJob(this, true);
         try {
 
             // 1 chunk per tile on scale 1.0
@@ -122,9 +128,10 @@ public class MCTileProvider implements BitmapProvider {
 
             Canvas canvas = new Canvas(bm);
             Paint paint = new Paint();
+            paint.setFilterBitmap(false);
+            paint.setAntiAlias(false);
 
             WorldData worldData = worldProvider.getWorld().getWorldData();
-
             for (z = minChunkZ, pY = 0; z < maxChunkZ; z++, pY += pixelsPerChunkL)
                 for (x = minChunkX, pX = 0; x < maxChunkX; x++, pX += pixelsPerChunkW) {
 
@@ -151,11 +158,12 @@ public class MCTileProvider implements BitmapProvider {
 
                 }
 
-
             //load all those markers with an async task, this task publishes its progress,
             // the UI thread picks it up and renders the markers
-            if (worldProvider.getShowMarkers())
-                new MarkerAsyncTask(worldProvider, minChunkX, minChunkZ, maxChunkX, maxChunkZ, dimension).execute();
+            if (worldProvider.getShowEntityMarkers())
+                new MarkerAsyncTask(worldProvider, minChunkX, minChunkZ, maxChunkX, maxChunkZ, dimension,EntitySwitch).execute();
+            if (worldProvider.getShowTileEntityMarkers())
+                new MarkerAsyncTask(worldProvider, minChunkX, minChunkZ, maxChunkX, maxChunkZ, dimension,TileEntitySwitch).execute();
 
 
             //draw the grid
@@ -180,6 +188,8 @@ public class MCTileProvider implements BitmapProvider {
 
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+//            world.setHaveBackgroundJob(this, false);
         }
 
 

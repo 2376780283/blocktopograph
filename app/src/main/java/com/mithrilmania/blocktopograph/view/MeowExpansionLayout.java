@@ -127,7 +127,6 @@ public class MeowExpansionLayout extends ExpansionLayout {
         if (parent instanceof ViewGroup) {
             float remaining = ((ViewGroup) parent).getMeasuredHeight() - getY();
             height = Math.min(remaining, height);
-            //Log.d(this, "remaining: " + remaining + ", requested: " + height);
             setHeight((int) height);
         }
     }

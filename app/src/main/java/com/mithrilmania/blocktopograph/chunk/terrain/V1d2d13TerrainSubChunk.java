@@ -2,6 +2,7 @@ package com.mithrilmania.blocktopograph.chunk.terrain;
 
 import androidx.annotation.NonNull;
 
+import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.block.Block;
 import com.mithrilmania.blocktopograph.block.BlockRegistry;
@@ -24,6 +25,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
@@ -38,7 +40,7 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
             0b11111111,
             0b111111111, 0b1111111111, 0b11111111111,
             0b111111111111,
-            0b1111111111111, 0b11111111111111, 0b11111111111111};
+            0b1111111111111, 0b11111111111111, 0b111111111111111,0b1111111111111111};
     // There could be multiple BlockStorage let's read the first two.
     private volatile BlockStorage[] mStorages;
 
@@ -73,6 +75,23 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
                 mIsDualStorageSupported = true;
                 raw.position(1);
                 int count = raw.get();
+                if (count < 1) {
+                    mIsError = true;
+                    return;
+                }
+                try {
+                    loadBlockStorage(raw, 0);
+                    if (count > 1) loadBlockStorage(raw, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    mIsError = true;
+                }
+                break;
+            case 9:
+                mIsDualStorageSupported = true;
+                raw.position(1);
+                count = raw.get();
+                int YIndex = raw.get();
                 if (count < 1) {
                     mIsError = true;
                     return;
@@ -206,12 +225,19 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
 
         //Read BlockState length.
         //this byte = (length << 2) | serializedType.
-        storage.blockCodeLenth = (raw.get() & 0xff) >> 1;
-
+//        int LenthPosition = raw.position();
+        int blockCodeByte = raw.get();
+        storage.blockCodeLenth = (blockCodeByte & 0xff) >> 1;
         if (storage.blockCodeLenth > 16) throw new IOException("mBlockLength > 16");
-
+        int bufsize;
+        if (blockCodeByte == 0) {
+            storage.palette = new ArrayList<>(0);
+            return;
+        }
         //We use this much of bytes to store BlockStates.
-        int bufsize = (4095 / (32 / storage.blockCodeLenth) + 1) << 2;
+        bufsize = (4095 / (32 / storage.blockCodeLenth) + 1) << 2;
+
+
         byte[] arr = new byte[bufsize];
         ByteBuffer byteBuffer = ByteBuffer.wrap(arr);
         byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -224,7 +250,6 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
 
         //Palette items count.
         int psize = raw.getInt();
-
 //        if(psize>(1<<mMainBlockCodeLenth)){
 //            throw new IOException("psize > most possible bound");
 //        }
@@ -244,7 +269,6 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
         BlockRegistry blockRegistry = getBlockRegistry();
         if (blockRegistry == null) return;
         for (int i = 0; i < psize; i++) {
-
             //Read a piece of nbt data, represented by a root CompoundTag.
             CompoundTag tag = (CompoundTag) nis.readTag();
             BlockStorage.BlockRecord record = new BlockStorage.BlockRecord();
@@ -278,7 +302,7 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
         if (mIsError) return getAir();
 
         BlockStorage storage = mStorages[layer];
-        if (storage == null) return getAir();
+        if (storage == null || storage.blockCodeLenth == 0) return getAir();
 
         //The codeOffset'th BlockState is wanted.
         int codeOffset = getOffset(x, y, z);

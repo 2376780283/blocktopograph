@@ -8,8 +8,25 @@ public final class McUtil {
 
     @NonNull
 
+//    public static File getMinecraftWorldsDir(File sdcard) {
+//        return new File(sdcard, "games/com.mojang/minecraftWorlds");
+//    }
     public static File getMinecraftWorldsDir(File sdcard) {
-        return new File(sdcard, "games/com.mojang/minecraftWorlds");
+        File internationalPath = new File(sdcard, "Android/\u200Bdata/com.mojang.minecraftpe/files/games/com.mojang/minecraftWorlds");
+        File internationalPath2 = new File(sdcard, "Android/data/com.mojang.minecraftpe/files/games/com.mojang/minecraftWorlds");
+        File oldPath = new File(sdcard, "games/com.mojang/minecraftWorlds");
+
+        File defaultPath = new File(sdcard, "Blocktopograph/worlds");
+
+        if (internationalPath.exists()) {
+            return internationalPath;
+        }else if(internationalPath2.exists()){
+            return internationalPath2;
+        }else if(oldPath.exists() && (oldPath.list().length != 0)){
+            return oldPath;
+        }else{
+            return defaultPath;
+        }
     }
 
     @NonNull

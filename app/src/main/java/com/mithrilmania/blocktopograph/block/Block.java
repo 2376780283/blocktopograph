@@ -3,6 +3,7 @@ package com.mithrilmania.blocktopograph.block;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.nbt.tags.CompoundTag;
 import com.mithrilmania.blocktopograph.nbt.tags.Tag;
 
@@ -71,8 +72,8 @@ public class Block implements Serializable {
     }
 
     public int getColor() {
-        if (listingBlock != null)
-            return listingBlock.getColor();
+//        if (listingBlock != null)
+//            return listingBlock.getColor();
         return legacyBlock.color;
     }
 

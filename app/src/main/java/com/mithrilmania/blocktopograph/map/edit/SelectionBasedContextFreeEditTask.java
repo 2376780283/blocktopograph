@@ -56,7 +56,7 @@ public class SelectionBasedContextFreeEditTask extends
                 activity, R.string.general_please_wait, this::onCancel
         );
         mWaitDialog.show();
-        owner.world.setHaveBackgroundJob(true);
+        owner.world.setHaveBackgroundJob(this,true);
     }
 
     @Override
@@ -124,7 +124,7 @@ public class SelectionBasedContextFreeEditTask extends
         mWaitDialog = null;
         MapFragment owner;
         if ((owner = mOwner.get()) != null)
-            owner.world.setHaveBackgroundJob(false);
+            owner.world.setHaveBackgroundJob(this,false);
     }
 
     @Override
@@ -135,7 +135,7 @@ public class SelectionBasedContextFreeEditTask extends
         MapFragment owner = mOwner.get();
         Activity activity;
         if (owner != null && (activity = owner.getActivity()) != null) {
-            owner.world.setHaveBackgroundJob(false);
+            owner.world.setHaveBackgroundJob(this,false);
             if (editResultCode == null)
                 return;
             switch (editResultCode) {

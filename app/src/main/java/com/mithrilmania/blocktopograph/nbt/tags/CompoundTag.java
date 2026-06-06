@@ -18,7 +18,17 @@ public class CompoundTag extends Tag<ArrayList<Tag>> {
         return NBTConstants.NBTType.COMPOUND;
     }
 
-
+    public Tag addChildTag(Tag tag) {
+        if (value == null) {
+            value = new ArrayList<>();
+        }
+        Tag existing = getChildTagByKey(tag.getName());
+        if (existing != null) {
+            value.remove(existing);
+        }
+        value.add(tag);
+        return tag;
+    }
     public Tag getChildTagByKey(String key){
         List<Tag> list = getValue();
         if(list == null) return null;

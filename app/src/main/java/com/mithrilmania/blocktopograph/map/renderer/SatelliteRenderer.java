@@ -7,6 +7,7 @@ import android.graphics.Rect;
 
 import androidx.annotation.NonNull;
 
+import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.block.Block;
 import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
@@ -29,15 +30,18 @@ public class SatelliteRenderer implements MapRenderer {
         float biomeR = (float) Color.red(grassColor) / 255f;
         float biomeG = (float) Color.green(grassColor) / 255f;
         float biomeB = (float) Color.blue(grassColor) / 255f;
-
+        int count = 0;
+        int originY = y;
         y--;
+
         for (; y >= 0 && alphaRemain >= .1f; y--) {
 
-            Block block = chunk.getBlock(x, y, z, 0);
+            count++;
 
+            Block block = chunk.getBlock(x, y, z, 0);
             KnownBlockRepr legacyBlock = block.getLegacyBlock();
 
-            if (legacyBlock == KnownBlockRepr.B_0_0_AIR) continue;//skip air blocks
+//            if (legacyBlock == KnownBlockRepr.B_0_0_AIR) continue;//skip air blocks
 
             int color = block.getColor();
 
@@ -45,7 +49,6 @@ public class SatelliteRenderer implements MapRenderer {
             if (Color.alpha(color) == 0) continue;
 
             float blendA = Color.alpha(color) / 255f;
-
             // alpha blend and multiply
             float blendR = alphaRemain * blendA * (Color.red(color) / 255f);
             float blendG = alphaRemain * blendA * (Color.green(color) / 255f);
@@ -63,12 +66,15 @@ public class SatelliteRenderer implements MapRenderer {
             finalB += blendB;
             alphaRemain *= 1f - blendA;
         }
-
         //height shading (based on slopes in terrain; height diff)
-        float heightShading = getHeightShading(y, heightW, heightN);
+        /// ///////////!!!!!!!!!!!!!!!!!!!!!
+        float heightShading = getHeightShading(originY, heightW, heightN);
+//        float heightShading = 0.6f;
+
 
         //go back to "surface"
-        y++;
+//        y++;
+        y += count;
         //light sources
         int lightValue = chunk.getBlockLightValue(x, y, z) & 0xff;
         float lightShading = (float) lightValue / 15f + 1;
@@ -77,13 +83,13 @@ public class SatelliteRenderer implements MapRenderer {
         float shading = heightShading * lightShading;
 
         //low places just get darker
-        //shading *= Math.max(Math.min(y / 40f, 1f), 0.2f);//shade ravines & caves, minimum *0.2 to keep some color
-
+//        shading *= Math.max(Math.min(y / 40f, 1f), 0.2f);//shade ravines & caves, minimum *0.2 to keep some color
+        float depthFactor = Math.max(Math.min((y + 64) / 104f, 1f), 0.2f);
+        shading *= depthFactor;
         // apply the shading
         finalR = Math.min(Math.max(0f, finalR * shading), 1f);
         finalG = Math.min(Math.max(0f, finalG * shading), 1f);
         finalB = Math.min(Math.max(0f, finalB * shading), 1f);
-
 
         // now we have our final RGB values as floats, convert to a packed ARGB pixel.
         return 0xff000000 |
@@ -104,7 +110,7 @@ public class SatelliteRenderer implements MapRenderer {
             for (int x = 0, tX = pX; x < 16; x++, tX += pW) {
 
                 int y = chunk.getHeightMapValue(x, z);
-                if (y == 0) continue;
+//                if (y == 0) continue;
 
                 int color = getColumnColour(chunk, x, y, z,
                         (x == 0) ? (west ? dataW.getHeightMapValue(dimension.chunkW - 1, z) : y)//chunk edge
@@ -112,6 +118,10 @@ public class SatelliteRenderer implements MapRenderer {
                         (z == 0) ? (north ? dataN.getHeightMapValue(x, dimension.chunkL - 1) : y)//chunk edge
                                 : chunk.getHeightMapValue(x, z - 1)//within chunk
                 );
+//                        ((x == 0) ? (west ? ("getHVx: "+(dimension.chunkW - 1)+" z: "+ z) : y)//chunk edge
+//                                :("getHVxThisChunk: "+(x - 1)+" z: "+ z))+" hN: "+
+//                        ((z == 0) ? (north ? ("getHVx: " +x+ " z: "+ (dimension.chunkL - 1)) : y)//chunk edge
+//                        : ("getHVxThisChunk: "+x+" z: "+ (z - 1))));
                 paint.setColor(color);
                 canvas.drawRect(new Rect(tX, tY, tX + pW, tY + pL), paint);
 
@@ -123,25 +133,28 @@ public class SatelliteRenderer implements MapRenderer {
 
     // shading Amp, possible range: [0, 2] (or use negative for reverse shading)
     private static final float shadingAmp = 0.8f;
+    private static final float k = 0.35f;
 
     public static float getHeightShading(int height, int heightW, int heightN) {
         int samples = 0;
         float heightDiff = 0;
 
-        if (heightW > 0) {
+        if (heightW > -64) {
             heightDiff += height - heightW;
             samples++;
         }
 
-        if (heightN > 0) {
+        if (heightN > -64) {
             heightDiff += height - heightN;
             samples++;
         }
 
-        heightDiff *= Math.pow(1.05f, samples);
+        heightDiff *= (float) Math.pow(0.7f, samples);
 
         // emphasize small differences in height, but as the difference in height increases, don't increase so much
-        return ((float) (Math.atan(heightDiff) / Math.PI) * shadingAmp) + 1f;
+//        return ((float) (Math.atan(heightDiff) / Math.PI) * shadingAmp) + 1f;
+        float sigmoid = (float) (2 / (1 + Math.exp(-k * heightDiff)) - 1);
+        return sigmoid * shadingAmp + 1f;
     }
 
 }

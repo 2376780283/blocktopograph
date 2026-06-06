@@ -33,7 +33,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
             android:maxLines="2"
-            android:text="@{biome==null ? null : biome.getName()+` (`+biome.id+`)`}" />
+            app:biomeInfo="@{biome}"/>
+        <!--            android:text="@{biome==null ? null : biome.getName()+` (`+biome.id+`)`}" -->
+
 
         <ImageView
             android:layout_width="36dp"

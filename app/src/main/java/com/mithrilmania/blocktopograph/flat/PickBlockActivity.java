@@ -113,7 +113,7 @@ public final class PickBlockActivity extends AppCompatActivity {
             for (ListingBlock b : ListingBlock.values())
                 if (b.getLegacy_id() == num ||
                         (b.getIdentifier().contains(text)) ||
-                        (b.getName().contains(text)))
+                        (b.getName(activity).contains(text)))
                     list.add(b);
             int position = -1;
             if (olds != null) for (ListingBlock b : olds) {

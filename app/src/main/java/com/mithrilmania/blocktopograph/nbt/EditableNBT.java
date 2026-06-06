@@ -2,6 +2,8 @@ package com.mithrilmania.blocktopograph.nbt;
 
 import com.mithrilmania.blocktopograph.nbt.tags.Tag;
 
+import java.io.IOException;
+
 /**
  * Wrapper around NBT data for easy passing and saving without knowing its context.
  */
@@ -33,4 +35,6 @@ public abstract class EditableNBT {
     public abstract void addRootTag(Tag tag);
 
     public abstract void removeRootTag(Tag tag);
+
+    public abstract boolean saveToFile();
 }

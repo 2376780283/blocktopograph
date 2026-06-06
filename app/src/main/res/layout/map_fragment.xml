@@ -113,6 +113,14 @@
                     app:srcCompat="@drawable/ic_location"
                     fab:fab_label="@string/gps_picer" />
 
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/fab_menu_screenshot"
+                    style="@style/MenuButtonsStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/baseline_wallpaper_24"
+                    fab:fab_label="@string/screenshot" />
+
             </com.github.clans.fab.FloatingActionMenu>
 
         </LinearLayout>

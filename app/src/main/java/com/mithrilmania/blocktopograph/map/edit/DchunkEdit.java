@@ -16,7 +16,7 @@ public class DchunkEdit implements EditTarget.ChunkBasedEdit {
     @Override
     public int edit(Chunk chunk, int fromX, int toX, int fromY, int toY, int fromZ, int toZ) {
         try {
-            chunk.deleteThis();
+            chunk.deleteThis(false);
         } catch (Exception e) {
             if (exceptionCount < MAX_EXCEPTION) {
                 Log.d(this, e);

@@ -10,6 +10,13 @@
         android:orientation="vertical"
         android:padding="6dp">
 
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/err_noworld_2" />
+
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -17,11 +24,11 @@
             android:contentDescription="Screenshot of the settings page"
             android:src="@drawable/external"
             tools:ignore="HardcodedText" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/err_noworld_2" />
+            android:text="@string/err_noworld_3" />
+
 
     </LinearLayout>
 

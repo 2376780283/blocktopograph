@@ -18,50 +18,10 @@
             然後點擊「創建自定義標記」。
         然後選擇一個標記圖標和一個Y坐標。
         最後在地圖上檢查一下你有沒有成功創建它！</string>
-    <string name="app_help">查看本應用的文檔（長期未更新）：
-        <a href="http://blocktopograph.protolambda.com/help">
-            blocktopograph.protolambda.com/help
-        </a>.</string>
+    <string name="app_help">此應用程式的幫助文件：尚未準備好。\n您可以查看 Github 上的 <a href="https://github.com/rukiroki/blocktopograph">README</a>。\n或者在<a href="https://discord.gg/3FYYfdYUBE">Discord</a>上反饋問題</string>
     <string name="world_seed_prefix">地圖種子碼：</string>
-    <string name="app_about">
-        本應用由<b>Proto Lambda</b>（應其要求，已移除鏈接）原創，
-        <a href="https://github.com/MithrilMania">@MithrilMania</a>、
-        <a href="https://github.com/flagmaggot">@flagmaggot</a>、
-        <a href="https://github.com/oO0oO0oO0o0o00">@MeowCat</a>、
-        <a href="https://github.com/MiemieMethod">@MiemieMethod</a>、
-        <a href="https://github.com/LordJunior">Manuel</a>和其他人參與更新和維護。
-        感謝百度貼吧minecraftpe吧的朋友們提供反饋。
-        可以在Google Play、Github的項目release頁面（PC版網頁）下載或百度貼吧搜索。
-        有賬號的可以點一下Star~
-        <i>歡迎在Github查看源代碼，並參與更新維護（包括增強翻譯）：</i>
-        <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph">github.com/oO0oO0oO0o0o00/blocktopograph</a>
-        使用前請備份你的重要存檔，以免發生意外。一點小問題都可能導致Minecraft無法載入整個存檔→_→
-        本應用支持MCPE 0.14至1.9（當前）的存檔格式，更舊或者更新的版本【可能】不完全兼容，但不妨一試。
-        原作者網站：<a href="http://blocktopograph.protolambda.com">blocktopograph.protolambda.com</a>
-        <i>免責聲明</i>
-        <b>此應用程序與Minecraft、Mojang AB或Microsoft無關。</b>
-        這不是一個官方的而是一個飯制的APP。
-        Minecraft是Mojang的一個商標。
-        請注意：
-            • 【這不是一個官方的MINECRAFT產品。並未經MOJANG批准並且與其無關。】
-            • 【該APP「按原樣」提供，不提供任何形式的保證。】
-        <i>使用的庫</i>
-        • <a href="https://github.com/Clans/FloatingActionButton">FloatingActionButton</a> 
-        • <a href="https://github.com/mithrilmania/TileView">
-                    Tileview，mithrilmania的版本庫分支</a> 
-        • <a href="https://github.com/Mojang/leveldb-mcpe">leveldb-mcpe</a> 
-            with <a href="https://github.com/mithrilmania/android-leveldb">
-                    android-leveldb，mithrilmania的版本庫分支</a> 
-        
-    </string>
-    <string name="app_changelog" formatted="false">
-        版本: <xliff:g example="0.0.1" id="version">%1$s</xliff:g>
-        <![CDATA[<br/><br/>
-        2018之前的更新記錄可以到:
-        <a href="http://blocktopograph.protolambda.com/changelog">
-            blocktopograph.protolambda.com/changelog
-        </a>查看。]]>
-    </string>
+    <string name="app_about">此應用程式由 <b>Protol Lambda</b>（因他要求已移除連結）創建，並由以下人員貢獻：<a href="https://github.com/MithrilMania">@MithrilMania</a>、<a href="https://github.com/flagmaggot">@flagmaggot</a>、<a href="https://github.com/oO0oO0oO0o0o00">@MeowCat</a>、<a href="https://github.com/MiemieMethod">@MiemieMethod</a>、<a href="https://github.com/LordJunior">@Manuel</a>、<a href="https://github.com/rukiroki">@rukiroki</a>以及 ScrapperBox25、Tcbdxh 等眾多其他人士。\n\n<a href="https://github.com/rukiroki/blocktopograph/releases/latest">下載</a> 於 GitHub。\n\n目前活躍的 GitHub 代碼庫：\n<a href="https://github.com/rukiroki/blocktopograph">github.com/rukiroki/blocktopograph</a>\n歡迎你星標或複製、協助專案，或直接加入你自己的語言支援。\n<b>你的 GitHub 贡獻將受到歡迎！</b>\n更多資訊（包括路線圖、變更記錄與幫助說明）可於 <a href="https://github.com/rukiroki/blocktopograph">GitHub</a> 查閱：\n\n\n請備份您所有珍愛的 MCPE 世界，以防資料損壞！\n注意：由於單一的 NBT 複製區塊損壞，Minecraft 可能無法載入整個世界！\n\n\n此應用程式已針對 MCPE 1.26.x、1.9.x、1.8.x、1.7.x、1.6.x、1.5.x、1.4.x、1.2.x、1.1.x、1.0.x、0.16.x、0.15.x 和 0.14.x 建立並測試過。\n較舊的 MCPE 版本不被支援。\n\n\n\n\n免責聲明\n此應用程式與 Minecraft、Mojang AB 或 Microsoft 無關聯。\n這不是官方應用程式，而是由粉絲製作的。\nMinecraft 是 Mojang AB 的商標。\n請注意：\n• 非官方 Minecraft 產品。未經 Mojang 批准或與其有關聯。\n• 本應用程式以「現有狀態」提供，不附帶任何保證。\n\n\n\n\n已使用的函式庫\n• <a href="https://github.com/Clans/FloatingActionButton">FloatingActionButton</a>\n• <a href="https://github.com/mithrilmania/TileView">\nTileview，由 mithrilmania 支援的分叉版本</a>\n• <a href="https://github.com/Mojang/leveldb-mcpe">leveldb-mcpe</a>\n使用 <a href="https://github.com/mithrilmania/android-leveldb">\nandroid-leveldb，由 mithrilmania 支援的分叉版本</a></string>
+    <string name="app_changelog" formatted="false">"         版本: <xliff:g example="0.0.1" id="version">%1$s</xliff:g>         <![CDATA[<br/><br/>         2018之前的更新記錄可以到:         <a href="http://blocktopograph.protolambda.com/changelog">             blocktopograph.protolambda.com/changelog         </a>查看。]]>     "</string>
     <string name="create_marker_info">
         標記圖標：
         • default_marker（默認標記）、blue_marker（藍標記）、green_marker（綠標記）、red_marker（紅標記）
@@ -87,7 +47,7 @@
     <string name="no_level_dat_found">沒找到level.dat文件</string>
     <string name="error_opening_world">打開地圖時發生錯誤</string>
     <string name="ask_close_world">您想關閉該地圖嗎？</string>
-    <string name="leveldb_key_here">輸入levelDB中的鍵……</string>
+    <string name="leveldb_key_here">在此搜尋 LevelDB 鍵…</string>
     <string name="open_nbt_from_db">從資料庫中打開NBT</string>
     <string name="invalid_keyname">無效的鍵名</string>
     <string name="cannot_find_db_entry_with_name">無法在資料庫中找到具有該名字的記錄！</string>
@@ -216,7 +176,7 @@
     <string name="marker_is_not_removable">這個標記不可被移除！</string>
     <string name="sub_chunk">區段</string>
     <string name="choose_subchunk">選擇一個區段（0至15）：</string>
-    <string name="filter_markers">篩選標記</string>
+    <string name="filter_entity_markers">篩選實體標記</string>
     <string name="show_map">顯示地圖</string>
     <string name="select_world">選擇地圖</string>
     <string name="singleplayer_nbt">單機玩家NBT</string>
@@ -236,25 +196,25 @@
     <string name="the_end">終末之界</string>
     <string name="map_options">地圖選項</string>
     <string name="toggle_grid">網格開關</string>
-    <string name="toggle_markers">標記開關</string>
+    <string name="toggle_entity_markers">實體標記開關</string>
     <string name="advanced_options">高級選項</string>
-    <string name="biomedata_nbt">BiomeData NBT</string>
-    <string name="overworld_nbt">Overworld NBT</string>
-    <string name="villages_nbt">Villages NBT</string>
-    <string name="portals_nbt">Portals NBT</string>
+    <string name="biomedata_nbt">群系數據 NBT</string>
+    <string name="overworld_nbt">主世界 NBT</string>
+    <string name="villages_nbt">村莊 NBT</string>
+    <string name="portals_nbt">傳送門 NBT</string>
     <string name="dimension0_nbt">dimension0 NBT</string>
     <string name="dimension1_nbt">dimension1 NBT</string>
     <string name="dimension2_nbt">dimension2 NBT</string>
-    <string name="autonomousentities_nbt">AutonomousEntities NBT</string>
-    <string name="open_nbt_by_name">按名稱打開NBT</string>
+    <string name="autonomousentities_nbt">自主實體 NBT</string>
+    <string name="open_nbt_by_name">按名稱搜索NBT</string>
     <string name="gamemode_survival">生存</string>
     <string name="gamemode_creative">創造</string>
     <string name="gamemode_adventure">冒險</string>
     <string name="postion_2D_floats_with_chunkpos">
-    (<xliff:g example="123.45" id="x_coordinate">%1$.1f</xliff:g>,
-    <xliff:g example="-123.987" id="z_coordinate">%2$.1f</xliff:g>)
-    區塊(<xliff:g example="123" id="x_chunk">%3$d</xliff:g>,
-    <xliff:g example="-42" id="z_chunk">%4$d</xliff:g>)
+        (<xliff:g example="123.45" id="x_coordinate">%1$.1d</xliff:g>,
+        <xliff:g example="-123.987" id="z_coordinate">%2$.1d</xliff:g>)
+        區塊(<xliff:g example="123" id="x_chunk">%3$d</xliff:g>,
+        <xliff:g example="-42" id="z_chunk">%4$d</xliff:g>)
     </string>
     <string name="action_teleport">傳送！</string>
     <string name="go_to_spawn">前往出生點</string>
@@ -293,25 +253,25 @@
     <string name="title_test_page">測試頁</string>
     <string name="create_world_book_title">喵~</string>
     <string name="create_world_book_page_0"><!--
-        -->"§c歡迎~ 喵嗚~"<!--
-        -->"§r該地圖由"<!--
-        -->"§3Blocktopograph"<!--
-        -->"§r生成。"<!--
-        -->"§1從Play商店/Github"<!--
-        -->"§1/貼吧/mineBBS獲取，"<!--
-        -->"§5創建你的自定義地圖。"<!--
-        -->""<!--
-        -->"§r生成於"<!--
-        -->"§d%1$s"<!--
+        -->§c歡迎~ 喵嗚~<!--
+        -->§r該地圖由<!--
+        -->§3Blocktopograph<!--
+        -->§r生成。<!--
+        -->§1從Github/bilibili<!--
+        -->§1/Discord獲取，<!--
+        -->§5創建你的自定義地圖。<!--
+        --><!--
+        -->§r生成於<!--
+        -->§d%1$s<!--
     --></string>
     <string name="create_world_book_recipe_header">地圖配料表：</string>
     <string name="create_world_book_recipe_many">"  §r..以及更多"</string>
-    <string name="create_world_extra_file_name">由Blocktopograph.txt</string>
+    <string name="create_world_extra_file_name">由Blocktopograph創建.txt</string>
     <string name="create_world_extra_file_text"><!--
-        -->"歡迎~ 喵嗚~"<!--
-        -->"該地圖由Blocktopograph創建，"<!--
-        -->"一款Minecraft的編輯和地圖查看工具。"<!--
-        -->"從Play商店/Github/貼吧/mineBBS獲取，並創建你的自定義地圖。"<!--
+        -->歡迎~ 喵嗚~<!--
+        -->該地圖由Blocktopograph創建，<!--
+        -->一款Minecraft的編輯和地圖查看工具。<!--
+        -->從Github/Discord獲取，並創建你的自定義地圖。<!--
     --></string>
     <string name="locator_page_player">玩家</string>
     <string name="player_position_desc">在%4$s的(%1$d, %2$d, %3$d)</string>
@@ -364,7 +324,7 @@
     <string name="map_edit_snr_bg_slot">背景層：</string>
     <string name="map_edit_snr_place_in">然後放置在</string>
     <string name="map_edit_snr_and_long">前景和背景</string>
-    <string name="map_edit_func_snr">查找&替換</string>
+    <string name="map_edit_func_snr">查找&amp;替換</string>
     <string name="map_edit_snr_ignore_subtype">忽略子類型</string>
     <string name="map_edit_snr_help_background">簡單的查找替換可以無視背景層。從Minecraft BE 1.4.x開始，背景層被用於存儲與其他方塊共存的水，不過其實可以放任何方塊。作為高級地圖作者，您可以利用這個特性。</string>
     <string name="map_sel_warn_backup">使用前先備份，請！（震聲）</string>
@@ -391,7 +351,7 @@
     <string name="map_picer_use_selection_instead">太♂大了。你可以:(1) 在電腦上使用同類工具；(2) 或者框選一部分區域然後從選區選項里選擇截圖。</string>
     <string name="map_picer_scale_guide">你可以放大圖片。每個方塊至少1像素。</string>
     <string name="map_picer_selection_too_large">選區太大</string>
-    <string name="map_picer_selection_too_large_detail">你選擇的區域太♂大了。寬度和高度都應該在%1$d方塊以內，同時面積在%2$d方塊²以內。</string>
+    <string name="map_picer_selection_too_large_detail">你選擇的區域太♂大了:(%3$dx%4$d)。寬度和高度都應該在%1$d方塊以內，同時面積在%2$d方塊²以內。</string>
     <string name="map_edit_func_picer">生成圖片</string>
     <string name="picer_scale_approxim">大約%1$dx%2$d。</string>
     <string name="map_dblclick_notice">雙擊屏幕以打開抽屜。</string>
@@ -418,4 +378,59 @@
     <string name="restore_caption">恢復先前的備份文件</string>
     <string name="restore_warn">這將撤銷所有在該備份創建以後進行的更改！您確定嗎？注意不要丟失進度。</string>
     <string name="world_name_broken">損壞的地圖</string>
+    <string name="world_mark_international">[攜帶版]</string>
+    <string name="toggle_tile_entity_markers">方塊實體標記開關</string>
+    <string name="filter_tile_entity_markers">篩選方塊實體標記</string>
+    <string name="map_nbt">地圖 NBT</string>
+    <string name="mcstructure_nbt">已保存的結構</string>
+    <string name="search">搜尋</string>
+    <string name="nether_nbt">地獄 NBT</string>
+    <string name="end_nbt">末地 NBT</string>
+    <string name="postrackdb_nbt">位置追蹤 NBT</string>
+    <string name="schedulerwt_nbt">排程器世界刻 NBT</string>
+    <string name="worldclock_nbt">世界時鐘 NBT</string>
+    <string name="old_villages_nbt">舊版本村莊NBT</string>
+    <string name="no_search_result_found">未找到搜尋結果</string>
+    <string name="empty_data">空資料</string>
+    <string name="cannot_open_multi_editor">無法打開多個編輯器</string>
+    <string name="choose_nbt_editor_save_type">選擇儲存模式</string>
+    <string name="nbt_editor_save_to_original_position">原始位置</string>
+    <string name="nbt_editor_export_to_file">保存到檔案</string>
+    <string name="share_picture_title">分享圖片</string>
+    <string name="share_nbt_title">分享 NBT 檔案</string>
+    <string name="picer_warn_not_scalable_too_large">選擇的區域太大了，已被自動裁剪成 %1$d x %2$d 大小。</string>
+    <string name="db_permission_denied">沒有對全世界的讀寫權限</string>
+    <string name="block">方塊</string>
+    <string name="height">高度</string>
+    <string name="db_occupied">這個世界被其他程式佔據。</string>
+    <string name="picer_progress_copying">複製中，請稍候...</string>
+    <string name="tip_dont_edit_with_play">如果你在遊戲進行中打開此編輯器，將導致遊戲無法保存，甚至可能導致存檔文件損壞。請不要這麼做。如果你執意要這麼做，請在操作前先備份世界。</string>
+    <string name="no_permission">沒有權限</string>
+    <string name="dont_show_again_btn">不再顯示</string>
+    <string name="world_mark_old_version">[舊版本]</string>
+    <string name="world_mark_default">[預設位置]</string>
+    <string name="err_noworld_3">如果你已經這麼做了，但仍然沒有世界存檔，這表示 BTR 沒有權限讀取 Minecraft 的外部存儲目錄。 \n\n你可以將存檔複製到 Blocktopograph/worlds 資料夾，以便在世界列表中顯示它。</string>
+    <string name="nbt_file_saved">已儲存到「下載」目錄。</string>
+    <string name="warn_edit_biome">此功能將強制將涉及的三維生物群系降級為二維生物群系，這可能會覆蓋一些地下生物群系，如茂密洞穴、洞窟和黑暗領域。\n您確定要繼續嗎？</string>
+    <string name="add_world_list_directory">新增世界列表目錄</string>
+    <string name="remark_here">在此處備註...</string>
+    <string name="listpath_is_not_exist">路徑不存在</string>
+    <string name="open_auto_backup_page">前往備份</string>
+    <string name="add_world_list_directory_done">路徑: %1$s\n備註: %2$s</string>
+    <string name="list_directory_delete_tip">\n你可以再次添加以刪除路徑。</string>
+    <string name="opened">已開啟。</string>
+    <string name="closed">已關閉。</string>
+    <string name="screenshot">螢幕截圖</string>
+    <string name="ask_copy_world_folder">無法打開。你沒有當前世界目錄的寫入權限（可能是遊戲內創建的世界）。你可以選擇複製這個世界。注意：複製後，將額外佔用 %1$s 的空間。你也可以選擇在遊戲中手動刪除舊的存檔來釋放空間。你想要複製嗎？</string>
+    <string name="ask_copy_game_folder">你沒有目前檔案目錄的寫入權限，所以無法開啟或建立世界。你想要複製整個遊戲資料夾嗎？複製後，你將能夠正常開啟和編輯世界。注意：複製後遊戲內容不會受到影響，但會佔用額外 %1$s 的空間。</string>
+    <string name="source_folder_not_exist">來源目錄不存在</string>
+    <string name="big_files">文件比較大</string>
+    <string name="ask_copy_large_files">當前檔案總大小為 %1$s，複製需要較長時間，要繼續嗎？</string>
+    <string name="world_folder_not_exist">世界檔案資料夾不存在。</string>
+    <string name="world_duplication">世界檔案重複</string>
+    <string name="world_copied_info">這個世界已經被複製到 \n%1$s。\n請關閉此頁面並進入複製的世界頁面。</string>
+    <string name="copy_complete">複製完成</string>
+    <string name="copy_complete_info">世界已成功複製到：%1$s 請關閉此頁面，進入複製後的世界頁面。</string>
+    <string name="copy_failed">複製失敗</string>
+    <string name="copy_game_folder_complete_info">遊戲資料夾已成功複製。現在你可以玩遊戲，並使用這個應用程式編輯你創建的所有世界。不過，請不要同時進行兩者。</string>
 </resources>

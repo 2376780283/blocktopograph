@@ -14,7 +14,7 @@ import java.io.InputStream;
 
 public final class LevelDataConverter {
 
-    public static final byte[] header = {0x04, 0x00, 0x00, 0x00};
+    public static final byte[] header = {0x0A, 0x00, 0x00, 0x00};
 
     public static CompoundTag read(InputStream inputStream) throws IOException {
         skip(inputStream, 8);
@@ -34,7 +34,28 @@ public final class LevelDataConverter {
         in.close();
         return levelTag;
     }
+    public static byte[] toStandardNBT(CompoundTag tag) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try (NBTOutputStream out = new NBTOutputStream(bos)) {
+            out.writeTag(tag);
+        }
+        return bos.toByteArray();
+    }
+    public static byte[] toLevelDatNBT(CompoundTag tag) throws IOException {
+        ByteArrayOutputStream nbtBuffer = new ByteArrayOutputStream();
+        try (NBTOutputStream out = new NBTOutputStream(nbtBuffer)) {
+            out.writeTag(tag);
+        }
+        byte[] nbtData = nbtBuffer.toByteArray();
+        ByteArrayOutputStream result = new ByteArrayOutputStream();
+        try (DataOutputStream dos = new DataOutputStream(result)) {
+            dos.write(header);
+            dos.writeInt(Integer.reverseBytes(nbtData.length));
+            dos.write(nbtData);
+        }
 
+        return result.toByteArray();
+    }
     public static void write(CompoundTag levelTag, File file) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         NBTOutputStream out = new NBTOutputStream(bos);

@@ -102,7 +102,8 @@ public class CaveRenderer implements MapRenderer {
                             }
                             break;
                     }
-                    r += chunk.getBlockLightValue(x, y, z);
+//                    r += chunk.getBlockLightValue(x, y, z);
+                    r += 0;
                     solid = Color.alpha(block.getColor()) == 0xff;
                     intoSurface |= solid && (y < 60 || layers > 0);
                 }

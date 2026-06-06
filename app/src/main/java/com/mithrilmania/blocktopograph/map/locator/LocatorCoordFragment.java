@@ -28,6 +28,7 @@ public final class LocatorCoordFragment extends LocatorPageFragment {
             int x, z;
             x = UiUtil.readIntFromView(mBinding.editX);
             z = UiUtil.readIntFromView(mBinding.editZ);
+
             mCameraMoveCallback.moveCamera(x, z);
         }
     }

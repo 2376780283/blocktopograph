@@ -30,7 +30,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
             android:maxLines="2"
-            android:text="@{biome==null ? null : biome.name+` (`+biome.id+`)`}" />
+            biomeInfo="@{biome}" />
+<!--            android:text="@{biome==null ? null : biome.name+` (`+biome.id+`)`}" />-->
+
 
     </LinearLayout>
 </layout>

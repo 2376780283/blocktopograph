@@ -38,8 +38,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{block.name}"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:blockName="@{block}"/>
+<!--            android:text="@{block.name}"-->
+
 
             <TextView
                 android:layout_width="wrap_content"

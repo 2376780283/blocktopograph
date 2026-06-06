@@ -12,8 +12,8 @@
     <string name="no_sdcard_access">Tidak bisa membuka dunia, tidak ada akses baca / tulis di penyimpanan! Coba mulai ulang aplikasi dan terima permintaan izin baca / tulis.</string>
     <string name="no_custom_markers_title">Tidak ada spidol khusus!</string>
     <string name="no_custom_markers">Belum ada spidol khusus! \ n Anda dapat membuatnya dengan mengetuk tempat pada peta di mana Anda ingin penanda, lalu ketuk \ "Buat penanda khusus \". Kemudian pilih ikon penanda dan koordinat Y. Dan kemudian periksa apakah Anda dapat menemukannya di sini!</string>
-    <string name="app_about"> Aplikasi ini dibuat oleh<a href="">Proto Lambda</a>, contributed by <a href="https://github.com/MithrilMania">@MithrilMania</a>, <a href="https://github.com/flagmaggot">@flagmaggot</a>, <a href="https://github.com/oO0oO0oO0o0o00">@MeowCat</a>, <a href="https://github.com/MiemieMethod">@MiemieMethod</a>, <a href="https://github.com/LordJunior">Manuel</a> and many others as well.\n\n Available on Google Play.\n\n Current active github repository: <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph">github.com/oO0oO0oO0o0o00/blocktopograph</a> Feel free to star or fork, help with the project or simply add your own language support. <b>Your github contribution is welcomed!</b> More information (including the roadmap, changelog and help-information) can be found at: <a href="http://blocktopograph.protolambda.com">blocktopograph.protolambda.com</a>. \n <b>Diterjemahkan kedalam bahasa Indonesia oleh ScrapperBox25(52357).</b> \n \n Please make a backup of all your loved MCPE worlds in case of data-corruption!\n NOTE: Minecraft might not load a whole world because of a single corrupt chunk of NBT!\n \n This app is built and tested for MCPE 1.9.x(beta), 1.8.x, 1.7.x, 1.6.x, 1.5.x, 1.4.x, 1.2.x, 1.1.x, 1.0.x, 0.16.x, 0.15.x, and 0.14.x\n Older MCPE versions are not supported.\n \n \n <i>Disclaimer</i>\n <b>This app is not affiliated with Minecraft, Mojang AB or Microsoft.</b>\n This is not an official but a fan made app.\n Minecraft is a trademark of Mojang AB.\n Please note:\n • NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG.\n • THE APP IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND.\n \n \n <i>Used libraries</i>\n • <a href="https://github.com/Clans/FloatingActionButton">FloatingActionButton</a> \n • <a href="https://github.com/mithrilmania/TileView"> Tileview, fork by mithrilmania</a> \n • <a href="https://github.com/Mojang/leveldb-mcpe">leveldb-mcpe</a> \n with <a href="https://github.com/mithrilmania/android-leveldb"> android-leveldb, fork by mithrilmania</a> \n \n <i>Source code on GitHub:</i>\n <a href="https://github.com/mithrilmania/blocktopograph">github.com/mithrilmania/blocktopograph</a> \n </string>
-    <string name="app_help">Dokumentasi aplikasi dapat ditemukan di (mungkin kedaluwarsa):<a href="http://blocktopograph.protolambda.com/help"> blocktopograph.protolambda.com/help </a>. </string>
+    <string name="app_about">Aplikasi ini dibuat oleh <b>Protol Lambda</b> (tautan dihapus karena permintaannya),  \ndibantu oleh  \n<a href="https://github.com/MithrilMania">@MithrilMania</a>,  \n<a href="https://github.com/flagmaggot">@flagmaggot</a>,  \n<a href="https://github.com/oO0oO0oO0o0o00">@MeowCat</a>,  \n<a href="https://github.com/MiemieMethod">@MiemieMethod</a>,  \n<a href="https://github.com/LordJunior">@Manuel</a>,  \n<a href="https://github.com/rukiroki">@rukiroki</a>,  \nScrapperBox25, Tcbdxh, dan banyak lainnya. \n\nUnduh di Github. \n\nRepository GitHub aktif saat ini:  \n<a href="https://github.com/rukiroki/blocktopograph">github.com/rukiroki/blocktopograph</a>  \nSilakan beri bintang atau fork, bantu proyek ini, atau sekadar tambahkan dukungan bahasa Anda sendiri.  \n<b>Kontribusi Anda di GitHub sangat disambut!</b>  \nInformasi lebih lanjut (termasuk roadmap, log perubahan, dan informasi bantuan) dapat ditemukan di <a href="https://github.com/rukiroki/blocktopograph">Github</a>: \n\n\nSilakan buat cadangan semua dunia MCPE kesayangan Anda jika terjadi kerusakan data! \nCATATAN: Minecraft mungkin tidak dapat memuat seluruh dunia karena satu chunk NBT yang rusak! \n\n\nAplikasi ini dibangun dan diuji untuk MCPE 1.26.x, 1.9.x, 1.8.x, 1.7.x, 1.6.x, 1.5.x, 1.4.x, 1.2.x, 1.1.x, 1.0.x, 0.16.x, 0.15.x, dan 0.14.x \nVersi MCPE yang lebih lama tidak didukung. \n\n\n\n\nPenafian \nAplikasi ini tidak terkait dengan Minecraft, Mojang AB, atau Microsoft. \nIni bukan aplikasi resmi, melainkan aplikasi yang dibuat oleh penggemar. \nMinecraft adalah merek dagang Mojang AB. \nHarap diperhatikan: \n• BUKAN PRODUK RESMI MINECRAFT. TIDAK DISETUJUI DARI ATAU BERBANDING DENGAN MOJANG. \nAPLIKASI DIBAGUNKAN \"SEBAGAIMANA ADANYA\", TANPA JAMINAN APA SAJA. \n\n\n\n\nPerpustakaan yang digunakan \n• <a href="https://github.com/Clans/FloatingActionButton">FloatingActionButton</a> \n• <a href="https://github.com/mithrilmania/TileView">\nTileview, fork oleh mithrilmania</a> \n&#8226; <a href="https://github.com/Mojang/leveldb-mcpe">leveldb-mcpe</a> \ndengan <a href="https://github.com/mithrilmania/android-leveldb">\nandroid-leveldb, fork oleh mithrilmania</a></string>
+    <string name="app_help">Dokumentasi bantuan untuk aplikasi ini: Belum siap. Anda dapat memeriksa <a href="https://github.com/rukiroki/blocktopograph">README</a> di Github.\nAtau memberikan masukan masalah di <a href="https://discord.gg/3FYYfdYUBE">Discord</a></string>
     <string name="app_changelog" formatted="false"> Versi:<ns0:g example="0.0.1" id="version">%1$s</ns0:g> &lt;br/&gt;&lt;br/&gt; Full changelog can be found at (out of date): &lt;a href="http://blocktopograph.protolambda.com/changelog"&gt; blocktopograph.protolambda.com/changelog &lt;/a&gt; </string>
     <string name="world_seed_prefix">Benih dunia:</string>
     <string name="map_water_mark" translatable="false">Blocktopograph</string>
@@ -30,7 +30,7 @@
     <string name="no_level_dat_found">Tidak ditemukan file level.dat!</string>
     <string name="error_opening_world">Terjadi kesalahan saat membuka dunia.</string>
     <string name="ask_close_world">Apakah Anda ingin menutup dunia ini?</string>
-    <string name="leveldb_key_here">kunci levelDB di sini ...</string>
+    <string name="leveldb_key_here">cari kunci levelDB di sini…</string>
     <string name="open_nbt_from_db">Buka NBT dari DB</string>
     <string name="invalid_keyname">Nama kunci tidak valid.</string>
     <string name="cannot_find_db_entry_with_name">Tidak dapat menemukan entri db dengan nama itu!</string>
@@ -130,7 +130,7 @@
     <string name="marker_is_not_removable">Marker ini tidak dimaksudkan untuk dihapus!</string>
     <string name="sub_chunk">Sub-chunk</string>
     <string name="choose_subchunk">Pilih sub-chunk (0 ...):</string>
-    <string name="filter_markers">Saring penanda</string>
+    <string name="filter_entity_markers">Memfilter tanda entitas</string>
     <string name="show_map">Tampilkan peta</string>
     <string name="select_world">Pilih dunia</string>
     <string name="singleplayer_nbt">Singleplayer NBT</string>
@@ -150,21 +150,25 @@
     <string name="the_end">Tamat</string>
     <string name="map_options">Opsi peta</string>
     <string name="toggle_grid">Matikan kisi</string>
-    <string name="toggle_markers">Beralih penanda / gerombolan</string>
+    <string name="toggle_entity_markers">Saklar Penanda Entitas</string>
     <string name="advanced_options">Opsi Tingkat Lanjut</string>
     <string name="biomedata_nbt">BiomeData NBT</string>
-    <string name="overworld_nbt">NBT Overworld</string>
+    <string name="overworld_nbt">Dunia Utama NBT</string>
     <string name="villages_nbt">Desa NBT</string>
     <string name="portals_nbt">Portal NBT</string>
     <string name="dimension0_nbt">dimensional0 nbt</string>
     <string name="dimension1_nbt">Dimensi1 nbt</string>
     <string name="dimension2_nbt">Dimensi2 NBT</string>
-    <string name="autonomousentities_nbt">AutonomousEntities NBT</string>
-    <string name="open_nbt_by_name">Buka NBT dengan nama</string>
+    <string name="autonomousentities_nbt">NBT Entitas Otonom</string>
+    <string name="open_nbt_by_name">Cari NBT berdasarkan nama</string>
     <string name="gamemode_survival">Bertahan hidup</string>
     <string name="gamemode_creative">Kreatif</string>
     <string name="gamemode_adventure">Petualangan</string>
-    <string name="postion_2D_floats_with_chunkpos"> (<ns0:g example="123.4" id="x_coordinate">%1$.1f</ns0:g>, <ns0:g example="-123.9" id="z_coordinate">%2$.1f</ns0:g>) Chunk(<ns0:g example="123" id="x_chunk">%3$d</ns0:g>, <ns0:g example="-42" id="z_chunk">%4$d</ns0:g>)</string>
+    <string name="postion_2D_floats_with_chunkpos">
+        (<ns0:g example="123.4" id="x_coordinate">%1$.1f</ns0:g>,
+        <ns0:g example="-123.9" id="z_coordinate">%2$.1f</ns0:g>)
+        Chunk(<ns0:g example="123" id="x_chunk">%3$d</ns0:g>,
+        <ns0:g example="-42" id="z_chunk">%4$d</ns0:g>)</string>
     <string name="action_teleport">Teleport!</string>
     <string name="go_to_spawn">Pergi untuk bertelur</string>
     <string name="err_noworld_1">Tidak ada dunia yang ditemukan.</string>
@@ -190,7 +194,7 @@
     <string name="create_need_restart">Setelah membuat, dunia akan muncul di Minecraft setelah memulai kembali gim.</string>
     <string name="title_test_page">Halaman Uji</string>
     <string name="create_world_book_title">Meow ~</string>
-    <string name="create_world_book_page_0">"\ n§cSelamat Datang ~ Meow ~" "\ n§rDiciptakan oleh" "\ n§3Blocktopograph" "\ n" "\ n§1Dapatkan dari Play Store" "\ n§5dan buat" "\ n§5dan buat duniamu yang disesuaikan ! "" \ n "" \ n§rWorld dihasilkan di "" \ n§d %1$s "</string>
+    <string name="create_world_book_page_0">" n§cSelamat Datang ~ Meow ~  n§rDiciptakan oleh  n§3Blocktopograph  n  n§1Dapatkan dari Github atau Discord  n§5dan buat  n§5dan buat duniamu yang disesuaikan !   n   n§rWorld dihasilkan di   n§d %1$s "</string>
     <string name="create_world_book_recipe_header">Resep dunia: \ n</string>
     <string name="create_world_book_recipe_format" translatable="false">§r%1$dx §b%2$s\n</string>
     <string name="create_world_book_recipe_many">"§R..Dan lainnya"</string>
@@ -278,10 +282,64 @@
     <string name="map_picer_use_selection_instead">Dunia ini terlalu besar. Anda dapat: \ n (1) Gunakan alat serupa di PC; \ n (2) Atau mulai memilih bagian dari dunia, dan pilih \ "Hasilkan Gambar \" dari menu pilihan.</string>
     <string name="map_picer_scale_guide">Anda dapat skala gambar yang lebih besar. Setidaknya satu piksel per blok.</string>
     <string name="map_picer_selection_too_large">Seleksi Terlalu Besar</string>
-    <string name="map_picer_selection_too_large_detail">Area yang Anda pilih terlalu besar. Lebar dan tinggi harus dalam %1$d blok, dan area harus dalam %2$d blok²s.</string>
+    <string name="map_picer_selection_too_large_detail">Area yang Anda pilih terlalu besar:(%3$dx%4$d). Lebar dan tinggi harus dalam %1$d blok, dan area harus dalam %2$d blok²s.</string>
     <string name="map_edit_func_picer">Hasilkan Gambar</string>
     <string name="picer_preview_generating">Membuat Pratinjau ...</string>
-    <string name="map_locator_player_pos_unknown">Posisi tidak diketahui</string> <!-- Generated by Automatic String Resource Translation
+    <string name="map_locator_player_pos_unknown">Posisi tidak diketahui</string>
+    <string name="toggle_tile_entity_markers">Sakelar tanda entitas blok</string>
+    <string name="filter_tile_entity_markers">Penyaringan tanda entitas blok</string>
+    <string name="map_nbt">Peta NBT</string>
+    <string name="mcstructure_nbt">Struktur yang disimpan</string>
+    <string name="search">Cari</string>
+    <string name="nether_nbt">NBT Nether</string>
+    <string name="end_nbt">NBT Akhir</string>
+    <string name="postrackdb_nbt">Posisi Lacak NBT</string>
+    <string name="schedulerwt_nbt">Scheduler World Tick NBT</string>
+    <string name="worldclock_nbt">Jam Dunia NBT</string>
+    <string name="old_villages_nbt">Desa Versi Lama NBT</string>
+    <string name="no_search_result_found">tidak ditemukan hasil pencarian</string>
+    <string name="empty_data">data kosong</string>
+    <string name="cannot_open_multi_editor">Tidak dapat membuka beberapa editor</string>
+    <string name="choose_nbt_editor_save_type">Pilih mode penyimpanan</string>
+    <string name="nbt_editor_save_to_original_position">lokasi asli</string>
+    <string name="nbt_editor_export_to_file">Simpan ke file</string>
+    <string name="share_picture_title">Bagikan gambar</string>
+    <string name="share_nbt_title">Bagikan file NBT</string>
+    <string name="picer_warn_not_scalable_too_large">Area yang dipilih terlalu besar, telah dipotong secara otomatis menjadi ukuran %1$d x %2$d.</string>
+    <string name="db_permission_denied">Tidak ada izin baca/tulis untuk semua orang</string>
+    <string name="block">kotak</string>
+    <string name="height">ketinggian</string>
+    <string name="db_occupied">Dunia ini diduduki oleh program lain.</string>
+    <string name="picer_progress_copying">Menyalin, tunggu...</string>
+    <string name="tip_dont_edit_with_play">Jika Anda membuka editor ini saat bermain game, hal itu akan menyebabkan game gagal disimpan dan bahkan dapat mengakibatkan kerusakan pada file penyimpanan. Mohon jangan melakukan ini. Jika Anda tetap ingin melakukannya, harap buat cadangan dunia sebelum melanjutkan.</string>
+    <string name="no_permission">Tidak ada izin</string>
+    <string name="dont_show_again_btn">Jangan tampil lagi</string>
+    <string name="world_mark_old_version">[versi lama]</string>
+    <string name="world_mark_default">[lokasi default]</string>
+    <string name="err_noworld_3">Jika Anda telah melakukan ini dan masih tidak memiliki file simpan dunia, itu menunjukkan bahwa BTR tidak memiliki izin untuk membaca direktori penyimpanan eksternal Minecraft. \n\nAnda dapat menyalin file simpanan ke folder Blocktopograph/worlds untuk menampilkannya di daftar dunia.</string>
+    <string name="nbt_file_saved">Disimpan ke direktori \"Downloads\".</string>
+    <string name="warn_edit_biome">Fungsi ini akan memaksa menurunkan tingkat bioma tiga dimensi yang terlibat menjadi dua dimensi, yang mungkin menimpa beberapa bioma bawah tanah seperti gua rimbun, cavern, dan domain gelap. \nApakah Anda yakin ingin melanjutkan?</string>
+    <string name="add_world_list_directory">Tambah Direktori Daftar Dunia</string>
+    <string name="remark_here">Catatan di sini...</string>
+    <string name="listpath_is_not_exist">Jalur tidak ada</string>
+    <string name="open_auto_backup_page">Pergi ke cadangan</string>
+    <string name="add_world_list_directory_done">Jalur: %1$s\nCatatan: %2$s</string>
+    <string name="list_directory_delete_tip">\nAnda dapat menambahkan lagi untuk menghapus jalur.</string>
+    <string name="opened">Dibuka.</string>
+    <string name="closed">Tutup.</string>
+    <string name="screenshot">Tangkapan layar</string>
+    <string name="ask_copy_world_folder">Tidak bisa dibuka. Kamu tidak punya izin menulis di direktori dunia saat ini (mungkin dunia yang dibuat di dalam game). Kamu bisa memilih untuk menyalin dunia ini. Catatan: Setelah disalin, akan ada tambahan %1$s ruang yang digunakan. Kamu bisa memilih untuk menghapus file save lama secara manual di dalam game untuk mengosongkan ruang. Apakah kamu ingin menyalinnya?</string>
+    <string name="ask_copy_game_folder">Kamu tidak memiliki izin menulis untuk direktori file saat ini, jadi kamu tidak bisa membuka atau membuat dunia. Apakah kamu ingin menyalin seluruh folder game? Setelah disalin, kamu akan bisa membuka dan mengedit dunia seperti biasa. Catatan: Konten game tidak akan terpengaruh setelah disalin, tapi akan memakan tambahan ruang sebesar %1$s.</string>
+    <string name="source_folder_not_exist">Direktori sumber tidak ada</string>
+    <string name="big_files">File-nya cukup besar</string>
+    <string name="ask_copy_large_files">Ukuran total file saat ini adalah %1$s, menyalinnya akan memakan waktu cukup lama, mau melanjutkan?</string>
+    <string name="world_folder_not_exist">Folder arsip dunia tidak ada.</string>
+    <string name="world_duplication">Duplikasi Arsip Dunia</string>
+    <string name="world_copied_info">Dunia ini telah direplikasi ke %1$s. Silakan tutup halaman ini dan masuk ke halaman dunia yang telah direplikasi.</string>
+    <string name="copy_complete">Salin selesai</string>
+    <string name="copy_complete_info">Dunia telah berhasil disalin ke: %1$s Silakan tutup halaman ini dan masuk ke halaman dunia yang telah disalin.</string>
+    <string name="copy_failed">Salin gagal</string>
+    <string name="copy_game_folder_complete_info">Folder game telah berhasil disalin. Sekarang kamu bisa memainkan gamenya dan menggunakan aplikasi ini untuk mengedit semua dunia yang sudah kamu buat. Tapi, jangan melakukan keduanya sekaligus.</string> <!-- Generated by Automatic String Resource Translation
 --><!--          https://asrt.gluege.boerde.de            
 -->
 </resources>

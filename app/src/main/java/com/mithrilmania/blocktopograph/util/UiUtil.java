@@ -19,11 +19,14 @@ import androidx.core.graphics.ColorUtils;
 import androidx.databinding.DataBindingUtil;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.block.ListingBlock;
 import com.mithrilmania.blocktopograph.databinding.GeneralWaitBinding;
 import com.mithrilmania.blocktopograph.map.Biome;
+
+import java.util.WeakHashMap;
 
 
 public final class UiUtil {
@@ -141,5 +144,55 @@ public final class UiUtil {
 
     public static int dpToPxInt(@NonNull Context context, int dp) {
         return (int) (context.getResources().getDisplayMetrics().density * dp);
+    }
+
+    private static final android.util.SparseArray<GeneralWaitBinding> sBindings = new android.util.SparseArray<>();
+
+    public static AlertDialog buildProgressDialog(
+            @NonNull Context context, @StringRes int text,
+            @Nullable DialogInterface.OnCancelListener onCancelListener) {
+
+        GeneralWaitBinding binding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.general_wait, null, false
+        );
+        binding.setText(text);
+        binding.indeterminateBar.setVisibility(View.GONE);
+        binding.progressBar.setVisibility(View.VISIBLE);
+        binding.progressText.setVisibility(View.VISIBLE);
+
+        AlertDialog dialog = new AlertDialog.Builder(context)
+                .setView(binding.getRoot())
+                .setCancelable(onCancelListener != null)
+                .create();
+
+        if (onCancelListener != null) {
+            dialog.setOnCancelListener(onCancelListener);
+        } else {
+            dialog.setCancelable(false);
+        }
+        dialog.setCanceledOnTouchOutside(false);
+
+        sBindings.put(dialog.hashCode(), binding);
+        return dialog;
+    }
+
+    public static void updateProgress(@Nullable AlertDialog dialog, int progress) {
+        if (dialog == null) return;
+        GeneralWaitBinding binding = sBindings.get(dialog.hashCode());
+        if (binding == null) return;
+
+        View decor = dialog.getWindow() != null ? dialog.getWindow().getDecorView() : null;
+        if (decor == null) return;
+
+        decor.post(() -> {
+            if (!dialog.isShowing()) return;
+            binding.progressBar.setProgress(progress);
+            binding.progressText.setText(String.format("%.1f%%", progress / 10f));
+        });
+    }
+
+    public static void releaseDialog(@Nullable AlertDialog dialog) {
+        if (dialog != null) sBindings.remove(dialog.hashCode());
     }
 }

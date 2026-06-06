@@ -17,6 +17,7 @@ import com.mithrilmania.blocktopograph.util.UiUtil;
 import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Arrays;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -95,11 +96,106 @@ class AnalyzeTask extends AsyncTask<Void, Void, Rect> {
 
         // Iterate over all items.
         try {
-            db.put(new byte[]{0, 1, 2, 3, 0, 1, 2, 3, 118}, new byte[]{0});
+//            db.put(new byte[]{0, 1, 2, 3, 0, 1, 2, 3, 118}, new byte[]{0});
             Iterator iterator = db.iterator();
             boolean cancelled = false;
             int loopCount = 0;
+            byte[] digp = "digp".getBytes();
+            byte[] key;
+            int x;
+            int z;
+            int dimId;
             loop:
+//            for (iterator.seekToFirst(); iterator.isValid(); iterator.next(), loopCount++) {
+            for (iterator.seek(digp); iterator.isValid(); iterator.next(), loopCount++) {
+
+                if (isCancelled()) {
+                    cancelled = true;
+                    break;
+                }
+
+                // Is it a key for a chunk of current dim's version record?
+                key = iterator.getKey();
+                if (key.length < 4
+                        || key[0] != digp[0]
+                        || key[1] != digp[1]
+                        || key[2] != digp[2]
+                        || key[3] != digp[3]) {
+                    break;
+                }
+//                if (key.length != 12 && key.length != 16) continue;
+//                if (key[0] != 'd' || key[1] != 'i' || key[2] != 'g' || key[3] != 'p') continue;
+
+                x = (key[4] & 0xFF) | ((key[5] & 0xFF) << 8) | ((key[6] & 0xFF) << 16) | ((key[7] & 0xFF) << 24);
+
+                z = (key[8] & 0xFF) | ((key[9] & 0xFF) << 8) | ((key[10] & 0xFF) << 16) | ((key[11] & 0xFF) << 24);
+                if (key.length == 16) {
+                    dimId = (key[12] & 0xFF) | ((key[13] & 0xFF) << 8) | ((key[14] & 0xFF) << 16) | ((key[15] & 0xFF) << 24);
+                } else {
+                    dimId = 0;
+                }
+
+                if (dimId != dimension.id) continue;
+//                if (key.length != verKeyLenOfDim) continue;
+
+//                if (key[verKeyLenOfDim - 1] != (byte) 0x76) continue;
+////                ByteBuffer byteBuffer = ByteBuffer.wrap(key);
+////                byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+////                int x = byteBuffer.getInt();
+////                int z = byteBuffer.getInt();
+//                int x = (key[0] & 0xFF) | ((key[1] & 0xFF) << 8) | ((key[2] & 0xFF) << 16) | ((key[3] & 0xFF) << 24);
+//                int z = (key[4] & 0xFF) | ((key[5] & 0xFF) << 8) | ((key[6] & 0xFF) << 16) | ((key[7] & 0xFF) << 24);
+//                // Wrong dim.
+////                if (verKeyLenOfDim == 13 && dimension.id != byteBuffer.getInt()) continue;
+//                if (verKeyLenOfDim == 13) {
+//                    int dimId = (key[8] & 0xFF) | ((key[9] & 0xFF) << 8) | ((key[10] & 0xFF) << 16) | ((key[11] & 0xFF) << 24);
+//                    if (dimension.id != dimId) continue;
+//                }
+//                byte[] value = iterator.getValue();
+//                Version version = Version.getVersion(value);
+//                // Record unsupported stuff and skip.
+//                switch (version) {
+//                    case ERROR:
+//                    case NULL:
+//                        hasWrongChunks = true;
+//                        continue loop;
+//                    case OLD_LIMITED:
+//                        hasOldChunks = true;
+//                        continue loop;
+//                }
+
+                if (rect != null) {
+                    if (x < rect.left) rect.left = x;
+                    else if (x > rect.right) rect.right = x;
+                    if (z < rect.top) rect.top = z;
+                    else if (z > rect.bottom) rect.bottom = z;
+                    if (rect.right - rect.left > PicerFragment.MAX_LENGTH
+                            || rect.bottom - rect.top > PicerFragment.MAX_LENGTH
+                            || loopCount % 36 == 0 && (rect.right - rect.left) * (rect.bottom - rect.top) > PicerFragment.MAX_AREA)
+                        break;
+                } else {
+                    rect = new Rect(x, z, x, z);
+                }
+
+                // Add the chunk to area list.
+//                add:
+//                {
+//                    for (Area area : areas) {
+//                        // Try add to existing areas.
+//                        if (area.add(x, z)) break add;
+//                    }
+//                    // Failed then create new.
+//                    areas.add(new Area(x, z));
+//                }
+//                // As more chunks were read maybe we can merge more of them.
+//                if (loopCount > 16) Area.absMergeList(areas);
+            }
+            /// //////////
+
+        if(rect == null){
+            byte[] value;
+            Version version;
+            loop1:
             for (iterator.seekToFirst(); iterator.isValid(); iterator.next(), loopCount++) {
 
                 if (isCancelled()) {
@@ -108,26 +204,27 @@ class AnalyzeTask extends AsyncTask<Void, Void, Rect> {
                 }
 
                 // Is it a key for a chunk of current dim's version record?
-                byte[] key = iterator.getKey();
+                key = iterator.getKey();
                 if (key.length != verKeyLenOfDim) continue;
                 if (key[verKeyLenOfDim - 1] != (byte) 0x76) continue;
-                ByteBuffer byteBuffer = ByteBuffer.wrap(key);
-                byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
-                int x = byteBuffer.getInt();
-                int z = byteBuffer.getInt();
+                x = (key[0] & 0xFF) | ((key[1] & 0xFF) << 8) | ((key[2] & 0xFF) << 16) | ((key[3] & 0xFF) << 24);
+                z = (key[4] & 0xFF) | ((key[5] & 0xFF) << 8) | ((key[6] & 0xFF) << 16) | ((key[7] & 0xFF) << 24);
                 // Wrong dim.
-                if (verKeyLenOfDim == 13 && dimension.id != byteBuffer.getInt()) continue;
-                byte[] value = iterator.getValue();
-                Version version = Version.getVersion(value);
+                if (verKeyLenOfDim == 13) {
+                    dimId = (key[8] & 0xFF) | ((key[9] & 0xFF) << 8) | ((key[10] & 0xFF) << 16) | ((key[11] & 0xFF) << 24);
+                    if (dimension.id != dimId) continue;
+                }
+                value = iterator.getValue();
+                version = Version.getVersion(value);
                 // Record unsupported stuff and skip.
                 switch (version) {
                     case ERROR:
                     case NULL:
                         hasWrongChunks = true;
-                        continue loop;
+                        continue loop1;
                     case OLD_LIMITED:
                         hasOldChunks = true;
-                        continue loop;
+                        continue loop1;
                 }
 
                 if (rect != null) {
@@ -156,6 +253,8 @@ class AnalyzeTask extends AsyncTask<Void, Void, Rect> {
 //                // As more chunks were read maybe we can merge more of them.
 //                if (loopCount > 16) Area.absMergeList(areas);
             }
+        }
+
             iterator.close();
             if (cancelled) return null;
         } catch (Throwable e) {
@@ -178,8 +277,9 @@ class AnalyzeTask extends AsyncTask<Void, Void, Rect> {
         if (rect != null) {
             rect.left *= 16;
             rect.top *= 16;
-            rect.right *= 16 + 15;
-            rect.bottom *= 16 + 15;
+//            rect.right *= 16 + 15;
+            rect.right = rect.right * 16 + 15;
+            rect.bottom =rect.bottom * 16 + 15;
         }
         return rect;
     }

@@ -78,6 +78,7 @@ public final class ChBiomeFragment extends DialogFragment {
                 .setTitle(R.string.map_edit_func_chbiome)
                 .setPositiveButton(android.R.string.ok, this::onClickOk)
                 .setNegativeButton(android.R.string.cancel, null)
+                .setMessage(R.string.warn_edit_biome)
                 .create();
     }
 

@@ -1,7 +1,10 @@
 package com.mithrilmania.blocktopograph;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.os.Build;
 import android.util.LruCache;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -10,12 +13,21 @@ import com.litl.leveldb.Iterator;
 import com.mithrilmania.blocktopograph.block.BlockRegistry;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.ChunkTag;
+import com.mithrilmania.blocktopograph.chunk.NBTChunkData;
 import com.mithrilmania.blocktopograph.chunk.Version;
 import com.mithrilmania.blocktopograph.map.Dimension;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.lang.ref.WeakReference;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -47,7 +59,7 @@ public class WorldData {
         return new String(hexChars);
     }
 
-    private static byte[] getChunkDataKey(int x, int z, ChunkTag type, Dimension dimension, byte subChunk, boolean asSubChunk) {
+    public static byte[] getChunkDataKey(int x, int z, ChunkTag type, Dimension dimension, byte subChunk, boolean asSubChunk) {
         if (dimension == Dimension.OVERWORLD) {
             byte[] key = new byte[asSubChunk ? 10 : 9];
             System.arraycopy(getReversedBytes(x), 0, key, 0, 4);
@@ -66,7 +78,7 @@ public class WorldData {
         }
     }
 
-    private static byte[] getReversedBytes(int i) {
+    public static byte[] getReversedBytes(int i) {
         return new byte[]{
                 (byte) i,
                 (byte) (i >> 8),
@@ -102,25 +114,56 @@ public class WorldData {
         for (File dbEntry : dbFile.listFiles()) {
             Log.d(this, "File in db: " + dbEntry.getAbsolutePath());
         }
+            checkAndCreateLockFile(dbFile);
         this.db = new DB(dbFile);
 
 
     }
 
+    private void checkAndCreateLockFile(File dbFile) throws WorldDataLoadException {
+        File lockFile = new File(dbFile, "LOCK");
+
+        if (!lockFile.exists()) {
+            Log.d(this, "LOCK file not found, creating...");
+            try {
+                if (!lockFile.createNewFile()) {
+                    throw new WorldDataLoadException("Failed to create LOCK file: createNewFile() returned false");
+                }
+                if (!lockFile.setReadable(true, false)) {
+                    Log.d(this, "Failed to set LOCK file readable");
+                }
+                if (!lockFile.setWritable(true, false)) {
+                    Log.d(this, "Failed to set LOCK file writable");
+                }
+                Log.d(this, "LOCK file created successfully: " + lockFile.getAbsolutePath());
+            } catch (IOException e) {
+                throw new WorldDataLoadException("Failed to create LOCK file: " + e.getMessage());
+            }
+        } else {
+            Log.d(this, "LOCK file already exists: " + lockFile.getAbsolutePath());
+        }
+    }
     //open db to make it available for this app
     public void openDB() throws WorldDBException {
-        if (this.db == null)
+        if (this.db == null) {
             throw new WorldDBException("DB is null!!! (db is not loaded probably)");
-
-        if (this.db.isClosed()) {
-            try {
-                this.db.open();
-            } catch (Exception e) {
-
-                throw new WorldDBException("DB could not be opened! " + e.getMessage());
-            }
         }
 
+        synchronized (dbLock) {
+            if (this.db.isClosed()) {
+                try {
+                    checkAndCreateLockFile(this.db.getPath());
+                    this.db.open();
+                    dbLock.notifyAll();
+                } catch (Exception e) {
+                    String msg = e.getMessage();
+                    if(msg != null && msg.contains("Permission denied")){
+                        Log.d(this,"Permission denied");
+                    }
+                    throw new WorldDBException("DB could not be opened! " + msg);
+                }
+            }
+        }
     }
 
     //close db to make it available for other apps (Minecraft itself!)
@@ -135,17 +178,90 @@ public class WorldData {
             e.printStackTrace();
         }
     }
+    private final Object dbLock = new Object();
+    public byte[] getChunkData(int x, int z, ChunkTag type,
+                               Dimension dimension, byte subChunk,
+                               boolean asSubChunk)
+            throws WorldDBException, WorldDBLoadException {
 
-    public byte[] getChunkData(int x, int z, ChunkTag type, Dimension dimension, byte subChunk, boolean asSubChunk) throws WorldDBException, WorldDBLoadException {
+        synchronized (dbLock) {
+            while (db == null || db.isClosed()) {
+                try {
+                    Log.d("Blocktopo", "DB closed, waiting for open...");
+                    dbLock.wait();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new WorldDBException("Interrupted while waiting for DB");
+                }
+            }
 
-        //ensure that the db is opened
+            byte[] chunkKey = getChunkDataKey(x, z, type, dimension, subChunk, asSubChunk);
+            return db.get(chunkKey);
+        }
+    }
+    public byte[] getDataWithKey(ByteBuffer key) throws WorldDBException {
         this.openDB();
+        return db.get(key);
+    }
+    public List<byte[]> findKeysWithPrefix(byte[] prefix) {
+        List<byte[]> result = new ArrayList<>();
 
-        byte[] chunkKey = getChunkDataKey(x, z, type, dimension, subChunk, asSubChunk);
-        //Log.d("Getting cX: "+x+" cZ: "+z+ " with key: "+bytesToHex(chunkKey, 0, chunkKey.length));
-        return db.get(chunkKey);
+        byte[] limit = nextPrefix(prefix);
+        Iterator iterator = db.iterator();;
+        try {
+            iterator.seek(prefix);
+
+            while (iterator.isValid()) {
+                byte[] key = iterator.getKey();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                }
+                if (limit != null && compareBytes(key, limit) >= 0) {
+                    break;
+                }
+
+                if (startsWith(key, prefix)) {
+                    result.add(key.clone());
+                }
+
+                iterator.next();
+            }
+        } finally {
+            if (iterator != null) {
+                iterator.close();
+            }
+        }
+        return result;
+    }
+    private static byte[] nextPrefix(byte[] prefix) {
+        byte[] next = prefix.clone();
+
+        for (int i = next.length - 1; i >= 0; i--) {
+            int b = (next[i] & 0xFF) + 1;
+            if (b <= 0xFF) {
+                next[i] = (byte) b;
+                return next;
+            }
+            next[i] = 0;
+        }
+
+        return null;
+    }
+    private static boolean startsWith(byte[] key, byte[] prefix) {
+        if (key.length < prefix.length) return false;
+        for (int i = 0; i < prefix.length; i++) {
+            if (key[i] != prefix[i]) return false;
+        }
+        return true;
     }
 
+    private static int compareBytes(byte[] a, byte[] b) {
+        int len = Math.min(a.length, b.length);
+        for (int i = 0; i < len; i++) {
+            int cmp = (a[i] & 0xFF) - (b[i] & 0xFF);
+            if (cmp != 0) return cmp;
+        }
+        return a.length - b.length;
+    }
     public void writeChunkData(int x, int z, ChunkTag type, Dimension dimension, byte subChunk, boolean asSubChunk, byte[] chunkData) throws WorldDBException {
         //ensure that the db is opened
         this.openDB();
@@ -158,6 +274,19 @@ public class WorldData {
         this.openDB();
 
         db.delete(getChunkDataKey(x, z, type, dimension, subChunk, asSubChunk));
+    }
+    public void deleteKey(byte[] key) throws WorldDBException {
+        this.openDB();
+        db.delete(key);
+    }
+    public void deleteEntityOfChunk(byte[] digpKey) throws WorldDBException {
+        this.openDB();
+        byte[] digpValue = db.get(digpKey);
+        List<byte[]> entityActorKeys = NBTChunkData.parseDigpValue(digpValue);
+        for(byte[] entityActorKey : entityActorKeys){
+            db.delete(entityActorKey);
+        }
+        db.delete(digpKey);
     }
 
     public Chunk getChunk(int cX, int cZ, Dimension dimension, boolean createIfMissing, Version createOfVersion) {
@@ -188,19 +317,30 @@ public class WorldData {
     }
 
     public List<String> getDBKeysStartingWith(String startWith) {
-        Iterator it = db.iterator();
+//        Iterator it = db.iterator();
+//
+//        ArrayList<String> items = new ArrayList<>();
+//        for (it.seekToFirst(); it.isValid(); it.next()) {
+//            byte[] key = it.getKey();
+//            if (key == null) continue;
+//            String keyStr = new String(key);
+//            if (keyStr.startsWith(startWith)) items.add(keyStr);
+//        }
+//        it.close();
+        byte[] prefixBytes = startWith.getBytes(java.nio.charset.StandardCharsets.UTF_8);
 
-        ArrayList<String> items = new ArrayList<>();
-        for (it.seekToFirst(); it.isValid(); it.next()) {
-            byte[] key = it.getKey();
-            if (key == null) continue;
-            String keyStr = new String(key);
-            if (keyStr.startsWith(startWith)) items.add(keyStr);
+        List<byte[]> byteKeys = findKeysWithPrefix(prefixBytes);
+
+        List<String> items = new ArrayList<>();
+        for (byte[] keyBytes : byteKeys) {
+            items.add(new String(keyBytes, java.nio.charset.StandardCharsets.UTF_8));
         }
-        it.close();
+
 
         return items;
     }
+
+
 
     private static class ChunkCache extends LruCache<Key, Chunk> {
 

@@ -86,9 +86,9 @@ public class SearchAndReplaceFragment extends DialogFragment {
             }
             //mBinding.cbIgsub.setChecked(cfg.ignoreSubId);
         } else {
-            setBlockToItem(mBinding.searchBlockAny, ListingBlock.B_2_GRASS);
+            setBlockToItem(mBinding.searchBlockAny, ListingBlock.B_2_GRASS_BLOCK);
             setBlockToItem(mBinding.searchBlockBg, ListingBlock.B_0_AIR);
-            setBlockToItem(mBinding.searchBlockFg, ListingBlock.B_2_GRASS);
+            setBlockToItem(mBinding.searchBlockFg, ListingBlock.B_2_GRASS_BLOCK);
             setBlockToItem(mBinding.replaceBlockAny, ListingBlock.B_20_GLASS);
             setBlockToItem(mBinding.replaceBlockFg, ListingBlock.B_20_GLASS);
             setBlockToItem(mBinding.replaceBlockBg, ListingBlock.B_9_WATER);

@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import com.mithrilmania.blocktopograph.Log;
+import com.mithrilmania.blocktopograph.WorldActivity;
 import com.mithrilmania.blocktopograph.WorldActivityInterface;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.NBTChunkData;
@@ -30,15 +31,17 @@ public class MarkerAsyncTask extends AsyncTask<Void, AbstractMarker, Void> {
     private final int minChunkX, minChunkZ, maxChunkX, maxChunkZ;
     private final Dimension dimension;
 
+    private String type;
+
 
     public MarkerAsyncTask(WorldActivityInterface worldProvider, int minChunkX, int minChunkZ,
-                           int maxChunkX, int maxChunkZ, Dimension dimension) {
+                           int maxChunkX, int maxChunkZ, Dimension dimension,String type) {
         this.minChunkX = minChunkX;
         this.minChunkZ = minChunkZ;
         this.maxChunkX = maxChunkX;
         this.maxChunkZ = maxChunkZ;
         this.dimension = dimension;
-
+        this.type = type;
         this.worldProvider = new WeakReference<>(worldProvider);
     }
 
@@ -48,8 +51,11 @@ public class MarkerAsyncTask extends AsyncTask<Void, AbstractMarker, Void> {
         int cX, cZ;
         for (cZ = minChunkZ; cZ < maxChunkZ; cZ++) {
             for (cX = minChunkX; cX < maxChunkX; cX++) {
-                loadEntityMarkers(cX, cZ);
-                loadTileEntityMarkers(cX, cZ);
+                if(type.equals(MCTileProvider.EntitySwitch)){
+                    loadEntityMarkers(cX, cZ);
+                }else{
+                    loadTileEntityMarkers(cX, cZ);
+                }
                 loadCustomMarkers(cX, cZ);
             }
         }
@@ -78,17 +84,25 @@ public class MarkerAsyncTask extends AsyncTask<Void, AbstractMarker, Void> {
                     Tag idTag = compoundTag.getChildTagByKey("id");
                     if (idTag instanceof IntTag) {
                         Integer id = ((IntTag) idTag).getValue();
-                        if (id != null) e = Entity.getEntity(id);
+                        if (id != null){
+                            int byteId = id.byteValue();
+                            e = Entity.getEntity(byteId);
+                        }
+
                     }
                 }
                 if (e == null) {
                     Tag idenTag = compoundTag.getChildTagByKey("identifier");
+
                     if (idenTag instanceof StringTag) {
                         String identifier = ((StringTag) idenTag).getValue();
                         if (identifier != null) e = Entity.getEntity(identifier);
                     }
                 }
                 if (e == null) e = Entity.UNKNOWN;
+                if (e == Entity.ITEM){
+//                    i =
+                }
                 List<Tag> pos = ((ListTag) compoundTag.getChildTagByKey("Pos")).getValue();
                 float xf = ((FloatTag) pos.get(0)).getValue();
                 float yf = ((FloatTag) pos.get(1)).getValue();
@@ -146,7 +160,6 @@ public class MarkerAsyncTask extends AsyncTask<Void, AbstractMarker, Void> {
     @Override
     protected void onProgressUpdate(AbstractMarker... values) {
         WorldActivityInterface wai = worldProvider.get();
-
         // Some of the marks may have been added to screen already, remove first.
         // TODO: Why not just skipping them?
         for (AbstractMarker marker : values) {
@@ -162,7 +175,8 @@ public class MarkerAsyncTask extends AsyncTask<Void, AbstractMarker, Void> {
             if (marker.view != null) {
                 ViewParent par = marker.view.getParent();
                 if (par instanceof ViewGroup)
-                    ((ViewGroup) par).removeView(marker.view);
+//                    ((ViewGroup) par).removeView(marker.view);
+                    continue;
             }
 
             wai.addMarker(marker);

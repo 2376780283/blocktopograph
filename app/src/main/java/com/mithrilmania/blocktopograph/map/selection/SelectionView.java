@@ -326,7 +326,6 @@ public class SelectionView extends FrameLayout {
             // density and tileView's scale.
             float amp = 0.2f;
 
-            //Log.d(this, "" + distOnScreen + "," + mDragCurrentPos + "," + mDragBeginPosCorr);
 
             // If a previous round failed to move at least 1 block's wide,
             // it would accumulate the distance till in a future round we could move.

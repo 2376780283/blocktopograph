@@ -15,6 +15,11 @@ public final class VoidChunk extends Chunk {
     }
 
     @Override
+    public boolean isData3d() {
+        return false;
+    }
+
+    @Override
     public boolean supportsBlockLightValues() {
         return false;
     }
@@ -36,7 +41,7 @@ public final class VoidChunk extends Chunk {
 
     @Override
     public int getBiome(int x, int z) {
-        return 0;
+        return 127;
     }
 
     @Override
@@ -86,5 +91,10 @@ public final class VoidChunk extends Chunk {
 
     @Override
     public void save() {
+    }
+
+    @Override
+    public int get3dBiome(int x, int y, int z) {
+        return 127;
     }
 }

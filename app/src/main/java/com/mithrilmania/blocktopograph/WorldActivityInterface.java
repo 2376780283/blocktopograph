@@ -21,7 +21,7 @@ public interface WorldActivityInterface {
 
     boolean getShowGrid();
 
-    boolean getShowMarkers();
+//    boolean getShowMarkers();
 
     void onFatalDBError(WorldData.WorldDBException worldDB);
 
@@ -38,4 +38,8 @@ public interface WorldActivityInterface {
     void changeMapType(MapType mapType, Dimension dimension);
 
     void openChunkNBTEditor(final int chunkX, final int chunkZ, final NBTChunkData nbtChunkData, final ViewGroup viewGroup);
+
+    boolean getShowEntityMarkers();
+
+    boolean getShowTileEntityMarkers();
 }

@@ -24,7 +24,7 @@ public class BlockLightRenderer implements MapRenderer {
 
         for (z = 0; z < 16; z++) {
             for (x = 0; x < 16; x++) {
-                for (y = 0; y < yLim; y++) {
+                for (y = -64; y < yLim; y++) {
                     light[(z * rW) + x] += chunk.getBlockLightValue(x, y, z) & 0xff;
                 }
             }

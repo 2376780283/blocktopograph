@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
@@ -19,7 +20,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 public class WorldItemListActivity extends AppCompatActivity {
 
@@ -61,7 +65,7 @@ public class WorldItemListActivity extends AppCompatActivity {
      */
     private boolean mTwoPane;
     private WorldItemRecyclerViewAdapter worldItemAdapter;
-
+    PathNotePrefs prefs;
     /**
      * Checks if the app has permission to write to device storage
      * <p>
@@ -154,10 +158,17 @@ public class WorldItemListActivity extends AppCompatActivity {
         worldItemAdapter = new WorldItemRecyclerViewAdapter();
         recyclerView.setAdapter(this.worldItemAdapter);
 
+        File sd = Environment.getExternalStorageDirectory();
+        File default_location = new File(sd, "Blocktopograph/worlds");
+
         if (verifyStoragePermissions(this)) {
             //directly open the world list if we already have access
+            if(!default_location.exists()){
+                default_location.mkdirs();
+            }
             worldItemAdapter.enable();
         }
+        prefs = new PathNotePrefs(this);
 
 
     }
@@ -241,6 +252,9 @@ public class WorldItemListActivity extends AppCompatActivity {
             case R.id.action_about:
                 type = Log.ANA_PARAM_MAINACT_MENU_TYPE_ABOUT;
                 break;
+            case R.id.action_add_world_list:
+                type = Log.ANA_PARAM_MAINACT_MENU_ADD_OPEN;
+                break;
             default:
                 type = 0;
         }
@@ -249,6 +263,66 @@ public class WorldItemListActivity extends AppCompatActivity {
 
         //some text pop-up dialogs, some with simple HTML tags.
         switch (item.getItemId()) {
+            case R.id.action_add_world_list: {
+                final EditText listPathText = new EditText(WorldItemListActivity.this);
+                listPathText.setHint(R.string.storage_path_here);
+                final EditText remarkText = new EditText(WorldItemListActivity.this);
+                remarkText.setHint(R.string.remark_here);
+                LinearLayout layout = new LinearLayout(this);
+                layout.setOrientation(LinearLayout.VERTICAL);
+                layout.setPadding(50, 30, 50, 0);
+                layout.addView(listPathText);
+                layout.addView(remarkText);
+
+                WorldItemListActivity activity = this;
+                new AlertDialog.Builder(WorldItemListActivity.this)
+                        .setTitle(R.string.add_world_list_directory)
+                        .setView(layout)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                Editable pathEditable = listPathText.getText();
+                                String path = (pathEditable == null || pathEditable.toString().equals("")) ? null : pathEditable.toString();
+                                if (path == null) {
+                                    return;//no path, no world
+                                }
+                                File worldListFolder = new File(path);
+                                File filePath2;
+                                if(path.contains("Android/data")){
+                                    String path2 = path.replace("Android/data","Android/\u200Bdata");
+                                    filePath2 = new File(path2);
+                                    if(filePath2.exists()){
+                                        worldListFolder = filePath2;
+                                        path = path2;
+                                    }
+                                }
+                                if (worldListFolder.exists()) {
+                                    String remark = remarkText.getText().toString();
+                                    String oldNote = prefs.getNote(path);
+                                    if (oldNote == null) {
+                                        prefs.add(path, remark);
+//                                        Toast.makeText(activity, R.string.general_done, Toast.LENGTH_SHORT).show();
+                                        new AlertDialog.Builder(activity)
+                                                .setTitle(R.string.general_done)
+                                                .setMessage(getString(R.string.add_world_list_directory_done,path,remark)+getString(R.string.list_directory_delete_tip))
+                                                .show();
+                                        worldItemAdapter.loadWorldList();
+                                    } else {
+                                        prefs.removeByPath(path);
+//                                        Toast.makeText(activity, R.string.general_delete, Toast.LENGTH_SHORT).show();
+                                        new AlertDialog.Builder(activity)
+                                                .setTitle(R.string.general_delete)
+                                                .setMessage(getString(R.string.add_world_list_directory_done,path,oldNote))
+                                                .show();
+                                        worldItemAdapter.loadWorldList();
+                                    }
+                                } else {
+                                    Toast.makeText(activity, R.string.listpath_is_not_exist, Toast.LENGTH_SHORT).show();
+                                }
+
+                            }
+                        }).show();
+                return true;
+            }
             case R.id.action_open: {
                 if (worldItemAdapter.isDisabled()) {
                     Snackbar.make(getWindow().getDecorView(), R.string.no_read_write_access, Snackbar.LENGTH_SHORT).show();
@@ -429,23 +503,61 @@ public class WorldItemListActivity extends AppCompatActivity {
             marks = new ArrayList<>(4);
 
             File sd = Environment.getExternalStorageDirectory();
+            Log.d("sd","dir: "+sd);
+
+//            File sd = null;
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//                sd = Environment.getStorageDirectory();
+//            }else{
+//                 sd = Environment.getDataDirectory();
+//            }
+
+            saveFolders.add(new File(sd, "Blocktopograph/worlds"));
+            marks.add(getString(R.string.world_mark_default));
 
             saveFolders.add(new File(sd, "games/com.mojang/minecraftWorlds"));
-            marks.add(null);
+            marks.add(getString(R.string.world_mark_old_version));
+
+            File internationalPath = new File(sd, "Android/\u200Bdata/com.mojang.minecraftpe/files/games/com.mojang/minecraftWorlds");
+            File internationalPath2 = new File(sd, "Android/data/com.mojang.minecraftpe/files/games/com.mojang/minecraftWorlds");
+            if (internationalPath.exists()) {
+                saveFolders.add(internationalPath);
+                marks.add(null);
+//                marks.add(getString(R.string.world_mark_international));
+            }else if(internationalPath2.exists()){
+                saveFolders.add(internationalPath2);
+                marks.add(null);
+//                marks.add(getString(R.string.world_mark_international));
+            }
 
             //noinspection ResultOfMethodCallIgnored
-            new File(sd, "Android/data").listFiles(
-                    file -> {
-                        if (file.getName().startsWith("com.netease")) {
-                            File worldsFolder = new File(file, "files/minecraftWorlds");
-                            if (worldsFolder.exists()) {
-                                saveFolders.add(worldsFolder);
-                                marks.add(getString(R.string.world_mark_neteas));
-                            }
-                        }
-                        return false;
-                    }
-            );
+//            new File(sd, "Android/\u200Bdata").listFiles(
+//                    file -> {
+//                        if (file.getName().startsWith("com.netease")) {
+//                            File worldsFolder = new File(file, "files/minecraftWorlds");
+//                            if (worldsFolder.exists()) {
+//                                saveFolders.add(worldsFolder);
+//                                marks.add(getString(R.string.world_mark_neteas));
+//                            }
+//                        }
+//                        return false;
+//                    }
+//            );
+
+            Map<String, String> addedListPath = prefs.getAll();
+            for (Map.Entry<String, String> entry : addedListPath.entrySet()) {
+                String pathString = entry.getKey();
+
+                File path = new File(pathString);
+                String note = entry.getValue();
+                if (path.exists()) {
+                    Log.d(this,"Folder存在: "+note);
+                    saveFolders.add(path);
+                    marks.add("["+note+"]");
+                }
+
+
+            }
 
             for (int i = 0, saveFoldersSize = saveFolders.size(); i < saveFoldersSize; i++) {
                 File dir = saveFolders.get(i);

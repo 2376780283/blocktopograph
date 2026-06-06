@@ -1,13 +1,22 @@
 package com.mithrilmania.blocktopograph.map;
 
+import static com.mithrilmania.blocktopograph.map.Biome.getBiome;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.util.DisplayMetrics;
 import android.view.GestureDetector;
@@ -31,6 +40,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -44,7 +54,9 @@ import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.World;
 import com.mithrilmania.blocktopograph.WorldActivityInterface;
+import com.mithrilmania.blocktopograph.block.Block;
 import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
+import com.mithrilmania.blocktopograph.block.ListingBlock;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.ChunkTag;
 import com.mithrilmania.blocktopograph.chunk.NBTChunkData;
@@ -71,16 +83,19 @@ import com.mithrilmania.blocktopograph.util.math.DimensionVector3;
 import com.qozix.tileview.detail.DetailLevelManager;
 import com.qozix.tileview.markers.MarkerLayout;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -94,21 +109,25 @@ public class MapFragment extends Fragment {
     private static final String PREF_KEY_HAS_USED_SELECTION = "hasUsedSelection";
     private static final String KEY_HAS_DOUBLE_TAP = "hasDoubleTap";
     //static, remember choice while app is open.
-    private static Map<NamedBitmapProvider, BitmapChoiceListAdapter.NamedBitmapChoice> markerFilter = new HashMap<>();
+    private static Map<NamedBitmapProvider, BitmapChoiceListAdapter.NamedBitmapChoice> entityMarkerFilter = new LinkedHashMap<>();
+    private static Map<NamedBitmapProvider, BitmapChoiceListAdapter.NamedBitmapChoice> tileEntityMarkerFilter = new LinkedHashMap<>();
+    private boolean iconsLoaded = false;
+
 
     static {
+
+        //tile-entities are disabled by default
+        for (TileEntity v : TileEntity.values()) {
+            tileEntityMarkerFilter.put(v.getNamedBitmapProvider(),
+                    new BitmapChoiceListAdapter.NamedBitmapChoice(v, true));
+        }
         //entities are enabled by default
         for (Entity v : Entity.values()) {
             //skip things without a bitmap (dropped items etc.)
             //skip entities with placeholder ids (900+)
             if (v.sheetPos < 0 || v.id >= 900) continue;
-            markerFilter.put(v.getNamedBitmapProvider(),
+            entityMarkerFilter.put(v.getNamedBitmapProvider(),
                     new BitmapChoiceListAdapter.NamedBitmapChoice(v, true));
-        }
-        //tile-entities are disabled by default
-        for (TileEntity v : TileEntity.values()) {
-            markerFilter.put(v.getNamedBitmapProvider(),
-                    new BitmapChoiceListAdapter.NamedBitmapChoice(v, false));
         }
 
     }
@@ -137,6 +156,101 @@ public class MapFragment extends Fragment {
      * Data binding of this fragment view.
      */
     private MapFragmentBinding mBinding;
+
+    public void captureMapWithoutFAB() {
+        mBinding.fabMenu.setVisibility(View.INVISIBLE);
+        int v1 = mBinding.floatWindowContainer.getVisibility();
+        int v2 = mBinding.selectionBoard.getVisibility();
+        if(v1 == View.VISIBLE){
+            mBinding.floatWindowContainer.setVisibility(View.INVISIBLE);
+        }
+        if(v2 == View.VISIBLE){
+            mBinding.selectionBoard.setVisibility(View.INVISIBLE);
+        }
+
+        mBinding.getRoot().post(() -> {
+            View rootView = mBinding.getRoot();
+            rootView.setDrawingCacheEnabled(true);
+            rootView.buildDrawingCache();
+
+            Bitmap bitmap = Bitmap.createBitmap(rootView.getDrawingCache());
+            rootView.setDrawingCacheEnabled(false);
+
+            mBinding.fabMenu.setVisibility(View.VISIBLE);
+            if(v1 == View.VISIBLE){
+                mBinding.floatWindowContainer.setVisibility(View.VISIBLE);
+            }
+            if(v2 == View.VISIBLE){
+                mBinding.selectionBoard.setVisibility(View.VISIBLE);
+            }
+            saveBitmap(bitmap);
+        });
+    }
+    private File getUniqueFile(File directory, String fileName) {
+        File file = new File(directory, fileName);
+        if (!file.exists()) return file;
+
+        String name = fileName;
+        String ext = "";
+        int dot = fileName.lastIndexOf('.');
+        if (dot > 0) {
+            name = fileName.substring(0, dot);
+            ext = fileName.substring(dot);
+        }
+
+        int counter = 1;
+        while (file.exists()) {
+            file = new File(directory, name + "(" + counter + ")" + ext);
+            counter++;
+        }
+        return file;
+    }
+    private void saveBitmap(Bitmap bitmap) {
+        File picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File file = getUniqueFile(picturesDir, "map_" + System.currentTimeMillis() + ".png");
+
+        try (FileOutputStream out = new FileOutputStream(file)) {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+
+            MediaScannerConnection.scanFile(requireContext(),
+                    new String[]{file.getAbsolutePath()},
+                    new String[]{"image/png"}, null);
+
+            onBitmapSaved(file);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(requireContext(), "保存失败", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void onBitmapSaved(File file) {
+        if (file == null) {
+            Toast.makeText(requireContext(), R.string.general_failed, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Snackbar snackbar = Snackbar.make(
+                        requireActivity().getWindow().getDecorView(),
+                        "截图已保存",
+                        Snackbar.LENGTH_SHORT)
+                .setAction(R.string.general_share, v -> {
+                    Uri fileUri = FileProvider.getUriForFile(
+                            requireContext(),
+                            requireContext().getPackageName() + ".fileprovider",
+                            file
+                    );
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    shareIntent.setType("image/png");
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
+                    shareIntent.putExtra(Intent.EXTRA_TITLE, file.getName());
+                    shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                    requireContext().startActivity(
+                            Intent.createChooser(shareIntent, getString(R.string.share_picture_title)));
+                });
+        snackbar.show();
+    }
 
     @Override
     public void onPause() {
@@ -208,9 +322,7 @@ public class MapFragment extends Fragment {
 //                for (int z = 0; z < 16; z++)
 //                    chunk.setBlock(0, 6, z, 0, KnownBlockRepr.B_5_0_PLANKS_OAK.getRuntimeId());
 //                chunk.save();//world.getWorldData(), 0, 0, Dimension.OVERWORLD, 1);
-//                Log.d(this, "ok");
 //            } catch (Exception e) {
-//                Log.d(this, e);
 //            }
 //            return;
 //        }
@@ -458,7 +570,11 @@ public class MapFragment extends Fragment {
         });
         mBinding.fabMenuGpsPicer.setImageDrawable(
                 VectorDrawableCompat.create(resources, R.drawable.ic_menu_camera, null));
-
+        mBinding.fabMenuScreenshot.setOnClickListener(unusedView -> {
+            captureMapWithoutFAB();
+        });
+        mBinding.fabMenuScreenshot.setImageDrawable(
+                VectorDrawableCompat.create(resources, R.drawable.baseline_wallpaper_24, null));
         // Show the toolbar if the fab menu is opened
         mBinding.fabMenu.setOnMenuToggleListener(opened -> {
             WorldActivityInterface worldProvider = MapFragment.this.worldProvider.get();
@@ -800,7 +916,7 @@ public class MapFragment extends Fragment {
         long blockW = Math.round((tileView.getWidth() + marginX + marginX) / pixelsPerBlockW);
         long blockH = Math.round((tileView.getHeight() + marginZ + marginZ) / pixelsPerBlockL);
 
-        return new Object[]{blockX, blockX + blockW, blockZ, blockH, dimension};
+        return new Object[]{blockX, blockX + blockW, blockZ, blockZ + blockH, dimension};
     }
 
     /**
@@ -825,7 +941,10 @@ public class MapFragment extends Fragment {
         Activity act = getActivity();
         if (act == null) return;
 
-        TileEntity.loadIcons(act.getAssets());
+        if (!iconsLoaded) {
+            TileEntity.loadIcons(act.getAssets());
+            iconsLoaded = true;
+        }
 
         for (AbstractMarker abstractMarker : proceduralMarkers) {
             if (abstractMarker.equals(marker)) {
@@ -882,18 +1001,31 @@ public class MapFragment extends Fragment {
                 -0.5f, -0.5f);
     }
 
-    public void toggleMarkers() {
+    public void toggleEntityMarkers() {
         WorldActivityInterface worldProvider = this.worldProvider.get();
         if (worldProvider == null) return;
-        if (worldProvider.getShowMarkers()) {
-            resetTileView();
-        } else {
-            for (AbstractMarker marker : proceduralMarkers) {
-                if (staticMarkers.contains(marker)) continue;
-                removeMarker(marker);
-            }
-            //resetTileView();
-        }
+//        if (worldProvider.getShowEntityMarkers() || worldProvider.getShowTileEntityMarkers()) {
+        resetTileView();
+//        } else {
+//            for (AbstractMarker marker : proceduralMarkers) {
+//                if (staticMarkers.contains(marker)) continue;
+//                removeMarker(marker);
+//            }
+//            //resetTileView();
+//        }
+    }
+    public void toggleTileEntityMarkers() {
+        WorldActivityInterface worldProvider = this.worldProvider.get();
+        if (worldProvider == null) return;
+        //if (worldProvider.getShowTileEntityMarkers() || worldProvider.getShowTileEntityMarkers()) {
+        resetTileView();
+//        } else {
+//            for (AbstractMarker marker : proceduralMarkers) {
+//                if (staticMarkers.contains(marker)) continue;
+//                removeMarker(marker);
+//            }
+//            //resetTileView();
+//        }
     }
 
     private String[] getLongClickOptions() {
@@ -959,8 +1091,25 @@ public class MapFragment extends Fragment {
             return;
         }
 
+        Chunk chunk = world.getWorldData().getChunk(chunkXint,chunkZint,dim);
+        int y = chunk.getHeightMapValue(((int) worldX) & 15, ((int) worldZ) & 15);
+        Block block = chunk.getBlock(((int) worldX) & 15, y-1, ((int) worldZ) & 15);
+        Log.d(this,"getBlockType: "+block.getBlockType());
+        ListingBlock listingblock = ListingBlock.getBlock(block.getBlockType());
+        Log.d(this,"ListingB: "+listingblock);
+        if(listingblock == null){
+            listingblock = ListingBlock.getBlock("minecraft:air");
+        }
+        String blockName =getString(Objects.requireNonNull(listingblock).getNameResId());
+        int biomeId = world.getWorldData().getChunk(chunkXint,chunkZint,dim).getBiome(((int) worldX) & 15, ((int) worldZ) & 15) & 0xff;
+        Biome biome  = Biome.getBiome(biomeId);
+
         AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AppTheme_Floating))
-                .setTitle(getString(R.string.postion_2D_floats_with_chunkpos, worldX, worldZ, chunkXint, chunkZint))
+                .setTitle(getString(R.string.postion_2D_floats_with_chunkpos,(int) worldX,(int) worldZ, chunkXint, chunkZint)
+                        +" "+getString(R.string.height)+": "+y
+                        +" "+getString(R.string.block)+": "+blockName
+                        +" "+getString(R.string.biomes)+": "+getString(biome.nameResId)
+                )
                 .setItems(getLongClickOptions(), (dialog, which) -> {
 
 
@@ -1247,19 +1396,51 @@ public class MapFragment extends Fragment {
         minecraftTileProvider = null;
     }
 
-    public void openMarkerFilter() {
+    public void openEntityMarkerFilter() {
 
         final Activity activity = this.getActivity();
 
 
-        final List<BitmapChoiceListAdapter.NamedBitmapChoice> choices = new ArrayList<>(markerFilter.values());
+        final List<BitmapChoiceListAdapter.NamedBitmapChoice> choices = new ArrayList<>(entityMarkerFilter.values());
 
         //sort on names, nice for the user.
-        Collections.sort(choices, (a, b) -> a.namedBitmap.getNamedBitmapProvider().getBitmapDisplayName().compareTo(b.namedBitmap.getNamedBitmapProvider().getBitmapDisplayName()));
+        //Fuck sort
+        //Collections.sort(choices, (a, b) -> a.namedBitmap.getNamedBitmapProvider().getBitmapDisplayName().compareTo(b.namedBitmap.getNamedBitmapProvider().getBitmapDisplayName()));
 
 
         new AlertDialog.Builder(activity)
-                .setTitle(R.string.filter_markers)
+                .setTitle(R.string.filter_entity_markers)
+                .setAdapter(new BitmapChoiceListAdapter(activity, choices), null)
+                .setCancelable(true)
+                .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
+                    //save all the temporary states.
+                    for (BitmapChoiceListAdapter.NamedBitmapChoice choice : choices) {
+                        choice.enabled = choice.enabledTemp;
+                    }
+                    MapFragment.this.updateMarkerFilter();
+                })
+                .setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+                    //reset all the temporary states.
+                    for (BitmapChoiceListAdapter.NamedBitmapChoice choice : choices) {
+                        choice.enabledTemp = choice.enabled;
+                    }
+                })
+                .setOnCancelListener(dialogInterface -> {
+                    //reset all the temporary states.
+                    for (BitmapChoiceListAdapter.NamedBitmapChoice choice : choices) {
+                        choice.enabledTemp = choice.enabled;
+                    }
+                })
+                .show();
+    }
+    public void openTileEntityMarkerFilter() {
+
+        final Activity activity = this.getActivity();
+
+        final List<BitmapChoiceListAdapter.NamedBitmapChoice> choices = new ArrayList<>(tileEntityMarkerFilter.values());
+
+        new AlertDialog.Builder(activity)
+                .setTitle(R.string.filter_tile_entity_markers)
                 .setAdapter(new BitmapChoiceListAdapter(activity, choices), null)
                 .setCancelable(true)
                 .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
@@ -1290,19 +1471,39 @@ public class MapFragment extends Fragment {
         }
     }
 
-    public void filterMarker(AbstractMarker marker) {
-        WorldActivityInterface worldProvider = this.worldProvider.get();
-        BitmapChoiceListAdapter.NamedBitmapChoice choice = markerFilter.get(marker.getNamedBitmapProvider());
-        if (choice != null) {
-            marker.getView(this.getActivity()).setVisibility(
-                    (choice.enabled && marker.dimension == worldProvider.getDimension())
-                            ? View.VISIBLE : View.INVISIBLE);
-        } else {
-            marker.getView(this.getActivity())
-                    .setVisibility(marker.dimension == worldProvider.getDimension()
-                            ? View.VISIBLE : View.INVISIBLE);
+public void filterMarker(AbstractMarker marker) {
+    View markerView = marker.getView(this.getActivity());
+    WorldActivityInterface worldProvider = this.worldProvider.get();
+    Dimension currentDim = worldProvider.getDimension();
+    boolean sameDimension = marker.dimension == currentDim;
+
+    NamedBitmapProvider provider = marker.getNamedBitmapProvider();
+
+    boolean shouldBeVisible;
+
+    if (entityMarkerFilter.containsKey(provider)) {
+        BitmapChoiceListAdapter.NamedBitmapChoice choice = entityMarkerFilter.get(provider);
+        if(worldProvider.getShowEntityMarkers()) {
+            shouldBeVisible = sameDimension && choice.enabled;
+        }else{
+            shouldBeVisible = false;
         }
+
+    } else if (tileEntityMarkerFilter.containsKey(provider)) {
+        BitmapChoiceListAdapter.NamedBitmapChoice choice = tileEntityMarkerFilter.get(provider);
+        if(worldProvider.getShowTileEntityMarkers()){
+            shouldBeVisible = sameDimension && choice.enabled;
+        }else{
+            shouldBeVisible = false;
+        }
+
+
+    } else {
+        shouldBeVisible = sameDimension;
     }
+
+    markerView.setVisibility(shouldBeVisible ? View.VISIBLE : View.INVISIBLE);
+}
 
     public void refreshAfterEdit() {
         mBinding.tileView.getTileCanvasViewGroup().clear();
@@ -1318,6 +1519,7 @@ public class MapFragment extends Fragment {
             mBinding.tileView.getDetailLevelManager().setLevelType(worldProvider.getMapType());
 
             invalidateTileView();
+
         }
     }
 
@@ -1600,8 +1802,8 @@ public class MapFragment extends Fragment {
         protected Void doInBackground(Object... params) {
             long minX = (long) params[0],
                     maxX = (long) params[1],
-                    minY = (long) params[2],
-                    maxY = (long) params[3];
+                    minZ = (long) params[2],
+                    maxZ = (long) params[3];
             Dimension reqDim = (Dimension) params[4];
 
             CopyOnWriteArraySet<AbstractMarker> proceduralMarkers = owner.get().proceduralMarkers;
@@ -1611,7 +1813,7 @@ public class MapFragment extends Fragment {
                 // do not remove static markers
                 if (owner.get().staticMarkers.contains(p)) continue;
 
-                if (p.x < minX || p.x > maxX || p.y < minY || p.y > maxY || p.dimension != reqDim) {
+                if (p.x < minX || p.x > maxX || p.z < minZ || p.z > maxZ || p.dimension != reqDim) {
                     this.publishProgress(p);
                 }
             }

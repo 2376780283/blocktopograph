@@ -22,6 +22,8 @@ import com.mithrilmania.blocktopograph.map.Player;
 import com.mithrilmania.blocktopograph.util.math.DimensionVector3;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class LocatorPlayersFragment extends LocatorPageFragment {
 
@@ -119,26 +121,38 @@ public final class LocatorPlayersFragment extends LocatorPageFragment {
                 worldData.openDB();
                 DimensionVector3<Float> localPlayerPos = world.getPlayerPos();
                 String[] mlst = worldData.getNetworkPlayerNames();
-                Player[] players;
-                int offset;
-                if (localPlayerPos == null) {
-                    players = new Player[mlst.length];
-                    offset = 0;
-                } else {
-                    players = new Player[mlst.length + 1];
-                    offset = 1;
-                    players[0] = Player.localPlayer();
-                    players[0].setPosition(localPlayerPos);
+                List<Player> playerList = new ArrayList<>();
+//                Player[] players;
+//                int offset;
+//                if (localPlayerPos == null) {
+//                    players = new Player[mlst.length];
+//                    offset = 0;
+//                } else {
+//                    players = new Player[mlst.length + 1];
+//                    offset = 1;
+//                    players[0] = Player.localPlayer();
+//                    players[0].setPosition(localPlayerPos);
+//                }
+                if (localPlayerPos != null) {
+                    Player local = Player.localPlayer();
+                    local.setPosition(localPlayerPos);
+                    playerList.add(local);
                 }
-                for (int i = 0; i < mlst.length; i++) {
-                    Player player = Player.networkPlayer(mlst[i]);
+                for (String s : mlst) {
+                    DimensionVector3<Float> pos = null;
                     try {
-                        player.setPosition(world.getMultiPlayerPos(mlst[i]));
+                        pos = world.getMultiPlayerPos(s);
                     } catch (Exception e) {
                         Log.d(this, e);
                     }
-                    players[i + offset] = player;
+
+                    if (pos != null) {
+                        Player player = Player.networkPlayer(s);
+                        player.setPosition(pos);
+                        playerList.add(player);
+                    }
                 }
+                Player[] players = playerList.toArray(new Player[0]);
                 return players;
             } catch (Exception e) {
                 Log.d(this, e);

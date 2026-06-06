@@ -26,57 +26,9 @@
         Then choose a marker icon and a Y-coordinate.
         And then check if you can find it here!</string>
 
-    <string name="app_about">
-        This app is created by <b>Protol Lambda</b> (Link removed as he asked to),
-        contributed by
-        <a href="https://github.com/MithrilMania">@MithrilMania</a>,
-        <a href="https://github.com/flagmaggot">@flagmaggot</a>,
-        <a href="https://github.com/oO0oO0oO0o0o00">@MeowCat</a>,
-        <a href="https://github.com/MiemieMethod">@MiemieMethod</a>,
-        <a href="https://github.com/LordJunior">Manuel</a>,
-        ScrapperBox25, Tcbdxh and many others as well.\n\n
-        Available on Google Play.\n\n
-        Current active github repository:
-        <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph">github.com/oO0oO0oO0o0o00/blocktopograph</a>
-        Feel free to star or fork, help with the project or simply add your own language support.
-        <b>Your github contribution is welcomed!</b>
-        More information (including the roadmap, changelog and help-information) can be found at:
-        <a href="http://blocktopograph.protolambda.com">blocktopograph.protolambda.com</a>. \n
-        \n
-        Please make a backup of all your loved MCPE worlds in case of data-corruption!\n
-        NOTE: Minecraft might not load a whole world because of a single corrupt chunk of NBT!\n
-        \n
-            This app is built and tested for MCPE 1.9.x(beta), 1.8.x, 1.7.x, 1.6.x, 1.5.x, 1.4.x, 1.2.x, 1.1.x, 1.0.x, 0.16.x, 0.15.x, and 0.14.x\n
-            Older MCPE versions are not supported.\n
-        \n
-        \n
-        <i>Disclaimer</i>\n
-        <b>This app is not affiliated with Minecraft, Mojang AB or Microsoft.</b>\n
-        This is not an official but a fan made app.\n
-        Minecraft is a trademark of Mojang AB.\n
-        Please note:\n
-            &#8226; NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG.\n
-            &#8226; THE APP IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND.\n
-        \n
-        \n
-        <i>Used libraries</i>\n
-        &#8226; <a href="https://github.com/Clans/FloatingActionButton">FloatingActionButton</a> \n
-        &#8226; <a href="https://github.com/mithrilmania/TileView">
-                    Tileview, fork by mithrilmania</a> \n
-        &#8226; <a href="https://github.com/Mojang/leveldb-mcpe">leveldb-mcpe</a> \n
-            with <a href="https://github.com/mithrilmania/android-leveldb">
-                    android-leveldb, fork by mithrilmania</a> \n
-        \n
-        <i>Source code on GitHub:</i>\n
-        <a href="https://github.com/mithrilmania/blocktopograph">github.com/mithrilmania/blocktopograph</a> \n
-        \n
-    </string>
+    <string name="app_about">"\n        This app is created by <b>Protol Lambda</b> (Link removed as he asked to),\n        contributed by<a href="https://github.com/MithrilMania">@MithrilMania</a>,<a href="https://github.com/flagmaggot">@flagmaggot</a>,<a href="https://github.com/oO0oO0oO0o0o00">@MeowCat</a>,<a href="https://github.com/MiemieMethod">@MiemieMethod</a>,<a href="https://github.com/LordJunior">@Manuel</a>,<a href="https://github.com/rukiroki">@rukiroki</a>ScrapperBox25, Tcbdxh and many others as well.\n\n\n        <a href="https://github.com/rukiroki/blocktopograph/releases/latest">Download</a> on Github.\n\n\n        Current active github repository:\n        <a href="https://github.com/rukiroki/blocktopograph">github.com/rukiroki/blocktopograph</a>\n        Feel free to star or fork, help with the project or simply add your own language support.\n        <b>Your github contribution is welcomed!</b>\n        More information (including the roadmap, changelog and help-information) can be found at <a href="https://github.com/rukiroki/blocktopograph">Github</a>:\n\n        \n\n        Please make a backup of all your loved MCPE worlds in case of data-corruption!\n\n        NOTE: Minecraft might not load a whole world because of a single corrupt chunk of NBT!\n\n        \n\n            This app is built and tested for MCPE 1.26.x 1.9.x, 1.8.x, 1.7.x, 1.6.x, 1.5.x, 1.4.x, 1.2.x, 1.1.x, 1.0.x, 0.16.x, 0.15.x, and 0.14.x\n\n            Older MCPE versions are not supported.\n\n        \n\n        \n\n        <i>Disclaimer</i>\n\n        <b>This app is not affiliated with Minecraft, Mojang AB or Microsoft.</b>\n\n        This is not an official but a fan made app.\n\n        Minecraft is a trademark of Mojang AB.\n\n        Please note:\n\n            &#8226; NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG.\n\n            &#8226; THE APP IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND.\n\n        \n\n        \n\n        <i>Used libraries</i>\n\n        &#8226; <a href="https://github.com/Clans/FloatingActionButton">FloatingActionButton</a> \n\n        &#8226; <a href="https://github.com/mithrilmania/TileView">\n                    Tileview, fork by mithrilmania</a> \n\n        &#8226; <a href="https://github.com/Mojang/leveldb-mcpe">leveldb-mcpe</a> \n\n            with <a href="https://github.com/mithrilmania/android-leveldb">\n                    android-leveldb, fork by mithrilmania</a> \n\n\n        "</string>
 
-    <string name="app_help">The app documentation can be found at (maybe out of date):
-        <a href="http://blocktopograph.protolambda.com/help">
-            blocktopograph.protolambda.com/help
-        </a>.
-    </string>
+    <string name="app_help">The help documentation for this application: Not yet ready.\nYou can check the <a href="https://github.com/rukiroki/blocktopograph">README</a> on Github.\nor\nChat on <a href="https://discord.gg/3FYYfdYUBE">Discord</a></string>
 
     <string name="app_changelog" formatted="false">
         Version: <xliff:g example="0.0.1" id="version">%1$s</xliff:g>
@@ -116,7 +68,7 @@
     <string name="no_level_dat_found">No level.dat file found!</string>
     <string name="error_opening_world">An error occurred while opening the world.</string>
     <string name="ask_close_world">Do you want to close this world?</string>
-    <string name="leveldb_key_here">levelDB key here…</string>
+    <string name="leveldb_key_here">search levelDB key here…</string>
     <string name="open_nbt_from_db">Open NBT from DB</string>
     <string name="invalid_keyname">Invalid key name.</string>
     <string name="cannot_find_db_entry_with_name">Cannot find db entry with that name!</string>
@@ -258,7 +210,7 @@
     <string name="marker_is_not_removable">This marker is not meant to be removed!</string>
     <string name="sub_chunk">Sub-chunk</string>
     <string name="choose_subchunk">Choose a sub–chunk (0…):</string>
-    <string name="filter_markers">Filter markers</string>
+    <string name="filter_entity_markers">Filter entity markers</string>
     <string name="show_map">Show map</string>
     <string name="select_world">Select world</string>
     <string name="singleplayer_nbt">Singleplayer NBT</string>
@@ -278,7 +230,7 @@
     <string name="the_end">The End</string>
     <string name="map_options">Map options</string>
     <string name="toggle_grid">Toggle grid</string>
-    <string name="toggle_markers">Toggle markers/mobs</string>
+    <string name="toggle_entity_markers">Toggle markers/Entity</string>
     <string name="advanced_options">Advanced Options</string>
     <!-- all these NBT options should not be translated;
       these correspond with the internal data names within the save file -->
@@ -291,14 +243,14 @@
     <string name="dimension2_nbt">dimension2 NBT</string>
     <string name="autonomousentities_nbt">AutonomousEntities NBT</string>
     <!-- End of NBT options -->
-    <string name="open_nbt_by_name">Open NBT by name</string>
+    <string name="open_nbt_by_name">Search NBT by name</string>
 
     <string name="gamemode_survival">Survival</string>
     <string name="gamemode_creative">Creative</string>
     <string name="gamemode_adventure">Adventure</string>
     <string name="postion_2D_floats_with_chunkpos">
-        (<xliff:g example="123.4" id="x_coordinate">%1$.1f</xliff:g>,
-        <xliff:g example="-123.9" id="z_coordinate">%2$.1f</xliff:g>)
+        (<xliff:g example="123" id="x_coordinate">%1$d</xliff:g>,
+        <xliff:g example="-129" id="z_coordinate">%2$d</xliff:g>)
         Chunk(<xliff:g example="123" id="x_chunk">%3$d</xliff:g>,
         <xliff:g example="-42" id="z_chunk">%4$d</xliff:g>)</string>
     <string name="action_teleport">Teleport!</string>
@@ -342,27 +294,23 @@
     <string name="title_test_page">Test Page</string>
     <string name="create_world_book_title">Meow~</string>
     <string name="create_world_book_page_0"><!--
-        -->"\n§cWelcome~ Meow~"<!--
-        -->"\n§rCreated by"<!--
-        -->"\n§3Blocktopograph"<!--
-        -->"\n"<!--
-        -->"\n§1Get from Play Store"<!--
-        -->"\n§5and create your"<!--
-        -->"\n§5own customized world!"<!--
-        -->"\n"<!--
-        -->"\n§rWorld generated at"<!--
-        -->"\n§d%1$s"<!--
+        -->\n§cWelcome~ Meow~<!--
+        -->\n§rCreated by<!--
+        -->\n§3Blocktopograph<!--
+        -->\n<!--
+        -->\n§1Get from Github or Discord<!--
+        -->\n§5and create your<!--
+        -->\n§5own customized world!<!--
+        -->\n<!--
+        -->\n§rWorld generated at<!--
+        -->\n§d%1$s<!--
     --></string>
     <string name="create_world_book_recipe_header">World recipe:\n</string>
     <string name="create_world_book_recipe_format" translatable="false">§r%1$dx §b%2$s\n</string>
     <string name="create_world_book_recipe_many">"  §r..And more"</string>
     <string name="create_world_extra_file_name">"by_Blocktopograph.txt"</string>
-    <string name="create_world_extra_file_text"><!--
-        -->"Welcome~ Meow~"<!--
-        -->"\nThe world was created by Blocktopograph,"<!--
-        -->"\nan Minecraft world editor and terrain viewer."<!--
-        -->"\nGet from Play Store and create your own customized world!"<!--
-    --></string>
+    <string name="create_world_extra_file_text"><!--         -->Welcome~ Meow~<!--         --> The world was created by Blocktopograph,<!--         -->
+        an Minecraft world editor and terrain viewer.<!--         --> Get from Github and create your own customized world!<!--     --></string>
     <string name="locator_page_player">Players</string>
     <string name="player_position_desc">At (%1$d, %2$d, %3$d) of %4$s</string>
     <string name="gps_advanced_locator">Advanced Locator...</string>
@@ -460,7 +408,7 @@
     <string name="map_picer_use_selection_instead">The world is too large. You can either:\n(1) Use a similar tool on PC;\n(2) Or begin a selection of part of the world, and choose \"Generate Picture\" from selection menu.</string>
     <string name="map_picer_scale_guide">You can scale the picture larger. One pixel per block at least.</string>
     <string name="map_picer_selection_too_large">Selection Too Large</string>
-    <string name="map_picer_selection_too_large_detail">Your selected area is too large. Width and height should both be within %1$d blocks, and the area should be within %2$d block²s.</string>
+    <string name="map_picer_selection_too_large_detail">Your selected area is too large:(%3$dx%4$d). Width and height should both be within %1$d blocks, and the area should be within %2$d block²s.</string>
     <string name="map_edit_func_picer">Generate Picture</string>
     <string name="picer_preview_generating">Generating Preview...</string>
     <string name="map_locator_player_pos_unknown">Position unknown</string>
@@ -487,4 +435,59 @@
     <string name="auto_backup_caption">Auto Backup In Progress...</string>
     <string name="auto_backup_name">[Auto]</string>
     <string name="world_name_broken">Broken World</string>
+    <string name="world_mark_international">[MCPE]</string>
+    <string name="toggle_tile_entity_markers">Block entity marker switch</string>
+    <string name="filter_tile_entity_markers">Filter tile entity markers</string>
+    <string name="map_nbt">Map NBT</string>
+    <string name="mcstructure_nbt">Saved mcstructure</string>
+    <string name="search">Search</string>
+    <string name="nether_nbt">Nether NBT</string>
+    <string name="end_nbt">The End NBT</string>
+    <string name="postrackdb_nbt">Position Track NBT</string>
+    <string name="schedulerwt_nbt">Scheduler World Tick NBT</string>
+    <string name="worldclock_nbt">World Clock NBT</string>
+    <string name="old_villages_nbt">Old Version Village NBT</string>
+    <string name="no_search_result_found">No sraech result found,</string>
+    <string name="empty_data">Empty data.</string>
+    <string name="cannot_open_multi_editor">Unable to open multiple editors</string>
+    <string name="choose_nbt_editor_save_type">Select save mode</string>
+    <string name="nbt_editor_save_to_original_position">Save to original location</string>
+    <string name="nbt_editor_export_to_file">Export to file</string>
+    <string name="share_picture_title">Share Picture</string>
+    <string name="share_nbt_title">Share NBT File</string>
+    <string name="picer_warn_not_scalable_too_large">The selected area is too large and has been automatically cropped to %1$d x %2$d size.</string>
+    <string name="db_permission_denied">No read/write permissions for the world</string>
+    <string name="block">Block</string>
+    <string name="height">Height</string>
+    <string name="db_occupied">This world is occupied by other programs.</string>
+    <string name="picer_progress_copying">Copying, wait...</string>
+    <string name="tip_dont_edit_with_play">If you open this editor while playing the game, it will cause the game to fail to save and even result in the corruption of the save file. Please do not do this. If you insist on doing so, please back up the world before proceeding.</string>
+    <string name="no_permission">No Permission</string>
+    <string name="dont_show_again_btn">Don\'t show again</string>
+    <string name="world_mark_old_version">[old version]</string>
+    <string name="world_mark_default">[default location]</string>
+    <string name="err_noworld_3">If you have done this and still don\'t have a world save file, it indicates that BTR does not have the permission to read the external storage directory of Minecraft. \n\nYou can copy the save file to the Blocktopograph/worlds folder to display it in the world list.</string>
+    <string name="nbt_file_saved">Saved to \"Downloads\" directory.</string>
+    <string name="warn_edit_biome">This function will forcibly downgrade the three-dimensional biomes involved to two-dimensional ones, which may overwrite some underground biomes such as lush caves, caverns, and dark domains. \nAre you sure you want to proceed?</string>
+    <string name="add_world_list_directory">Add World List Directory</string>
+    <string name="remark_here">Remark here...</string>
+    <string name="listpath_is_not_exist">Path does not exist</string>
+    <string name="open_auto_backup_page">Go to backup</string>
+    <string name="add_world_list_directory_done">Path: %1$s\nRemark: %2$s</string>
+    <string name="list_directory_delete_tip">\nYou can add again to delete the path.</string>
+    <string name="opened">Opened.</string>
+    <string name="closed">Closed.</string>
+    <string name="screenshot">Screenshot</string>
+    <string name="ask_copy_world_folder">Unable to open. You do not have write permissions for the current world directory (possibly a world created within the game). You can choose to copy this world. Note: After copying, an additional %1$s of space will be occupied. You can choose to manually delete the old save files within the game to free up space. Do you want to copy?</string>
+    <string name="ask_copy_game_folder">You do not have write permissions for the current file directory, so you cannot open or create a world. Would you like to copy the entire game folder? After copying, you will be able to open and edit the world normally. Note: The game content will not be affected after the copy, but it will occupy an additional %1$s of space.</string>
+    <string name="source_folder_not_exist">Source directory does not exist</string>
+    <string name="big_files">Large files</string>
+    <string name="ask_copy_large_files">The total size of the current file is %1$s. The copy process will take some time. Do you want to continue?</string>
+    <string name="world_folder_not_exist">The world archive folder does not exist.</string>
+    <string name="world_duplication">World Archive Duplication</string>
+    <string name="world_copied_info">This world has been replicated to \n%1$s. \nPlease close this page and enter the replicated world page.</string>
+    <string name="copy_complete">Copy completed</string>
+    <string name="copy_complete_info">The world has been successfully replicated to: %1$s Please close this page and enter the page of the replicated world.</string>
+    <string name="copy_failed">Copy failed</string>
+    <string name="copy_game_folder_complete_info">The game folder has been copied successfully. Now you can play the game and use this application to edit all the worlds you have created. However, do not do both at the same time.</string>
 </resources>

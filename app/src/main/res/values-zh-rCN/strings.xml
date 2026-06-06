@@ -18,42 +18,9 @@
             然后点击“创建自定义标记”。
         然后选择一个标记图标和一个Y坐标。
         最后在地图上检查一下你有没有成功创建它！</string>
-    <string name="app_help">查看本应用的文档（长期未更新）：
-        <a href="http://blocktopograph.protolambda.com/help">
-            blocktopograph.protolambda.com/help
-        </a>.</string>
+    <string name="app_help">本应用的帮助文档：还未准备好。\n你可以去Github查看<a href="https://github.com/rukiroki/blocktopograph">README</a>。\n或者在<a href="https://pd.qq.com/s/1byp80uw8">频道</a>上反馈问题。</string>
     <string name="world_seed_prefix">世界种子：</string>
-    <string name="app_about">
-        本应用由<b>Proto Lambda</b>（应其要求，已移除链接）原创，
-        <a href="https://github.com/MithrilMania">@MithrilMania</a>、
-        <a href="https://github.com/flagmaggot">@flagmaggot</a>、
-        <a href="https://github.com/oO0oO0oO0o0o00">@MeowCat</a>、
-        <a href="https://github.com/MiemieMethod">@MiemieMethod</a>、
-        <a href="https://github.com/LordJunior">Manuel</a>和其他人参与更新和维护。
-        感谢百度贴吧minecraftpe吧的朋友们提供反馈。\n\n
-        可以在Google Play、Github的项目release页面（PC版网页）下载或百度贴吧搜索。\n\n
-        有账号的可以点一下Star~\n
-        <i>欢迎在Github查看源代码，并参与更新维护（包括增强翻译）：</i>\n
-        <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph">github.com/oO0oO0oO0o0o00/blocktopograph</a>
-        \n使用前请备份你的重要存档，以免发生意外。一点小问题都可能导致Minecraft无法加载整个存档→_→
-        \n本应用支持MCPE 0.14至1.9（当前）的存档格式，更旧或者更新的版本【可能】不完全兼容，但不妨一试。
-        \n原作者网站：<a href="http://blocktopograph.protolambda.com">blocktopograph.protolambda.com</a>
-        <i>免责声明</i>\n
-        <b>此应用程序与Minecraft、Mojang AB或Microsoft无关。</b>\n
-        这不是一个官方的而是一个饭制的APP。\n
-        Minecraft是Mojang的一个商标。\n
-        请注意：\n
-            &#8226; 【这不是一个官方的MINECRAFT产品。并未经MOJANG批准并且与其无关。】\n
-            &#8226; 【该APP“按原样”提供，不提供任何形式的保证。】\n
-        \n<i>使用的库</i>\n
-        &#8226; <a href="https://github.com/Clans/FloatingActionButton">FloatingActionButton</a> \n
-        &#8226; <a href="https://github.com/mithrilmania/TileView">
-                    Tileview，mithrilmania的版本库分支</a> \n
-        &#8226; <a href="https://github.com/Mojang/leveldb-mcpe">leveldb-mcpe</a> \n
-            with <a href="https://github.com/mithrilmania/android-leveldb">
-                    android-leveldb，mithrilmania的版本库分支</a> \n
-        \n
-    </string>
+    <string name="app_about">"\n        本应用由<b>Proto Lambda</b>（应其要求，已移除链接）原创，<a href="https://github.com/MithrilMania">@MithrilMania</a>、<a href="https://github.com/flagmaggot">@flagmaggot</a>、<a href="https://github.com/oO0oO0oO0o0o00">@MeowCat</a>、<a href="https://github.com/MiemieMethod">@MiemieMethod</a>、<a href="https://github.com/LordJunior">@Manuel</a>、<a href="https://github.com/rukiroki">@rukiroki</a>和其他人参与更新和维护。感谢群友们提供的帮助和反馈。\n\n\n        可以在Github的项目<a href="https://github.com/rukiroki/blocktopograph/releases/latest">release页面</a>下载。\n\n\n        有账号的可以点一下Star~\n\n        <i>欢迎在Github查看源代码，并参与更新维护（包括增强翻译）：</i>\n\n        <a href="https://github.com/rukiroki/blocktopograph">github.com/rukiroki/blocktopograph</a>\n        \n使用前请备份你的重要存档，以免发生意外。一点小问题都可能导致Minecraft无法加载整个存档→_→\n        \n本应用支持MCPE 0.14至1.26（当前）的存档格式，更旧或者更新的版本【可能】不完全兼容。\n        \n        <i>免责声明</i>\n\n        <b>此应用程序与Minecraft、Mojang AB或Microsoft无关。</b>\n\n        这不是一个官方的而是一个饭制的APP。\n\n        Minecraft是Mojang的一个商标。\n\n        请注意：\n\n            &#8226; 【这不是一个官方的MINECRAFT产品。并未经MOJANG批准并且与其无关。】\n\n            &#8226; 【该APP“按原样”提供，不提供任何形式的保证。】\n\n        \n<i>使用的库</i>\n\n        &#8226; <a href="https://github.com/Clans/FloatingActionButton">FloatingActionButton</a> \n\n        &#8226; <a href="https://github.com/mithrilmania/TileView">\n                    Tileview，mithrilmania的版本库分支</a> \n\n        &#8226; <a href="https://github.com/Mojang/leveldb-mcpe">leveldb-mcpe</a> \n\n            with <a href="https://github.com/mithrilmania/android-leveldb">\n                    android-leveldb，mithrilmania的版本库分支</a> \n\n        \n\n    "</string>
     <string name="app_changelog" formatted="false">
         版本: <xliff:g example="0.0.1" id="version">%1$s</xliff:g>
         <![CDATA[<br/><br/>
@@ -74,12 +41,7 @@
     <string name="storage_path_here">输入文件路径……</string>
     <string name="open_world_custom_path">从自定义路径打开世界</string>
     <string name="open">打开</string>
-    <string name="report_path_and_previous_search" formatted="false">
-        您使用的路径：<xliff:g example="/storage/emulated/0/games/com.mojang/minecraftWorlds/worldName" id="file_path">%1$s</xliff:g>\n
-        \n
-        已在<xliff:g example="/storage/emulated/0/games/com.mojang/minecraftWorlds/" id="file_path">%2$s</xliff:g>
-        路径中搜索包含Minecraft世界的文件夹。
-    </string>
+    <string name="report_path_and_previous_search" formatted="false">"         您使用的路径：<xliff:g example="/storage/emulated/0/games/com.mojang/minecraftWorlds/worldName" id="file_path">%1$s</xliff:g>                    已在<xliff:g example="/storage/emulated/0/games/com.mojang/minecraftWorlds/" id="file_path">%2$s</xliff:g>         路径中搜索包含Minecraft世界的文件夹。     "</string>
     <string name="no_file_folder_found_at_path">在您输入的路径中没有找到文件或者文件夹！</string>
     <string name="worldpath_is_not_directory">
         文件路径（可以以“/level.dat”结尾）不是文件夹！
@@ -87,7 +49,7 @@
     <string name="no_level_dat_found">没找到level.dat文件</string>
     <string name="error_opening_world">打开世界时发生错误</string>
     <string name="ask_close_world">您想关闭该世界吗？</string>
-    <string name="leveldb_key_here">输入levelDB中的键……</string>
+    <string name="leveldb_key_here">搜索levelDB中的键……</string>
     <string name="open_nbt_from_db">从数据库中打开NBT</string>
     <string name="invalid_keyname">无效的键名</string>
     <string name="cannot_find_db_entry_with_name">无法在数据库中找到具有该名字的记录！</string>
@@ -216,7 +178,7 @@
     <string name="marker_is_not_removable">这个标记不可被移除！</string>
     <string name="sub_chunk">区段</string>
     <string name="choose_subchunk">选择一个区段（0至15）：</string>
-    <string name="filter_markers">筛选标记</string>
+    <string name="filter_entity_markers">筛选实体标记</string>
     <string name="show_map">显示地图</string>
     <string name="select_world">选择世界</string>
     <string name="singleplayer_nbt">单机玩家NBT</string>
@@ -236,26 +198,25 @@
     <string name="the_end">末路之地</string>
     <string name="map_options">地图选项</string>
     <string name="toggle_grid">网格开关</string>
-    <string name="toggle_markers">标记开关</string>
+    <string name="toggle_entity_markers">实体标记开关</string>
     <string name="advanced_options">高级选项</string>
-    <string name="biomedata_nbt">BiomeData NBT</string>
-    <string name="overworld_nbt">Overworld NBT</string>
-    <string name="villages_nbt">Villages NBT</string>
-    <string name="portals_nbt">Portals NBT</string>
-    <string name="dimension0_nbt">dimension0 NBT</string>
-    <string name="dimension1_nbt">dimension1 NBT</string>
-    <string name="dimension2_nbt">dimension2 NBT</string>
-    <string name="autonomousentities_nbt">AutonomousEntities NBT</string>
-    <string name="open_nbt_by_name">按名称打开NBT</string>
+    <string name="biomedata_nbt">群系数据 NBT</string>
+    <string name="overworld_nbt">主世界 NBT</string>
+    <string name="villages_nbt">村庄 NBT</string>
+    <string name="portals_nbt">传送门 NBT</string>
+    <string name="dimension0_nbt">dimension0 NBT (旧版)</string>
+    <string name="dimension1_nbt">dimension1 NBT (旧版)</string>
+    <string name="dimension2_nbt">dimension2 NBT (旧版)</string>
+    <string name="autonomousentities_nbt">自治实体 NBT</string>
+    <string name="open_nbt_by_name">按名称搜索NBT</string>
     <string name="gamemode_survival">生存</string>
     <string name="gamemode_creative">创造</string>
     <string name="gamemode_adventure">冒险</string>
     <string name="postion_2D_floats_with_chunkpos">
-    (<xliff:g example="123.45" id="x_coordinate">%1$.1f</xliff:g>,
-    <xliff:g example="-123.987" id="z_coordinate">%2$.1f</xliff:g>)
-    区块(<xliff:g example="123" id="x_chunk">%3$d</xliff:g>,
-    <xliff:g example="-42" id="z_chunk">%4$d</xliff:g>)
-    </string>
+        (<xliff:g example="123" id="x_coordinate">%1$d</xliff:g>,
+        <xliff:g example="-123" id="z_coordinate">%2$d</xliff:g>)
+        区块(<xliff:g example="123" id="x_chunk">%3$d</xliff:g>,
+        <xliff:g example="-42" id="z_chunk">%4$d</xliff:g>)</string>
     <string name="action_teleport">传送！</string>
     <string name="go_to_spawn">前往出生点</string>
     <string name="world_mark_neteas">[网易]</string>
@@ -293,25 +254,25 @@
     <string name="title_test_page">测试页</string>
     <string name="create_world_book_title">喵~</string>
     <string name="create_world_book_page_0"><!--
-        -->"\n§c欢迎~ 喵呜~"<!--
-        -->"\n§r该世界由"<!--
-        -->"\n§3Blocktopograph"<!--
-        -->"\n§r生成。"<!--
-        -->"\n§1从Play商店/Github"<!--
-        -->"\n§1/贴吧/mineBBS获取，"<!--
-        -->"\n§5创建你的自定义世界。"<!--
-        -->"\n"<!--
-        -->"\n§r生成于"<!--
-        -->"\n§d%1$s"<!--
+        -->\n§c欢迎~ 喵呜~<!--
+        -->\n§r该世界由<!--
+        -->\n§3Blocktopograph<!--
+        -->\n§r生成。<!--
+        -->\n§1从Github/b站<!--
+        -->\n§1/QQ群聊/Discord获取，<!--
+        -->\n§5创建你的自定义世界。<!--
+        -->\n<!--
+        -->\n§r生成于<!--
+        -->\n§d%1$s<!--
     --></string>
     <string name="create_world_book_recipe_header">世界配料表：\n</string>
     <string name="create_world_book_recipe_many">"  §r..以及更多"</string>
-    <string name="create_world_extra_file_name">由Blocktopograph.txt</string>
+    <string name="create_world_extra_file_name">由Blocktopograph创建.txt</string>
     <string name="create_world_extra_file_text"><!--
-        -->"欢迎~ 喵呜~"<!--
-        -->"\n该世界由Blocktopograph创建，"<!--
-        -->"\n一款Minecraft的编辑和地图查看工具。"<!--
-        -->"\n从Play商店/Github/贴吧/mineBBS获取，并创建你的自定义世界。"<!--
+        -->欢迎~ 喵呜~<!--
+        -->\n该世界由Blocktopograph创建，<!--
+        -->\n一款Minecraft的编辑和地图查看工具。<!--
+        -->\n从Github/b站/QQ群聊/Discord获取，并创建你的自定义世界。<!--
     --></string>
     <string name="locator_page_player">玩家</string>
     <string name="player_position_desc">在%4$s的(%1$d, %2$d, %3$d)</string>
@@ -391,7 +352,7 @@
     <string name="map_picer_use_selection_instead">太♂大了。你可以:\\n(1) 在电脑上使用同类工具；\\n(2) 或者框选一部分区域然后从选区选项里选择截图。</string>
     <string name="map_picer_scale_guide">你可以放大图片。每个方块至少1像素。</string>
     <string name="map_picer_selection_too_large">选区太大</string>
-    <string name="map_picer_selection_too_large_detail">你选择的区域太♂大了。宽度和高度都应该在%1$d方块以内，同时面积在%2$d方块²以内。</string>
+    <string name="map_picer_selection_too_large_detail">你选择的区域太♂大了:(%3$dx%4$d)。宽度和高度都应该在%1$d方块以内，同时面积在%2$d方块²以内。</string>
     <string name="map_edit_func_picer">生成图片</string>
     <string name="picer_scale_approxim">大约%1$dx%2$d。</string>
     <string name="map_dblclick_notice">双击屏幕以打开抽屉。</string>
@@ -418,4 +379,59 @@
     <string name="restore_caption">恢复先前的备份文件</string>
     <string name="restore_warn">这将撤销所有在该备份创建以后进行的更改！您确定吗？注意不要丢失进度。</string>
     <string name="world_name_broken">损坏的世界</string>
+    <string name="world_mark_international">[国际版]</string>
+    <string name="toggle_tile_entity_markers">方块实体标记开关</string>
+    <string name="filter_tile_entity_markers">筛选方块实体标记</string>
+    <string name="map_nbt">地图 NBT</string>
+    <string name="mcstructure_nbt">已保存的结构</string>
+    <string name="search">搜索</string>
+    <string name="nether_nbt">地狱 NBT</string>
+    <string name="end_nbt">末地 NBT</string>
+    <string name="postrackdb_nbt">位置追踪 NBT</string>
+    <string name="schedulerwt_nbt">调度器世界刻 NBT</string>
+    <string name="worldclock_nbt">世界时钟 NBT</string>
+    <string name="old_villages_nbt">旧版村庄 NBT</string>
+    <string name="no_search_result_found">未找到搜索结果</string>
+    <string name="empty_data">数据为空</string>
+    <string name="cannot_open_multi_editor">无法打开多个编辑器</string>
+    <string name="choose_nbt_editor_save_type">选择保存模式</string>
+    <string name="nbt_editor_save_to_original_position">原始位置</string>
+    <string name="nbt_editor_export_to_file">保存到文件</string>
+    <string name="share_picture_title">分享图片</string>
+    <string name="share_nbt_title">分享 NBT 文件</string>
+    <string name="picer_warn_not_scalable_too_large">选择的区域太大了，已被自动裁剪成 %1$d x %2$d 大小。</string>
+    <string name="db_permission_denied">没有世界的读/写权限</string>
+    <string name="block">方块</string>
+    <string name="height">高度</string>
+    <string name="db_occupied">这个世界被其他程序占用</string>
+    <string name="picer_progress_copying">正在复制，请等待...</string>
+    <string name="tip_dont_edit_with_play">如果您在进行游戏的时候打开此编辑器，会导致游戏无法保存，甚至会导致存档损坏。\n如果您执意要这样做，请在此之前备份世界。</string>
+    <string name="no_permission">没有权限</string>
+    <string name="dont_show_again_btn">不再提示</string>
+    <string name="world_mark_old_version">[旧版]</string>
+    <string name="world_mark_default">[默认位置]</string>
+    <string name="err_noworld_3">如果您已经这样做了，还是没有世界存档，说明BTR没有权限读取minecraft外部存储目录。\n\n你可以把存档复制到 Blocktopograph/worlds 文件夹以显示到世界列表。</string>
+    <string name="nbt_file_saved">已保存到”下载“目录。</string>
+    <string name="warn_edit_biome">此功能会强制将所涉及区块的三维生物群系降级为二维生物群系，可能会覆盖掉一些地底生物群系，比如繁茂洞穴、溶洞、深暗之域等。\n确认要继续吗？</string>
+    <string name="add_world_list_directory">添加世界列表目录</string>
+    <string name="remark_here">请输入备注...</string>
+    <string name="listpath_is_not_exist">路径不存在</string>
+    <string name="open_auto_backup_page">去备份</string>
+    <string name="add_world_list_directory_done">路径：%1$s  \n备注：%2$s</string>
+    <string name="list_directory_delete_tip">\n你可以再次添加以删除路径</string>
+    <string name="opened">打开了。</string>
+    <string name="closed">已关闭。</string>
+    <string name="screenshot">截屏</string>
+    <string name="ask_copy_world_folder">无法打开，当前世界目录没有写权限（可能是通过游戏内创建的世界），你可以选择复制此世界。 注：复制后会额外占用 %1$s 空间，你可以选择去游戏内手动删除旧存档来释放空间。要复制吗？</string>
+    <string name="ask_copy_game_folder">当前文件目录没有写权限，无法打开和创建世界，是否将整个游戏文件夹进行复制？ 复制后即可正常打开和编辑世界。注：复制后游戏内容不受影响，但是会额外占用 %1$s 空间。</string>
+    <string name="source_folder_not_exist">源目录不存在</string>
+    <string name="big_files">文件较大</string>
+    <string name="ask_copy_large_files">当前文件总大小为 %1$s，复制需要较长时间，是否继续？</string>
+    <string name="world_folder_not_exist">世界存档文件夹不存在</string>
+    <string name="world_duplication">世界存档重复</string>
+    <string name="world_copied_info">此世界已经复制过了 \n%1$s \n请关闭此页面，进入复制后的世界页面。</string>
+    <string name="copy_complete">复制完成</string>
+    <string name="copy_complete_info">世界已成功复制到：%1$s 请关闭此页面，进入复制后的世界页面。</string>
+    <string name="copy_failed">复制失败</string>
+    <string name="copy_game_folder_complete_info">游戏文件夹已复制完成，现在可以在游戏中游玩和使用此应用编辑你创建过的所有世界了。但是不要同时这样做。</string>
 </resources>

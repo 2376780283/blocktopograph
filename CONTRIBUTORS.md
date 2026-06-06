@@ -15,6 +15,8 @@ Order by joined date.
 
 [@MeowCat](https://github.com/oO0oO0oO0o0o00) (Half Active)
 
+[@rukiroki](https://github.com/rukiroki) (Active)
+
 
 # Main contributors
 
@@ -27,6 +29,8 @@ Order by joined date.
 [@flagmaggot](https://github.com/flagmaggot)
 
 [@MeowCat](https://github.com/oO0oO0oO0o0o00)
+
+[@rukiroki](https://github.com/rukiroki)
 
 
 # Contributors

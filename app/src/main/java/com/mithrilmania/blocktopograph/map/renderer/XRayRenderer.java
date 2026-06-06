@@ -41,15 +41,23 @@ public class XRayRenderer implements MapRenderer {
                     index2D = (z * rW) + x;
                     if (block.id <= 1)
                         continue;
-                    else if (block == KnownBlockRepr.B_56_0_DIAMOND_ORE) {
+                    else if (block == KnownBlockRepr.B_56_0_DIAMOND_ORE || block == KnownBlockRepr.B_2452_0_DEEPSLATE_DIAMOND_ORE || block == KnownBlockRepr.B_2173_0_ANCIENT_DEBRIS) {
                         bestBlock[index2D] = block;
                         break;
-                    } else if (block == KnownBlockRepr.B_129_0_EMERALD_ORE) bValue = 8;
+                    }
+                    else if (block == KnownBlockRepr.B_129_0_EMERALD_ORE) bValue = 8;
+                    else if (block == KnownBlockRepr.B_2453_0_DEEPSLATE_EMERALD_ORE) bValue = 8;
                     else if (block == KnownBlockRepr.B_153_0_QUARTZ_ORE) bValue = 7;
                     else if (block == KnownBlockRepr.B_14_0_GOLD_ORE) bValue = 6;
+                    else if (block == KnownBlockRepr.B_2454_0_DEEPSLATE_GOLD_ORE) bValue = 6;
+                    else if (block == KnownBlockRepr.B_2686_0_NETHER_GOLD_ORE) bValue = 6;
                     else if (block == KnownBlockRepr.B_15_0_IRON_ORE) bValue = 5;
+                    else if (block == KnownBlockRepr.B_2455_0_DEEPSLATE_IRON_ORE) bValue = 5;
                     else if (block == KnownBlockRepr.B_73_0_REDSTONE_ORE) bValue = 4;
                     else if (block == KnownBlockRepr.B_21_0_LAPIS_ORE) bValue = 3;
+                    else if (block == KnownBlockRepr.B_2344_0_COPPER_ORE) bValue = 2;
+                    else if (block == KnownBlockRepr.B_2451_0_DEEPSLATE_COPPER_ORE) bValue = 2;
+
                         //else if(block == KnownBlockRepr.COAL_ORE) bValue = 2;
                         //else if(b == KnownBlockRepr.LAVA || b == KnownBlockRepr.STATIONARY_LAVA) bValue = 1;
                     else bValue = 0;

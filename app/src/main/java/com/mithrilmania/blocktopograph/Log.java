@@ -5,18 +5,17 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import io.fabric.sdk.android.Fabric;
-
 public class Log {
 
     public static final String ANA_PARAM_CREATE_WORLD_TYPE = "cw_type";
     public static final String ANA_PARAM_MAINACT_MENU_TYPE = "mam_type";
+    public static final int ANA_PARAM_MAINACT_MENU_ADD_OPEN = 114;
     public static final int ANA_PARAM_MAINACT_MENU_TYPE_OPEN = 123;
     public static final int ANA_PARAM_MAINACT_MENU_TYPE_HELP = 130;
     public static final int ANA_PARAM_MAINACT_MENU_TYPE_ABOUT = 199;
@@ -24,6 +23,7 @@ public class Log {
     private static final String LOG_TAG = "Blocktopo";
 
     private static FirebaseAnalytics mFirebaseAnalytics;
+    private static FirebaseCrashlytics mCrashlytics;
 
     private static PrintWriter mFileLogger;
 
@@ -44,7 +44,7 @@ public class Log {
 
     public static void enableCrashlytics(@NonNull Context context) {
         if (!BuildConfig.DEBUG) {
-            Fabric.with(context, new Crashlytics());
+            mCrashlytics = FirebaseCrashlytics.getInstance();
             mIsCrashlyticsEnabled = true;
         }
     }
@@ -62,7 +62,7 @@ public class Log {
 
     public static void e(@NonNull Object caller, @NonNull String msg) {
         if (mIsCrashlyticsEnabled)
-            Crashlytics.log(android.util.Log.DEBUG, LOG_TAG, concat(caller, msg));
+            mCrashlytics.log(concat(caller, msg));
     }
 
     public static void e(@NonNull Object caller, @NonNull Throwable throwable) {
@@ -70,7 +70,7 @@ public class Log {
         PrintWriter pw = new PrintWriter(sw);
         throwable.printStackTrace(pw);
         android.util.Log.e(LOG_TAG, concat(caller, sw.toString()));
-        if (mIsCrashlyticsEnabled) Crashlytics.logException(throwable);
+        if (mIsCrashlyticsEnabled) mCrashlytics.recordException(throwable);
     }
 
     private synchronized static FirebaseAnalytics getFirebaseAnalytics(@NonNull Context context) {

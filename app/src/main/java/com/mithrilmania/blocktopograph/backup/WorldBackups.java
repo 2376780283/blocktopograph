@@ -54,6 +54,13 @@ public class WorldBackups {
         return new File(getBackupDir(), "config.json");
     }
 
+    public boolean hasDir(){
+        File dir = getBackupDir();
+        if(dir.exists()){
+            return true;
+        }
+        return false;
+    }
     public void loadConfig() {
         File cfg = getConfigFile();
         if (!cfg.isFile()) return;

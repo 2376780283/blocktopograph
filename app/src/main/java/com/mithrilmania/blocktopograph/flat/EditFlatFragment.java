@@ -157,9 +157,9 @@ public final class EditFlatFragment extends Fragment {
             addItem(0, layer);
             layer = new Layer(ListingBlock.B_3_DIRT, 29);
             addItem(0, layer);
-            layer = new Layer(ListingBlock.B_2_GRASS, 1);
+            layer = new Layer(ListingBlock.B_2_GRASS_BLOCK, 1);
             addItem(0, layer);
-            layer = new Layer(ListingBlock.B_31_TALLGRASS, 1);
+            layer = new Layer(ListingBlock.B_31_SHORT_GRASS, 1);
             addItem(0, layer);
         }
 

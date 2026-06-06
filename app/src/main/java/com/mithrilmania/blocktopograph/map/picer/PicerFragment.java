@@ -1,5 +1,7 @@
 package com.mithrilmania.blocktopograph.map.picer;
 
+import static org.apache.commons.lang3.ClassUtils.getPackageName;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -24,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.annotation.UiThread;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
@@ -33,8 +36,10 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.material.snackbar.Snackbar;
+import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.World;
+import com.mithrilmania.blocktopograph.WorldActivity;
 import com.mithrilmania.blocktopograph.databinding.FragPicerBinding;
 import com.mithrilmania.blocktopograph.map.Dimension;
 import com.mithrilmania.blocktopograph.map.OpenLongPressMenuHandler;
@@ -45,8 +50,14 @@ import java.io.File;
 
 public final class PicerFragment extends DialogFragment {
 
-    public static final int MAX_LENGTH = 2048;
-    public static final int MAX_AREA = 64 * 64 * 256;
+//    public static final int MAX_LENGTH = 24576;
+    public static final int MAX_LENGTH = 32767;
+
+//    public static final int MAX_AREA = 1536 * 1536 * 256;
+    public static final int MAX_AREA = 2048 * 2048 * 256;
+
+//    public static final int MAX_AREA = Integer.MAX_VALUE;
+
     public static final int MAX_SCALE = 32;
     private FragPicerBinding mBinding;
     Rect mRange;
@@ -148,6 +159,8 @@ public final class PicerFragment extends DialogFragment {
         mBinding.selectCase.setVisibility(View.VISIBLE);
         int w = mRange.right - mRange.left;
         int h = mRange.bottom - mRange.top;
+        int rectW = w;
+        int rectH = h;
         if (w <= 0 || h <= 0) {
             dismiss();
             return;
@@ -160,7 +173,7 @@ public final class PicerFragment extends DialogFragment {
         if (maxScale <= 0) {
             new AlertDialog.Builder(activity)
                     .setTitle(R.string.map_picer_selection_too_large)
-                    .setMessage(getString(R.string.map_picer_selection_too_large_detail, MAX_LENGTH, MAX_AREA))
+                    .setMessage(getString(R.string.map_picer_selection_too_large_detail, MAX_LENGTH, MAX_AREA,mRange.right - mRange.left,h))
                     .setPositiveButton(android.R.string.ok, null)
                     .create()
                     .show();
@@ -168,13 +181,19 @@ public final class PicerFragment extends DialogFragment {
             return;
         } else if (maxScale == 1) {
             mBinding.scaleBox.setVisibility(View.GONE);
-            mBinding.scaleNot.setVisibility(View.VISIBLE);
+            if(rectH == MAX_LENGTH || rectW == MAX_LENGTH){
+                mBinding.scaleNotTooLarge.setText(getString(R.string.picer_warn_not_scalable_too_large, rectW, rectH));
+                mBinding.scaleNotTooLarge.setVisibility(View.VISIBLE);
+            }else{
+                mBinding.scaleNot.setVisibility(View.VISIBLE);
+            }
+
         } else {
             if (MAX_SCALE < maxScale) maxScale = MAX_SCALE;
             mBinding.scaleBox.setVisibility(View.VISIBLE);
             mBinding.scaleNot.setVisibility(View.GONE);
             mBinding.scaleSeek.setMax(maxScale - 1);
-            mBinding.scaleSeek.setProgress(maxScale - 1);
+            mBinding.scaleSeek.setProgress((maxScale - 1) >> 2);
         }
         stage = 1;
         mBinding.finalButton.setVisibility(View.VISIBLE);
@@ -228,15 +247,22 @@ public final class PicerFragment extends DialogFragment {
         if (activity == null) return;
 
         if (rangeCheck(rect)) {
+//        if(true){
             mRange = rect;
             goToScalePhase();
         } else {
-            new AlertDialog.Builder(activity)
-                    .setTitle(R.string.map_picer_world_too_large)
-                    .setMessage(R.string.map_picer_use_selection_instead)
-                    .setPositiveButton(android.R.string.ok, (dia, i) -> mOpenLongPressMenuHandler.open())
-                    .create().show();
-            dismiss();
+            rect.top = Math.max(rect.top, -MAX_LENGTH / 2);
+            rect.bottom = Math.min(rect.bottom,(MAX_LENGTH+1)/2);
+            rect.left = Math.max(rect.left,-MAX_LENGTH/2);
+            rect.right = Math.min(rect.right,(MAX_LENGTH+1)/2);
+            mRange = rect;
+            goToScalePhase();
+//            new AlertDialog.Builder(activity)
+//                    .setTitle(R.string.map_picer_world_too_large)
+//                    .setMessage(R.string.map_picer_use_selection_instead)
+//                    .setPositiveButton(android.R.string.ok, (dia, i) -> mOpenLongPressMenuHandler.open())
+//                    .create().show();
+//            dismiss();
         }
     }
 
@@ -248,14 +274,20 @@ public final class PicerFragment extends DialogFragment {
         if (activity == null) return;
 
         int scale = mBinding.scaleSeek.getProgress() + 1;
-        AlertDialog dialog = UiUtil.buildProgressWaitDialog(
-                activity, R.string.picer_progress_generating, dialogInterface -> dismiss());
+
+        AlertDialog dialog = UiUtil.buildProgressDialog(
+                activity,
+                R.string.picer_progress_generating,
+                dialogInterface -> dismiss()
+        );
         dialog.show();
 
         mBinding.finalButton.setVisibility(View.GONE);
         mBinding.selectCase.setVisibility(View.GONE);
 
-        mOngoingThread = new GenerateThread(this, mRange, scale, Bitmap.Config.ARGB_8888, dialog);
+        mOngoingThread = new
+
+                GenerateThread(this, mRange, scale, Bitmap.Config.RGB_565, dialog);
         mOngoingThread.start();
     }
 
@@ -318,15 +350,17 @@ public final class PicerFragment extends DialogFragment {
                     new String[]{"image/png"}, null);
             Snackbar snackbar = Snackbar.make(
                     activity.getWindow().getDecorView(),
-                    getString(R.string.picer_saved), Snackbar.LENGTH_SHORT)
+                    getString(R.string.picer_saved), Snackbar.LENGTH_LONG)
                     .setAction(R.string.general_share, v -> {
+                        Uri fileUri = FileProvider.getUriForFile(activity,activity.getPackageName() + ".fileprovider",file);
                         Intent shareIntent = new Intent();
                         shareIntent.setAction(Intent.ACTION_SEND);
-                        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+                        shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
                         shareIntent.setType("image/jpeg");
-                        getActivity().startActivity(
-                                Intent.createChooser(shareIntent,
-                                        v.getContext().getString(R.string.picer_share_title)));
+                        activity.startActivity(Intent.createChooser(shareIntent, activity.getString(R.string.share_picture_title)));
+//                        getActivity().startActivity(
+//                                Intent.createChooser(shareIntent,
+//                                        v.getContext().getString(R.string.picer_share_title)));
                     });
             snackbar.show();
             dismiss();

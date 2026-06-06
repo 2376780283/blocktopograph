@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.block.Block;
 import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
@@ -39,8 +40,9 @@ public class NetherRenderer implements MapRenderer {
                 sumRf = sumGf = sumBf = 0;
                 layers = 1;
                 cavefloor = chunk.getHeightMapValue(x, z);//TODO test this
+                cavefloor = 127;
 
-                while (cavefloor > 0) {
+                outerWhile: while (cavefloor > 0) {
                     caveceil = chunk.getCaveYUnderAt(x, z, cavefloor - 1);
 
 
@@ -57,9 +59,9 @@ public class NetherRenderer implements MapRenderer {
 
                     //check if it is supported, default to full brightness to not lose details.
                     if (chunk.supportsBlockLightValues()) {
-                        lightShading = (float) chunk.getBlockLightValue(x, y, z) / 15f + 1;
+                        lightShading = (float) chunk.getBlockLightValue(x, y+64, z) / 15f + 1;
                     } else {
-                        lightShading = 2f;
+                        lightShading = 0.9f;
                     }
 
 
@@ -75,8 +77,11 @@ public class NetherRenderer implements MapRenderer {
                     a = 1f;
 
                     for (y = caveceil; y >= cavefloor; y--) {
-
+//                    for (y = cavefloor;a >= .1f; y--) {
+                        if(y<0) break;
                         Block block = chunk.getBlock(x, y, z, 0);
+                        String blockType = block.getBlockType();
+//                        if(!blockType.equals("minecraft:air"))
 
                         if (block.getLegacyBlock() == KnownBlockRepr.B_0_0_AIR)
                             continue;//skip air blocks
@@ -85,6 +90,7 @@ public class NetherRenderer implements MapRenderer {
                         //if (block == null) block = KnownBlockRepr.getBlock(id, 0);
 
                         int color = block.getColor();
+
                         // no need to process block if it is fully transparent
                         if (Color.alpha(color) == 0) continue;
 
@@ -104,7 +110,7 @@ public class NetherRenderer implements MapRenderer {
                         a *= 1f - af;
 
                         // break when an opaque block is encountered
-                        if (Color.alpha(color) == 0xff) break;
+                        if (Color.alpha(color) == 0xff) break outerWhile;
                     }
 
                     //start at the top of the next chunk! (current offset might differ)
@@ -127,38 +133,38 @@ public class NetherRenderer implements MapRenderer {
                 g = g < 0 ? 0 : g > 255 ? 255 : g;
                 b = b < 0 ? 0 : b > 255 ? 255 : b;
 
-                for (y = 0; y < chunk.getHeightLimit(); y++) {
-
-                    //some x-ray for important stuff like portals
-                    switch (chunk.getBlock(x, y, z, 0).getLegacyBlock()) {
-                        case B_52_0_MOB_SPAWNER://monster spawner
-                            r = g = b = 255;
-                            break;
-                        case B_54_0_CHEST://chest
-                            if (worth < 90) {
-                                worth = 90;
-                                b = 170;
-                                r = 240;
-                                g = 40;
-                            }
-                            break;
-                        case B_115_0_NETHER_WART://nether wart
-                            if (worth < 80) {
-                                worth = 80;
-                                r = b = 120;
-                                g = 170;
-                            }
-                            break;
-                        case B_90_0_PORTAL://nether portal
-                            if (worth < 95) {
-                                worth = 95;
-                                r = 60;
-                                g = 0;
-                                b = 170;
-                            }
-                            break;
-                    }
-                }
+//                for (y = 0; y < chunk.getHeightLimit(); y++) {
+//
+//                    //some x-ray for important stuff like portals
+//                    switch (chunk.getBlock(x, y, z, 0).getLegacyBlock()) {
+//                        case B_52_0_MOB_SPAWNER://monster spawner
+//                            r = g = b = 255;
+//                            break;
+//                        case B_54_0_CHEST://chest
+//                            if (worth < 90) {
+//                                worth = 90;
+//                                b = 170;
+//                                r = 240;
+//                                g = 40;
+//                            }
+//                            break;
+//                        case B_115_0_NETHER_WART://nether wart
+//                            if (worth < 80) {
+//                                worth = 80;
+//                                r = b = 120;
+//                                g = 170;
+//                            }
+//                            break;
+//                        case B_90_0_PORTAL://nether portal
+//                            if (worth < 95) {
+//                                worth = 95;
+//                                r = 60;
+//                                g = 0;
+//                                b = 170;
+//                            }
+//                            break;
+//                    }
+//                }
 
                 paint.setColor((r << 16) | (g << 8) | b | 0xff000000);
                 canvas.drawRect(new Rect(tX, tY, tX + pW, tY + pL), paint);

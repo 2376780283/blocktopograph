@@ -41,6 +41,7 @@ public abstract class TerrainSubChunk {
                 break;
             case 1:
             case 8:
+            case 9:
                 subChunk = new V1d2d13TerrainSubChunk(byteBuffer, blockRegistry);
                 break;
             default:
@@ -64,6 +65,7 @@ public abstract class TerrainSubChunk {
                 break;
             case 1:
             case 8:
+            case 9:
                 subChunk = new V1d2d13TerrainSubChunk(blockRegistry);
                 break;
             default:

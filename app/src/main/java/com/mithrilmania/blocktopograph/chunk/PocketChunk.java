@@ -31,6 +31,11 @@ public final class PocketChunk extends Chunk {
         tryLoad();
     }
 
+    @Override
+    public boolean isData3d() {
+        return false;
+    }
+
     private void tryLoad() {
         if (mData == null) {
             try {
@@ -217,5 +222,10 @@ public final class PocketChunk extends Chunk {
     public void save() {
         // TODO implement save for pocket chunk
         if (mIsError || mIsVoid) return;
+    }
+
+    @Override
+    public int get3dBiome(int x, int y, int z) {
+        return 127;
     }
 }
