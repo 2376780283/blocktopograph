@@ -962,8 +962,8 @@ public class MapFragment extends Fragment {
                 //reset this to start accepting viewport update requests again.
                 shrinkProceduralMarkersTask = null;
             }).execute(calculateViewPort(
-                    displayMetrics.widthPixels / 2,
-                    displayMetrics.heightPixels / 2)
+                    displayMetrics.widthPixels / 4,
+                    displayMetrics.heightPixels / 4)
             );
 
             proceduralMarkersInterval = 0;

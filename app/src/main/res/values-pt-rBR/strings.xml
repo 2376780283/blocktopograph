@@ -380,7 +380,7 @@
     <string name="create_world_extra_file_name">Criado por Blocktopograph.txt</string>
     <string name="add_world_list_directory">Adicionar Diretório de Lista de Palavras</string>
     <string name="remark_here">Observação aqui...</string>
-    <string name="listpath_is_not_exist">Caminho não existe</string>
+    <string name="listpath_is_not_exist">Não foi possível ler o caminho</string>
     <string name="open_auto_backup_page">Ir para backup</string>
     <string name="add_world_list_directory_done">Caminho: %1$s\nObservação: %2$s</string>
     <string name="list_directory_delete_tip">\nVocê pode adicionar novamente para excluir o caminho.</string>

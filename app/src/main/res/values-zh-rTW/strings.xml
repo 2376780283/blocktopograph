@@ -414,7 +414,7 @@
     <string name="warn_edit_biome">此功能將強制將涉及的三維生物群系降級為二維生物群系，這可能會覆蓋一些地下生物群系，如茂密洞穴、洞窟和黑暗領域。\n您確定要繼續嗎？</string>
     <string name="add_world_list_directory">新增世界列表目錄</string>
     <string name="remark_here">在此處備註...</string>
-    <string name="listpath_is_not_exist">路徑不存在</string>
+    <string name="listpath_is_not_exist">無法讀取路徑</string>
     <string name="open_auto_backup_page">前往備份</string>
     <string name="add_world_list_directory_done">路徑: %1$s\n備註: %2$s</string>
     <string name="list_directory_delete_tip">\n你可以再次添加以刪除路徑。</string>

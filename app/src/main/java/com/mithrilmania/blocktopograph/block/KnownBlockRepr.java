@@ -37,15 +37,15 @@ public enum KnownBlockRepr implements NamedBitmapProviderHandle, NamedBitmapProv
 
 
     B_0_0_AIR("minecraft:air", null, 0, 0, null, 0x00000000, false),
-    B_1_0_STONE("minecraft:stone", "stone", 1, 0, "blocks/stone.png", 0xff707070, false),
+    B_1_0_STONE("minecraft:stone", "stone", 1, 0, "blocks/stone.png", 0xff808080, false),
     B_1_1_STONE_GRANITE("minecraft:stone", "granite", 1, 1, "blocks/stone_granite.png", 0xff8c7167, false),
     B_1_2_STONE_GRANITE_SMOOTH("minecraft:stone", "granite_smooth", 1, 2, "blocks/stone_granite_smooth.png", 0xff946251, false),
     B_1_3_STONE_DIORITE("minecraft:stone", "diorite", 1, 3, "blocks/stone_diorite.png", 0xffc6c6c6, false),
     B_1_4_STONE_DIORITE_SMOOTH("minecraft:stone", "diorite_smooth", 1, 4, "blocks/stone_diorite_smooth.png", 0xffbebec1, false),
     B_1_5_STONE_ANDESITE("minecraft:stone", "andesite", 1, 5, "blocks/stone_andesite.png", 0xff797777, false),
     B_1_6_STONE_ANDESITE_SMOOTH("minecraft:stone", "andesite_smooth", 1, 6, "blocks/stone_andesite_smooth.png", 0xff828382, false),
-//    B_2_0_GRASS("minecraft:grass", null, 2, 0, "blocks/grass_side_carried.png", 0xff939393, true),//debug
-    B_2_0_GRASS("minecraft:grass", null, 2, 0, "blocks/grass_side_carried.png", 0xff588530, true),
+    B_2_0_GRASS("minecraft:grass", null, 2, 0, "blocks/grass_side_carried.png", 0xff939393, true),//debug
+//B_2_0_GRASS("minecraft:grass", null, 2, 0, "blocks/grass_side_carried.png", 0xff588530, true),//debug
     B_3_0_DIRT("minecraft:dirt", null, 3, 0, "blocks/dirt.png", 0xff866043, true),
     B_4_0_COBBLESTONE("minecraft:cobblestone", null, 4, 0, "blocks/cobblestone.png", 0xffA0A0A0, false),
     B_5_0_PLANKS_OAK("minecraft:planks", "oak", 5, 0, "blocks/planks_oak.png", 0xff9c7f4e, false),
@@ -747,7 +747,9 @@ public enum KnownBlockRepr implements NamedBitmapProviderHandle, NamedBitmapProv
     B_2201_3_stripped_oak_log("minecraft:stripped_oak_log", "", 2201, 3, "blocks/observer.png", 0xff9a7d4d, false),
     B_2202_0_blue_ice("minecraft:blue_ice", "", 2202, 0, "blocks/observer.png", 0xff7dbeF6, false),
     /**/
-    B_4000_grass_block("minecraft:grass_block","",4000,0,"blocks/grass_carried.png",0xff939393,true),
+//    B_4000_grass_block("minecraft:grass_block","",4000,0,"blocks/grass_carried.png",0xff588530,true),//debug
+    B_4000_grass_block("minecraft:grass_block","",4000,0,"blocks/grass_carried.png",0xff939393,true),//debug
+
     B_4091_0_seagrass("minecraft:seagrass", "", 4091, 0, "blocks/observer.png", 0x4e787878, false),
     B_4092_1_seagrass("minecraft:seagrass", "", 4092, 1, "blocks/observer.png", 0x4e787878, false),
     B_4093_2_seagrass("minecraft:seagrass", "", 4093, 2, "blocks/observer.png", 0x4e787878, false),

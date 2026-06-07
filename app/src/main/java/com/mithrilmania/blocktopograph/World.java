@@ -55,6 +55,7 @@ public class World implements Serializable {
     private CompoundTag level;
     private transient WorldData worldData;
     private transient MarkerManager markersManager;
+    private long cachedSize = -1;
 
     private final Set<String> mBackgroundJobList = new HashSet<>();
 
@@ -359,6 +360,53 @@ public class World implements Serializable {
         }else{
             mBackgroundJobList.remove(object.getClass().getName());
         }
+    }
+
+    public long getWorldSize() {
+        if (cachedSize >= 0) {
+            return cachedSize;
+        }
+
+        if (!worldFolder.exists() || !worldFolder.canRead()) {
+            cachedSize = 0;
+            return 0;
+        }
+
+        long total = 0;
+
+        // level.dat
+        File levelDat = new File(worldFolder, "level.dat");
+        if (levelDat.exists()) {
+            total += levelDat.length();
+        }
+
+        File dbFolder = new File(worldFolder, "db");
+        if (dbFolder.exists() && dbFolder.isDirectory()) {
+            total += folderSize(dbFolder);
+        }
+
+        File backupsFolder = new File(worldFolder, "btgBackups");
+        if (backupsFolder.exists() && backupsFolder.isDirectory()) {
+            total += folderSize(backupsFolder);
+        }
+
+        cachedSize = total;
+        return total;
+    }
+
+    private long folderSize(File folder) {
+        long size = 0;
+        File[] files = folder.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    size += file.length();
+                } else if (file.isDirectory()) {
+                    size += folderSize(file);
+                }
+            }
+        }
+        return size;
     }
 
     public enum SpecialDBEntryType {

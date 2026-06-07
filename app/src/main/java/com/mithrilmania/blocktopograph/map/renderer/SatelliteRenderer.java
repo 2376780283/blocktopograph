@@ -34,7 +34,7 @@ public class SatelliteRenderer implements MapRenderer {
         int originY = y;
         y--;
 
-        for (; y >= 0 && alphaRemain >= .1f; y--) {
+        for (; y >= -64 && alphaRemain >= .1f; y--) {
 
             count++;
 
@@ -84,8 +84,8 @@ public class SatelliteRenderer implements MapRenderer {
 
         //low places just get darker
 //        shading *= Math.max(Math.min(y / 40f, 1f), 0.2f);//shade ravines & caves, minimum *0.2 to keep some color
-        float depthFactor = Math.max(Math.min((y + 64) / 104f, 1f), 0.2f);
-        shading *= depthFactor;
+//        float depthFactor = Math.max(Math.min((y + 64) / 104f, 1f), 0.4f);
+//        shading *= depthFactor;
         // apply the shading
         finalR = Math.min(Math.max(0f, finalR * shading), 1f);
         finalG = Math.min(Math.max(0f, finalG * shading), 1f);
@@ -103,6 +103,7 @@ public class SatelliteRenderer implements MapRenderer {
         Chunk dataW = worldData.getChunk(chunkX - 1, chunkZ, dimension);
         Chunk dataN = worldData.getChunk(chunkX, chunkZ - 1, dimension);
 
+        if(chunk.isVoid()) return;
         boolean west = dataW != null && !dataW.isVoid(),
                 north = dataN != null && !dataN.isVoid();
 

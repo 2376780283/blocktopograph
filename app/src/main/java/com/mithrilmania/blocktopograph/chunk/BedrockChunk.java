@@ -82,8 +82,8 @@ public final class BedrockChunk extends Chunk {
 
     @Nullable
     private TerrainSubChunk getSubChunk(int which, boolean createIfMissing) {
-        if (mIsError || mVoidList[which]) return null;
-        TerrainSubChunk ret = mTerrainSubChunks[which];
+        if (mIsError || mVoidList[which+4]) return null;
+        TerrainSubChunk ret = mTerrainSubChunks[which+4];
         if (ret == null) {
             byte[] raw;
             WorldData worldData = mWorldData.get();
@@ -91,24 +91,24 @@ public final class BedrockChunk extends Chunk {
                 raw = worldData.getChunkData(mChunkX, mChunkZ,
                         ChunkTag.TERRAIN, mDimension, (byte) which, true);
                 if (raw == null && !createIfMissing) {
-                    mVoidList[which] = true;
+                    mVoidList[which+4] = true;
                     return null;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                mErrorList[which] = true;
-                mVoidList[which] = true;
+                mErrorList[which+4] = true;
+                mVoidList[which+4] = true;
                 return null;
             }
             ret = raw == null ?
                     TerrainSubChunk.createEmpty(8, worldData.mBlockRegistry) :
                     TerrainSubChunk.create(raw, worldData.mBlockRegistry);
             if (ret == null || ret.isError()) {
-                mVoidList[which] = true;
-                mErrorList[which] = true;
+                mVoidList[which+4] = true;
+                mErrorList[which+4] = true;
                 ret = null;
             } else if (!ret.hasBlockLight()) mHasBlockLight = false;
-            mTerrainSubChunks[which] = ret;
+            mTerrainSubChunks[which+4] = ret;
         }
         return ret;
     }
@@ -119,10 +119,12 @@ public final class BedrockChunk extends Chunk {
     public int get3dBiome(int x, int y, int z) {
         ByteBuffer biome3d = data2D;
         int offset = 512;
-        int subchunk = (y) >> 4;
-        int localY = (y + 64) & 0xf;
+        int subchunk = Math.floorDiv(y, 16);
+
+        int localY = Math.floorMod(y, 16);
         int paletteValue = 127;
-        for(int i = 0; i <= subchunk; i++){
+        for(int i = -4; i <= subchunk; i++){
+            if(offset >= data2D.capacity()) return 127;
             int header = biome3d.get(offset) & 0xff;
             offset ++;
             if(header == 0xff){
@@ -224,7 +226,7 @@ public final class BedrockChunk extends Chunk {
                 y = 64;
             int biomeId = get3dBiome(x,y,z);
             if(biomeId == 127){
-                biomeId = get3dBiome(x,64,z);
+                biomeId = get3dBiome(x,0,z);
             }
             return biomeId;
         }else{
@@ -325,7 +327,7 @@ public final class BedrockChunk extends Chunk {
         TerrainSubChunk subChunk = getSubChunk(which, true);
         if (subChunk == null) return;
         subChunk.setBlock(x, y & 0xf, z, layer, block);
-        mDirtyList[which] = true;
+        mDirtyList[which+4] = true;
         KnownBlockRepr repr = block.getLegacyBlock();
 
         // Height increased.

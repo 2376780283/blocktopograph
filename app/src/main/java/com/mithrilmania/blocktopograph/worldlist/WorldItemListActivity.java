@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,6 +21,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +35,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.mithrilmania.blocktopograph.CreateWorldActivity;
@@ -49,6 +53,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class WorldItemListActivity extends AppCompatActivity {
 
@@ -295,7 +301,7 @@ public class WorldItemListActivity extends AppCompatActivity {
                                         path = path2;
                                     }
                                 }
-                                if (worldListFolder.exists()) {
+                                if (worldListFolder.exists() && worldListFolder.canRead()) {
                                     String remark = remarkText.getText().toString();
                                     String oldNote = prefs.getNote(path);
                                     if (oldNote == null) {
@@ -520,11 +526,11 @@ public class WorldItemListActivity extends AppCompatActivity {
 
             File internationalPath = new File(sd, "Android/\u200Bdata/com.mojang.minecraftpe/files/games/com.mojang/minecraftWorlds");
             File internationalPath2 = new File(sd, "Android/data/com.mojang.minecraftpe/files/games/com.mojang/minecraftWorlds");
-            if (internationalPath.exists()) {
+            if (internationalPath.exists() && internationalPath.canRead()) {
                 saveFolders.add(internationalPath);
                 marks.add(null);
 //                marks.add(getString(R.string.world_mark_international));
-            }else if(internationalPath2.exists()){
+            }else if(internationalPath2.exists() && internationalPath2 .canRead()){
                 saveFolders.add(internationalPath2);
                 marks.add(null);
 //                marks.add(getString(R.string.world_mark_international));
@@ -550,7 +556,7 @@ public class WorldItemListActivity extends AppCompatActivity {
 
                 File path = new File(pathString);
                 String note = entry.getValue();
-                if (path.exists()) {
+                if (path.exists() && path.canRead()) {
                     Log.d(this,"Folder存在: "+note);
                     saveFolders.add(path);
                     marks.add("["+note+"]");
@@ -612,18 +618,45 @@ public class WorldItemListActivity extends AppCompatActivity {
             return new ViewHolder(view);
         }
 
-
+        private final ExecutorService executor = Executors.newFixedThreadPool(2);
         @SuppressLint("SetTextI18n")
         @Override
         public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
             holder.mWorld = mWorlds.get(position);
             holder.mWorldNameView.setText(holder.mWorld.getWorldDisplayName());
-            holder.mWorldSize.setText(IoUtil.getFileSizeInText(FileUtils.sizeOf(holder.mWorld.worldFolder)));
+//            holder.mWorldSize.setText(IoUtil.getFileSizeInText(FileUtils.sizeOf(holder.mWorld.worldFolder)));
+            final World world = holder.mWorld;
+            executor.execute(() -> {
+                long size = world.getWorldSize();
+                final String sizeText = IoUtil.getFileSizeInText(size);
+
+                holder.mView.post(() -> {
+                    if (holder.getAdapterPosition() == position) {
+                        holder.mWorldSize.setText(sizeText);
+                    }
+                });
+            });
             holder.mWorldGamemode.setText(WorldListUtil.getWorldGamemodeText(WorldItemListActivity.this, holder.mWorld));
             holder.mWorldLastPlayed.setText(WorldListUtil.getLastPlayedText(WorldItemListActivity.this, holder.mWorld));
             holder.mWorldPath.setText(holder.mWorld.worldFolder.getName());
             holder.mWorldMark.setText(holder.mWorld.mark);
+            File iconFile = new File(holder.mWorld.worldFolder, "world_icon.jpeg");
 
+            if (iconFile.exists() || iconFile.exists()) {
+//                holder.mIconView.setImageURI(Uri.fromFile(iconFile));
+
+                Glide.with(WorldItemListActivity.this)
+                        .load(iconFile)
+                        .override(96, 96)
+                        .centerCrop()
+                        .placeholder(R.drawable.ic_world_icon)
+                        .error(R.drawable.ic_world_icon)
+                        .into(holder.mIconView);
+                holder.mIconContainer.setBackgroundResource(R.drawable.bg_icon_border);
+            } else {
+                holder.mIconView.setImageResource(R.drawable.ic_world_icon);
+                holder.mIconContainer.setBackground(null);
+            }
 
             holder.mView.setOnClickListener(v -> {
                 if (mTwoPane) {
@@ -657,6 +690,8 @@ public class WorldItemListActivity extends AppCompatActivity {
             final TextView mWorldGamemode;
             final TextView mWorldLastPlayed;
             final TextView mWorldPath;
+            final ImageView mIconView;
+            FrameLayout mIconContainer;
             World mWorld;
 
             ViewHolder(View view) {
@@ -668,6 +703,8 @@ public class WorldItemListActivity extends AppCompatActivity {
                 mWorldGamemode = view.findViewById(R.id.world_gamemode);
                 mWorldLastPlayed = view.findViewById(R.id.world_last_played);
                 mWorldPath = view.findViewById(R.id.world_path);
+                mIconView = view.findViewById(R.id.icon);
+                mIconContainer = itemView.findViewById(R.id.icon_container);
             }
 
             @Override

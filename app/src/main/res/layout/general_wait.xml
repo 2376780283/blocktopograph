@@ -10,6 +10,7 @@
         android:padding="24dp"
         android:gravity="center_horizontal">
 
+        <!-- 新增：水平进度条 -->
         <ProgressBar
             android:id="@+id/progress_bar"
             style="?android:attr/progressBarStyleHorizontal"
@@ -36,6 +37,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
 
+        <!-- 新增：百分比文字 -->
         <TextView
             android:id="@+id/progress_text"
             android:layout_width="wrap_content"

@@ -321,7 +321,7 @@
     <string name="warn_edit_biome">Fungsi ini akan memaksa menurunkan tingkat bioma tiga dimensi yang terlibat menjadi dua dimensi, yang mungkin menimpa beberapa bioma bawah tanah seperti gua rimbun, cavern, dan domain gelap. \nApakah Anda yakin ingin melanjutkan?</string>
     <string name="add_world_list_directory">Tambah Direktori Daftar Dunia</string>
     <string name="remark_here">Catatan di sini...</string>
-    <string name="listpath_is_not_exist">Jalur tidak ada</string>
+    <string name="listpath_is_not_exist">Tidak dapat membaca jalur</string>
     <string name="open_auto_backup_page">Pergi ke cadangan</string>
     <string name="add_world_list_directory_done">Jalur: %1$s\nCatatan: %2$s</string>
     <string name="list_directory_delete_tip">\nAnda dapat menambahkan lagi untuk menghapus jalur.</string>

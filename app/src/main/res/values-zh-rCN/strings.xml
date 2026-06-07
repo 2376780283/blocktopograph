@@ -415,7 +415,7 @@
     <string name="warn_edit_biome">此功能会强制将所涉及区块的三维生物群系降级为二维生物群系，可能会覆盖掉一些地底生物群系，比如繁茂洞穴、溶洞、深暗之域等。\n确认要继续吗？</string>
     <string name="add_world_list_directory">添加世界列表目录</string>
     <string name="remark_here">请输入备注...</string>
-    <string name="listpath_is_not_exist">路径不存在</string>
+    <string name="listpath_is_not_exist">无法读取路径</string>
     <string name="open_auto_backup_page">去备份</string>
     <string name="add_world_list_directory_done">路径：%1$s  \n备注：%2$s</string>
     <string name="list_directory_delete_tip">\n你可以再次添加以删除路径</string>

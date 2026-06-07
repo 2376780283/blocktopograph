@@ -18,9 +18,9 @@ public final class McUtil {
 
         File defaultPath = new File(sdcard, "Blocktopograph/worlds");
 
-        if (internationalPath.exists()) {
+        if (internationalPath.exists() && internationalPath.canRead()) {
             return internationalPath;
-        }else if(internationalPath2.exists()){
+        }else if(internationalPath2.exists() && internationalPath2.canRead()){
             return internationalPath2;
         }else if(oldPath.exists() && (oldPath.list().length != 0)){
             return oldPath;

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.mithrilmania.blocktopograph.BackupActivity;
@@ -132,11 +134,26 @@ public class WorldItemDetailFragment extends Fragment implements View.OnClickLis
         try {
             if (mWorld != null && mWorld.getLevel() != null) {
                 binding.setName(mWorld.getWorldDisplayName());
-                binding.setSize(IoUtil.getFileSizeInText(FileUtils.sizeOf(mWorld.worldFolder)));
+                binding.setSize(IoUtil.getFileSizeInText(mWorld.getWorldSize()));
                 binding.setMode(WorldListUtil.getWorldGamemodeText(activity, mWorld));
                 binding.setTime(WorldListUtil.getLastPlayedText(activity, mWorld));
                 binding.setSeed(String.valueOf(mWorld.getWorldSeed()));
                 binding.setPath(mWorld.levelFile.getAbsolutePath());
+                ImageView backdrop = activity.findViewById(R.id.backdrop);
+                View scrim = activity.findViewById(R.id.scrim);
+                Log.d(this,"backdropisNull: "+(backdrop == null));
+                if (backdrop != null) {
+                    File iconFile = new File(mWorld.worldFolder, "world_icon.jpeg");
+                    Log.d(this,"iconExist: "+iconFile.exists());
+
+                    if (iconFile.exists()) {
+                        Glide.with(activity)
+                                .load(iconFile)
+                                .into(backdrop);
+
+                        if (scrim != null) scrim.setVisibility(View.VISIBLE);
+                    }
+                }
             }
         } catch (Exception e) {
             Log.d(this, e);

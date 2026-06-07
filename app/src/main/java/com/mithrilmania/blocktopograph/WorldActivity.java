@@ -139,8 +139,8 @@ public class WorldActivity extends AppCompatActivity
             return;
         }
 
-        showEntityMarkers = getPreferences(MODE_PRIVATE).getBoolean(PREF_KEY_SHOW_ENTITY_MARKERS, true);
-        showTileEntityMarkers = getPreferences(MODE_PRIVATE).getBoolean(PREF_KEY_SHOW_TILE_ENTITY_MARKERS, true);
+        showEntityMarkers = getPreferences(MODE_PRIVATE).getBoolean(PREF_KEY_SHOW_ENTITY_MARKERS, false);
+        showTileEntityMarkers = getPreferences(MODE_PRIVATE).getBoolean(PREF_KEY_SHOW_TILE_ENTITY_MARKERS, false);
 
         /*
                 Layout
