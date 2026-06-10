@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.block.Block;
+import com.mithrilmania.blocktopograph.block.BlockType;
 import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.chunk.terrain.TerrainSubChunk;
 import com.mithrilmania.blocktopograph.chunk.terrain.V1d2d13TerrainSubChunk;
@@ -119,9 +120,9 @@ public final class BedrockChunk extends Chunk {
     public int get3dBiome(int x, int y, int z) {
         ByteBuffer biome3d = data2D;
         int offset = 512;
-        int subchunk = Math.floorDiv(y, 16);
+        int subchunk = (y >> 4) - ((y < 0) && (y & 15) != 0 ? 1 : 0);
 
-        int localY = Math.floorMod(y, 16);
+        int localY = y & 15;
         int paletteValue = 127;
         for(int i = -4; i <= subchunk; i++){
             if(offset >= data2D.capacity()) return 127;
@@ -201,14 +202,17 @@ public final class BedrockChunk extends Chunk {
     public int getHeightMapValue(int x, int z) {
         if (mIsVoid) return 0;
         short h = data2D.getShort(POS_HEIGHTMAP + (get2dOffset(x, z) << 1));
+        int heightvalue;
         if(isData3d && (mDimension == Dimension.getDimension(0))){
-            return (((h & 0xff) << 8) | ((h >> 8) & 0xff)) - 64;
+            heightvalue = (short) (((h & 0xff) << 8) | ((h >> 8) & 0xff)) - 64;
         }else{
-            return ((h & 0xff) << 8) | ((h >> 8) & 0xff);
+            heightvalue =(short) ((h & 0xff) << 8) | ((h >> 8) & 0xff);
         }
-
+        if(heightvalue == -64 && mDimension == Dimension.OVERWORLD){
+            heightvalue = getHighestBlockYUnderAt(x,z,319)+1;
+        }
+        return heightvalue;
     }
-
     private void setHeightMapValue(int x, int z, short height) {
         if (mIsVoid) return;
         data2D.putShort(POS_HEIGHTMAP + (get2dOffset(x, z) << 1), Short.reverseBytes(height));
@@ -221,9 +225,12 @@ public final class BedrockChunk extends Chunk {
     public int getBiome(int x, int z) {
         if (mIsVoid) return 127;
         if(isData3d){
-            int y = getHeightMapValue(x, z);
-            if(mDimension == Dimension.getDimension(1))
+            int y;
+            if(mDimension == Dimension.getDimension(1)) {
                 y = 64;
+            }else {
+                y= getHeightMapValue(x, z);
+            }
             int biomeId = get3dBiome(x,y,z);
             if(biomeId == 127){
                 biomeId = get3dBiome(x,0,z);
@@ -256,10 +263,8 @@ public final class BedrockChunk extends Chunk {
                     }
                 }
             }
-            Log.d(this,"newData2d put: x:"+x+" z:"+z+" id:"+id);
             newData2d.put(POS_BIOME_DATA + get2dOffset(x, z), (byte) id);
         }else{
-            Log.d(this,"data2d put: x:"+x+" z:"+z+" id:"+id);
             data2D.put(POS_BIOME_DATA + get2dOffset(x, z), (byte) id);
         }
 
@@ -313,18 +318,19 @@ public final class BedrockChunk extends Chunk {
         TerrainSubChunk subChunk = getSubChunk(y >> 4, false);
         if (subChunk == null)
             return getAir();
-        Block block = subChunk.getBlock(x, y & 0xf, z, layer);
-        int color = block.getColor();
+        //        int color = block.getColor();
 
-        return block;
+        return subChunk.getBlock(x, y & 0xf, z, layer);
     }
 
     @Override
     public void setBlock(int x, int y, int z, int layer, @NonNull Block block) {
-        if (x >= 16 || y >= 256 || z >= 16 || x < 0 || y < 0 || z < 0 || mIsVoid)
+        if (x >= 16 || y >= 320 || z >= 16 || x < 0 || y < -64 || z < 0 || mIsVoid)
             return;
+
         int which = y >> 4;
         TerrainSubChunk subChunk = getSubChunk(which, true);
+
         if (subChunk == null) return;
         subChunk.setBlock(x, y & 0xf, z, layer, block);
         mDirtyList[which+4] = true;
@@ -354,12 +360,7 @@ public final class BedrockChunk extends Chunk {
     public int getBlockLightValue(int x, int y, int z) {
         if (!mHasBlockLight || x >= 16 || y >= 320 || z >= 16 || x < 0 || y < -64 || z < 0 || mIsVoid)
             return 0;
-        TerrainSubChunk subChunk;
-        if(isData3d || y < 0){
-            subChunk = getSubChunk((y >> 4) + 4, false);
-        }else {
-            subChunk = getSubChunk(y >> 4, false);
-        }
+        TerrainSubChunk subChunk = getSubChunk(y >> 4, false);
         if (subChunk == null) return 0;
         return subChunk.getBlockLightValue(x, y & 0xf, z);
     }
@@ -375,10 +376,10 @@ public final class BedrockChunk extends Chunk {
 
     @Override
     public int getHighestBlockYUnderAt(int x, int z, int y) {
-        if (x >= 16 || y >= 256 || z >= 16 || x < 0 || y < 0 || z < 0 || mIsVoid)
+        if (x >= 16 || y >= 320 || z >= 16 || x < 0 || y < -64 || z < 0 || mIsVoid)
             return -1;
         TerrainSubChunk subChunk;
-        for (int which = y >> 4; which >= 0; which--) {
+        for (int which = y >> 4; which >= -4; which--) {
             subChunk = getSubChunk(which, false);
             if (subChunk == null) continue;
             for (int innerY = (which == (y >> 4)) ? y & 0xf : 15; innerY >= 0; innerY--) {
@@ -432,7 +433,7 @@ public final class BedrockChunk extends Chunk {
         for (int i = 0, mTerrainSubChunksLength = mTerrainSubChunks.length; i < mTerrainSubChunksLength; i++) {
             TerrainSubChunk subChunk = mTerrainSubChunks[i];
             if (subChunk == null || mVoidList[i] || !mDirtyList[i]) continue;
-            subChunk.save(worldData, mChunkX, mChunkZ, mDimension, i);
+            subChunk.save(worldData, mChunkX, mChunkZ, mDimension, i-4);
         }
     }
 }

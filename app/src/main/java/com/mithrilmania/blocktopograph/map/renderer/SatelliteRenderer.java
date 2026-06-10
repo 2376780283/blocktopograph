@@ -33,15 +33,16 @@ public class SatelliteRenderer implements MapRenderer {
         int count = 0;
         int originY = y;
         y--;
-
-        for (; y >= -64 && alphaRemain >= .1f; y--) {
+        int bottomY = 0;
+        if(chunk.mDimension == Dimension.OVERWORLD) bottomY = -64;
+        for (; y >= bottomY && alphaRemain >= .1f; y--) {
 
             count++;
 
             Block block = chunk.getBlock(x, y, z, 0);
             KnownBlockRepr legacyBlock = block.getLegacyBlock();
 
-//            if (legacyBlock == KnownBlockRepr.B_0_0_AIR) continue;//skip air blocks
+            if (legacyBlock == KnownBlockRepr.B_0_0_AIR) continue;//skip air blocks
 
             int color = block.getColor();
 
@@ -126,7 +127,7 @@ public class SatelliteRenderer implements MapRenderer {
                 paint.setColor(color);
                 canvas.drawRect(new Rect(tX, tY, tX + pW, tY + pL), paint);
 
-
+                
             }
         }
 

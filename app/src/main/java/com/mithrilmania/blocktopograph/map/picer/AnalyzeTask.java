@@ -131,8 +131,18 @@ class AnalyzeTask extends AsyncTask<Void, Void, Rect> {
                 z = (key[8] & 0xFF) | ((key[9] & 0xFF) << 8) | ((key[10] & 0xFF) << 16) | ((key[11] & 0xFF) << 24);
                 if (key.length == 16) {
                     dimId = (key[12] & 0xFF) | ((key[13] & 0xFF) << 8) | ((key[14] & 0xFF) << 16) | ((key[15] & 0xFF) << 24);
+                    byte[] legacyKey = new byte[13];
+                    System.arraycopy(key,4,legacyKey,0,12);
+                    legacyKey[12] = 44;
+                    byte[] value = db.get(legacyKey);
+                    if(value == null) continue ;
                 } else {
                     dimId = 0;
+                    byte[] legacyKey = new byte[9];
+                    System.arraycopy(key,4,legacyKey,0,8);
+                    legacyKey[8] = 44;
+                    byte[] value = db.get(legacyKey);
+                    if(value == null) continue ;
                 }
 
                 if (dimId != dimension.id) continue;
@@ -191,8 +201,16 @@ class AnalyzeTask extends AsyncTask<Void, Void, Rect> {
 //                if (loopCount > 16) Area.absMergeList(areas);
             }
             /// //////////
-
-        if(rect == null){
+        boolean notAll = false;
+            if(rect != null) {
+                byte[] left = db.get(genLegacyKey(rect.left - 1, 0, dimension.id));
+                byte[] right = db.get(genLegacyKey(rect.right + 1, 0, dimension.id));
+                byte[] top = db.get(genLegacyKey(0, rect.top - 1, dimension.id));
+                byte[] bottom = db.get(genLegacyKey(0, rect.bottom + 1, dimension.id));
+                if (left != null || right != null || top != null || bottom != null) notAll = true;
+            }
+        Log.d(this,"notAll: "+notAll);
+        if(rect == null || notAll){
             byte[] value;
             Version version;
             loop1:
@@ -283,7 +301,35 @@ class AnalyzeTask extends AsyncTask<Void, Void, Rect> {
         }
         return rect;
     }
+    private static byte[] genLegacyKey(int chunkX, int chunkZ, int dimId) {
+        byte[] legacyKey;
 
+        if(dimId == 0){
+            legacyKey = new byte[9];
+            legacyKey[0] = (byte) (chunkX & 0xFF);
+            legacyKey[1] = (byte) ((chunkX >> 8) & 0xFF);
+            legacyKey[2] = (byte) ((chunkX >> 16) & 0xFF);
+            legacyKey[3] = (byte) ((chunkX >> 24) & 0xFF);
+            legacyKey[4] = (byte) (chunkZ & 0xFF);
+            legacyKey[5] = (byte) ((chunkZ >> 8) & 0xFF);
+            legacyKey[6] = (byte) ((chunkZ >> 16) & 0xFF);
+            legacyKey[7] = (byte) ((chunkZ >> 24) & 0xFF);
+            legacyKey[8] = (byte) 118;
+        }else{
+            legacyKey = new byte[13];
+            legacyKey[0] = (byte) (chunkX & 0xFF);
+            legacyKey[1] = (byte) ((chunkX >> 8) & 0xFF);
+            legacyKey[2] = (byte) ((chunkX >> 16) & 0xFF);
+            legacyKey[3] = (byte) ((chunkX >> 24) & 0xFF);
+            legacyKey[4] = (byte) (chunkZ & 0xFF);
+            legacyKey[5] = (byte) ((chunkZ >> 8) & 0xFF);
+            legacyKey[6] = (byte) ((chunkZ >> 16) & 0xFF);
+            legacyKey[7] = (byte) ((chunkZ >> 24) & 0xFF);
+            legacyKey[8] = (byte) dimId;
+            legacyKey[12] = (byte) 118;
+        }
+        return legacyKey;
+    }
     @Override
     protected void onCancelled() {
         PicerFragment owner = this.owner.get();

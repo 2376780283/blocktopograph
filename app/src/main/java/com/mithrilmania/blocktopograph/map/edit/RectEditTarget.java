@@ -30,8 +30,8 @@ public class RectEditTarget extends EditTarget {
         mArea = new Rect(area);
         mArea.right--;
         mArea.bottom--;
-        yLowest = 0;
-        yHighest = 255;
+        yLowest = -64;
+        yHighest = 320;
         this.dimension = dimension;
     }
 
