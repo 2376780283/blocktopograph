@@ -39,7 +39,7 @@ import com.mithrilmania.blocktopograph.map.TileEntity;
 import com.mithrilmania.blocktopograph.map.marker.AbstractMarker;
 import com.mithrilmania.blocktopograph.map.renderer.MapType;
 import com.mithrilmania.blocktopograph.nbt.EditableNBT;
-import com.mithrilmania.blocktopograph.nbt.EditorFragment;
+import com.mithrilmania.blocktopograph.nbt.EditorFragmentNew;
 import com.mithrilmania.blocktopograph.nbt.convert.DataConverter;
 import com.mithrilmania.blocktopograph.nbt.convert.LevelDataConverter;
 import com.mithrilmania.blocktopograph.nbt.convert.NBTConstants;
@@ -1216,7 +1216,7 @@ public class WorldActivity extends AppCompatActivity
         // see changeContentFragment(callback)
         this.confirmContentClose = getString(R.string.confirm_close_nbt_editor);
 
-        EditorFragment editorFragment = new EditorFragment();
+        EditorFragmentNew editorFragment = new EditorFragmentNew();
         editorFragment.setNbt(editableNBT);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

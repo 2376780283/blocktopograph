@@ -35,6 +35,8 @@ import com.mithrilmania.blocktopograph.nbt.convert.NBTInputStream;
 import com.mithrilmania.blocktopograph.nbt.convert.NBTOutputStream;
 import com.mithrilmania.blocktopograph.nbt.tags.ByteTag;
 import com.mithrilmania.blocktopograph.nbt.tags.CompoundTag;
+import com.mithrilmania.blocktopograph.nbt.tags.FloatTag;
+import com.mithrilmania.blocktopograph.nbt.tags.ListTag;
 import com.mithrilmania.blocktopograph.nbt.tags.LongTag;
 import com.mithrilmania.blocktopograph.nbt.tags.StringTag;
 import com.mithrilmania.blocktopograph.nbt.tags.Tag;
@@ -52,6 +54,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -63,6 +66,8 @@ public final class CreateWorldActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_PICK_BIOME = 2012;
     private ActivityCreateWorldBinding mBinding;
     private ToolTipsManager mToolTipsManager;
+    private int mVersion;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -110,15 +115,26 @@ public final class CreateWorldActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+
+    public int getMaxHeight() {
+        int versionId = mBinding.version.getCheckedRadioButtonId();
+        if (versionId == R.id.version_aqua) return 256;
+        if (versionId == R.id.version_cave) return 384;
+        return 256;
+    }
+
+
     private static class CreateWorldTask extends AsyncTask<Void, Void, Boolean> {
 
         private final WeakReference<CreateWorldActivity> thiz;
         private boolean canProceed;
         private boolean mIsVanillaFlat;
+        private int mVersion;
         private String mName;
         private int mBiome;
-        private int mVersion;
         private List<Layer> layers;
+        private int layerCount = 0;
+
 
         private CreateWorldTask(CreateWorldActivity thiz) {
             this.thiz = new WeakReference<>(thiz);
@@ -151,7 +167,6 @@ public final class CreateWorldActivity extends AppCompatActivity {
         @Override
         @NonNull
         protected Boolean doInBackground(Void... voids) {
-
             // Check existing failure.
             if (!canProceed) return false;
 
@@ -177,8 +192,10 @@ public final class CreateWorldActivity extends AppCompatActivity {
             // Get version.
             String verStr;
             if (mVersion == R.id.version_aqua) {
-                verStr = "1_2_13";
-            } else {
+                verStr = "1_2_13+";
+            } else if(mVersion == R.id.version_cave) {
+                verStr = "1_18+";
+            }else{
                 verStr = "unknown";
             }
 
@@ -225,12 +242,12 @@ public final class CreateWorldActivity extends AppCompatActivity {
                 }
                 Layer[] alayers = new Layer[lsize < 3 ? 3 : lsize];
                 byte isEducation = (byte) 0;
-
                 for (int i = 0; i < lsize; i++) {
                     alayers[i] = layers.get(lsize - i - 1);
                     if(alayers[i].isEducationBlock()){
                         isEducation = (byte) 1;
                     }
+                    layerCount += alayers[i].amount;
                 }
                 // Actually there have to be at least 3 layers, but we don't need to inform users.
                 for (int i = lsize; i < 3; i++) {
@@ -239,7 +256,7 @@ public final class CreateWorldActivity extends AppCompatActivity {
                     air.amount = 0;
                     alayers[i] = air;
                 }
-                FlatLayers flatLayers = FlatLayers.createNew(mBiome, alayers);
+                FlatLayers flatLayers = FlatLayers.createNew(mBiome, alayers,mVersion);
                 stag = (StringTag) tag;
                 stag.setValue(flatLayers.write());
 
@@ -275,6 +292,22 @@ public final class CreateWorldActivity extends AppCompatActivity {
                         false, true);
                 CompoundTag playerTag = (CompoundTag) nis.readTag();
 
+                Tag posTag = playerTag.getChildTagByKey(Keys.POSATION);
+                if (posTag instanceof ListTag) {
+                    ListTag posList = (ListTag) posTag;
+                    ArrayList<Tag> pos = posList.getValue();
+
+                    if (pos.size() > 1) {
+                        Tag yTag = pos.get(1);
+                        if (yTag instanceof FloatTag) {
+                            float playerHeight = mVersion == R.id.version_cave
+                                    ? layerCount - 64 + 5
+                                    : layerCount + 5;
+                            Log.d(this,"playerHeight: "+playerHeight+" LayerCount; "+layerCount);
+                            ((FloatTag) yTag).setValue(playerHeight);
+                        }
+                    }
+                }
                 // Modify inventory.
                 InventoryHolder inv = InventoryHolder.readFromPlayer(playerTag);
                 assert inv != null;
@@ -282,7 +315,7 @@ public final class CreateWorldActivity extends AppCompatActivity {
                 // Create a book in the first slot.
                 InventoryHolder.Item item = inv.getItemOfSlot((short) 0);
                 assert item != null;
-                //item.setName("minecraft:written_book");
+                item.setName("minecraft:written_book");
                 item.setId((short) 387);
                 item.setCount((byte) 1);
                 item.setDamage((short) 0);
@@ -301,7 +334,7 @@ public final class CreateWorldActivity extends AppCompatActivity {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 ItemTag.setPageText(page, activity.getString(
                         R.string.create_world_book_page_0, dateFormat.format(new Date())));
-                ItemTag.setPageUrl(page, "https://play.google.com/store/apps/details?id=rbq2012.blocktopograph");
+                ItemTag.setPageUrl(page, "https://github.com/rukiroki/blocktopograph");
                 {
                     page = itag.getPage(1);
                     assert page != null;

@@ -25,14 +25,17 @@ import static com.mithrilmania.blocktopograph.flat.EditFlatFragment.EXTRA_KEY_LI
 import static com.mithrilmania.blocktopograph.flat.EditFlatFragment.EXTRA_KEY_LIST_INDEX;
 import static com.mithrilmania.blocktopograph.flat.EditFlatFragment.EXTRA_KEY_LIST_IS_ADD;
 import static com.mithrilmania.blocktopograph.flat.EditFlatFragment.EXTRA_KEY_LIST_LAYER;
+import static com.mithrilmania.blocktopograph.flat.EditFlatFragment.EXTRA_KEY_LIST_MAX_HEIGHT;
 
 public final class EditLayerDialog extends AppCompatActivity {
 
     public static final int REQUEST_CODE_PICK_BLOCK = 2014;
     private boolean mIsAdd;
     private int mExistingSum;
+    private int mMaxHeight;
     private int mPositon;
     private DialogEditLayerBinding mBinding;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,6 +61,7 @@ public final class EditLayerDialog extends AppCompatActivity {
         mBinding.setLayer(layer);
         mIsAdd = intent.getBooleanExtra(EXTRA_KEY_LIST_IS_ADD, true);
         mExistingSum = intent.getIntExtra(EXTRA_KEY_LIST_EXISTING_SUM, 0);
+        mMaxHeight = intent.getIntExtra(EXTRA_KEY_LIST_MAX_HEIGHT, 384);
 
         if (mIsAdd) setTitle(R.string.edit_flat_add_layer_title);
         else setTitle(R.string.edit_flat_edit_layer_title);
@@ -77,7 +81,7 @@ public final class EditLayerDialog extends AppCompatActivity {
                 mBinding.amount.testValidity();
             }
         });
-        amountBar.addValidator(new AmountValidator(getString(R.string.edit_layer_amount_constrait)));
+        amountBar.addValidator(new AmountValidator(getString(R.string.edit_layer_amount_constrait,mMaxHeight)));
 
         mBinding.icon.setImageBitmap(layer.block.getIcon(getAssets()));
         UiUtil.blendBlockColor(mBinding.frame, layer.block);
@@ -141,7 +145,7 @@ public final class EditLayerDialog extends AppCompatActivity {
             } catch (NumberFormatException e) {
                 return false;
             }
-            return val >= 0 && val < 128 - mExistingSum;
+            return val >= 0 && val < mMaxHeight - mExistingSum;
         }
     }
 }

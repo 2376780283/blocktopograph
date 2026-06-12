@@ -271,6 +271,7 @@
     <string name="error_general">Erro desconhecido.</string>
     <string name="general_please_wait">Por favor, aguarde...</string>
     <string name="edit_layer_amount">Quantidade:</string>
+    <string name="edit_layer_amount_constrait">O número total de todas as camadas deve ser pelo menos 0 e no máximo %1$d.</string>
     <string name="edit_flat_add_layer_title">Adicionar uma camada...</string>
     <string name="edit_flat_edit_layer_title">Editar</string>
     <string name="pick_block_title">Selecionar um bloco</string>
@@ -399,5 +400,7 @@
     <string name="copy_complete_info">O mundo foi copiado com sucesso para: %1$s. Feche esta página e vá para a página do mundo copiado.</string>
     <string name="copy_failed">Falha ao copiar</string>
     <string name="copy_game_folder_complete_info">A pasta do jogo foi copiada com sucesso. Agora você pode jogar e usar este aplicativo para editar todos os mundos que você criou. No entanto, não faça os dois ao mesmo tempo.</string>
+    <string name="create_world_version_cave">1.18.0~latest</string>
+    <string name="nbt_editor_cannot_different_tag_in_liat">Esta ListTag só pode conter %1$s</string>
 
 </resources>

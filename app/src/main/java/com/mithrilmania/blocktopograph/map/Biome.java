@@ -132,7 +132,8 @@ public enum Biome {
 
     PALE_GARDEN(193, R.string.biome_pale_garden, ColorWrapper.fromRGB(160, 170, 160)),
 
-    SULFUR_CAVES(194, R.string.biome_sulfur_caves, ColorWrapper.fromRGB(200, 180, 60));
+    SULFUR_CAVES(194, R.string.biome_sulfur_caves, ColorWrapper.fromRGB(200, 180, 60)),
+    NULL(255,R.string.biome_null,ColorWrapper.fromRGB(1, 1, 1));
 
     private static final SparseArray<Biome> biomeMap;
 

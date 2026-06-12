@@ -10,8 +10,9 @@
     <ImageView
         android:id="@+id/icon"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_tag_byte" />
+        android:layout_height="@dimen/size_large"
+        app:srcCompat="@drawable/ic_tag_byte"
+        android:layout_marginStart="@dimen/size_small"/>
 
     <TextView
         android:id="@+id/tag_name"
@@ -19,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:textSize="19sp"
+        android:textSize="@dimen/text_midium"
         tools:text="Tag name here" />
 
     <EditText
@@ -28,6 +29,7 @@
         android:layout_height="40dp"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
+        android:textSize="@dimen/text_small"
         android:ems="3"
         android:inputType="number" />
 

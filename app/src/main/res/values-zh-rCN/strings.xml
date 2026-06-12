@@ -237,7 +237,7 @@
     <string name="error_general">未知错误。</string>
     <string name="general_please_wait">请等待...</string>
     <string name="edit_layer_amount">数量：</string>
-    <string name="edit_layer_amount_constrait">所有层的数量总和应该至少是0而至多是127。</string>
+    <string name="edit_layer_amount_constrait">所有层的数量总和应该至少是0而至多是%1$d。</string>
     <string name="edit_flat_add_layer_title">添加一层...</string>
     <string name="edit_flat_edit_layer_title">编辑</string>
     <string name="pick_block_title">选取方块</string>
@@ -434,4 +434,6 @@
     <string name="copy_complete_info">世界已成功复制到：%1$s 请关闭此页面，进入复制后的世界页面。</string>
     <string name="copy_failed">复制失败</string>
     <string name="copy_game_folder_complete_info">游戏文件夹已复制完成，现在可以在游戏中游玩和使用此应用编辑你创建过的所有世界了。但是不要同时这样做。</string>
+    <string name="create_world_version_cave">1.18.0至今</string>
+    <string name="nbt_editor_cannot_different_tag_in_liat">这个List标签只能包含%1$s</string>
 </resources>

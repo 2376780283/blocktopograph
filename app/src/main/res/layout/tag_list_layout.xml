@@ -6,20 +6,31 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal">
-
+    <ImageView
+        android:id="@+id/expand_indicator"
+        android:layout_width="@dimen/size_small"
+        android:layout_height="@dimen/size_small"
+        android:src="@drawable/baseline_arrow_forward_ios_24" />
     <ImageView
         android:id="@+id/icon"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_tag_list" />
+        android:layout_height="@dimen/size_large"
+        app:srcCompat="@drawable/ic_tag_list"/>
 
     <TextView
         android:id="@+id/tag_name"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_start_small"
+        android:layout_marginLeft="10dp"
+        android:textSize="@dimen/text_midium"
+        tools:text="Tag name here" />
+    <TextView
+        android:id="@+id/tag_value"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:textSize="19sp"
-        tools:text="Tag name here" />
+        android:textSize="16sp"
+        android:textColor="@android:color/darker_gray" />
 
 </LinearLayout>

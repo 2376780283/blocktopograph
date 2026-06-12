@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.mithrilmania.blocktopograph.Log;
+import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 
 import org.json.JSONArray;
@@ -19,11 +20,14 @@ public final class FlatLayers {
     private static final String KEY_COUNT = "count";
     private static final String KEY_VERSION = "encoding_version";
     private static final String KEY_STRUCTURE_OPS = "structure_options";
+    private static final String  WORLD_VERSION = "world_version";
 
     private boolean hasStructureOps;
     private int biomeId;
     private int encodingVersion;
     private Layer[] mLayers;
+    private int mVersion;
+    private String caveWorldVersion = "version.post_1_18";
 
     @Nullable
     public static FlatLayers parse(String json) {
@@ -52,11 +56,12 @@ public final class FlatLayers {
     }
 
     @NonNull
-    public static FlatLayers createNew(int biomeId, Layer[] layers) {
+    public static FlatLayers createNew(int biomeId, Layer[] layers,int mVersion) {
         FlatLayers ret = new FlatLayers();
         ret.biomeId = biomeId;
-        ret.encodingVersion = 4;
+        ret.encodingVersion = mVersion == R.id.version_aqua?4:6;
         ret.mLayers = layers;
+        ret.mVersion = mVersion;
         return ret;
     }
 
@@ -103,6 +108,7 @@ public final class FlatLayers {
             }
             root.put(KEY_BLOCK_LAYERS, jlayers);
             if (hasStructureOps) root.put(KEY_STRUCTURE_OPS, null);
+            if (mVersion == R.id.version_cave) root.put(WORLD_VERSION,caveWorldVersion);
             return root.toString(4);
         } catch (JSONException e) {
             Log.d(FlatLayers.class, e);

@@ -24,6 +24,7 @@ public final class Keys {
     public static final String I_BOOK_PAGES_CLICK_ACTION = "action";
     public static final String I_BOOK_PAGES_CLICK_ACTION_URL = "open_url";
     public static final String I_BOOK_PAGES_CLICK_VALUE = "value";
+    public static final String POSATION = "Pos";
 
     //public static final String ="";
 

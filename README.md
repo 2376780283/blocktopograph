@@ -38,8 +38,8 @@ This application is a Minecraft Bedrock Edition save‑editor for Android.
 - [x] Add more NBT query options in the ‘Advanced Selection’ section.
 - [x] Optimize the performance of tile rendering. (boosting the rendering speed of empty‑chunk “checkerboard” tiles by hundreds of times).
 - [x] Add a ‘Save to File’ feature to the NBT editor.
-- [ ] Optimize the UI performance of the NBT editor.
-- [ ] Click on the map to display the biome, elevation, and block name of the selected location.
+- [x] Optimize the UI performance of the NBT editor.
+- [x] Click on the map to display the biome, elevation, and block name of the selected location.
 - [ ] Generate a brightness map for the new world save (the new world save does not include a brightness map) using an algorithm.
 - [ ] Add ‘Import Structure Files into World Save’ and ‘Import Custom Key‑Value Pairs into Database’ features.
 - [ ] Add a ‘Horizontal Cross‑Section Preview’ feature.

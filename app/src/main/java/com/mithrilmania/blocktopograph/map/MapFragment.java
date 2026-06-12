@@ -1092,8 +1092,10 @@ public class MapFragment extends Fragment {
         }
 
         Chunk chunk = world.getWorldData().getChunk(chunkXint,chunkZint,dim);
-        int y = chunk.getHeightMapValue(((int) worldX) & 15, ((int) worldZ) & 15);
-        Block block = chunk.getBlock(((int) worldX) & 15, y-1, ((int) worldZ) & 15);
+//        int y = chunk.getHeightMapValue(((int) worldX) & 15, ((int) worldZ) & 15);
+        int y = chunk.getHighestBlockYUnderAt(((int) worldX) & 15, ((int) worldZ) & 15,319);
+
+        Block block = chunk.getBlock(((int) worldX) & 15, y, ((int) worldZ) & 15);
         Log.d(this,"getBlockType: "+block.getBlockType());
         ListingBlock listingblock = ListingBlock.getBlock(block.getBlockType());
         Log.d(this,"ListingB: "+listingblock);

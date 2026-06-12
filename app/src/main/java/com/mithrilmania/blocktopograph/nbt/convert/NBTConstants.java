@@ -85,8 +85,8 @@ public class NBTConstants {
                 case DOUBLE: return new DoubleTag(tagName, 0.0);
                 case BYTE_ARRAY: return new ByteArrayTag(tagName, null);
                 case STRING: return new StringTag(tagName, "");
-                case LIST: return new ListTag(tagName, new ArrayList<Tag>());
-                case COMPOUND: return new CompoundTag(tagName, new ArrayList<Tag>());
+                case LIST: return new ListTag(tagName == null?"":tagName, new ArrayList<Tag>());
+                case COMPOUND: return new CompoundTag(tagName == null?"":tagName, new ArrayList<Tag>());
                 default: return null;
             }
         }

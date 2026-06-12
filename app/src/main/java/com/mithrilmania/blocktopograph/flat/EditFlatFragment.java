@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.mithrilmania.blocktopograph.CreateWorldActivity;
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.block.ListingBlock;
@@ -39,6 +40,7 @@ public final class EditFlatFragment extends Fragment {
     static final String EXTRA_KEY_LIST_IS_ADD = "isAdd";
     static final String EXTRA_KEY_LIST_LAYER = "layer";
     static final String EXTRA_KEY_LIST_EXISTING_SUM = "existingSum";
+    public static final String EXTRA_KEY_LIST_MAX_HEIGHT = "max_height";
     private static final int REQUEST_CODE_EDIT_LAYER = 2013;
     private FragLayersBinding mBinding;
     private MeowAdapter mMeowAdapter;
@@ -58,11 +60,17 @@ public final class EditFlatFragment extends Fragment {
                         .putExtra(EXTRA_KEY_LIST_INDEX, index)
                         .putExtra(EXTRA_KEY_LIST_LAYER, layer)
                         .putExtra(EXTRA_KEY_LIST_IS_ADD, isAdd)
-                        .putExtra(EXTRA_KEY_LIST_EXISTING_SUM, existingSum),
+                        .putExtra(EXTRA_KEY_LIST_EXISTING_SUM, existingSum)
+                        .putExtra(EXTRA_KEY_LIST_MAX_HEIGHT, getMaxHeight()),
                 REQUEST_CODE_EDIT_LAYER
         );
     }
 
+    private int getMaxHeight() {
+        CreateWorldActivity activity = (CreateWorldActivity) getActivity();
+        if (activity == null) return 128;
+        return activity.getMaxHeight();
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_EDIT_LAYER) {

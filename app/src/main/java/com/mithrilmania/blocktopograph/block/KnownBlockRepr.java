@@ -350,7 +350,7 @@ public enum KnownBlockRepr implements NamedBitmapProviderHandle, NamedBitmapProv
     B_168_0_PRISMARINE_ROUGH("minecraft:prismarine", "rough", 168, 0, "blocks/prismarine_rough.png", 0xff79Ad7e, false),
     B_168_1_PRISMARINE_DARK("minecraft:prismarine", "dark", 168, 1, "blocks/prismarine_dark.png", 0xFF34634e, false),
     B_168_2_PRISMARINE_BRICKS("minecraft:prismarine", "bricks", 168, 2, "blocks/prismarine_bricks.png", 0xff59Ad7e, false),
-    B_169_0_SEALANTERN("minecraft:seaLantern", null, 169, 0, "blocks/seaLantern.png", 0xffe0eae4, false),
+    B_169_0_SEALANTERN("minecraft:sea_lantern", "sea_lantern", 169, 0, "blocks/seaLantern.png", 0xff8EDBCF, false),
     B_170_0_HAY_BLOCK("minecraft:hay_block", null, 170, 0, "blocks/hay_block.png", 0xffa3870e, false),
     B_171_0_CARPET_WHITE("minecraft:carpet", "white", 171, 0, "blocks/carpet_white.png", 0xffdddddd, false),
     B_171_1_CARPET_ORANGE("minecraft:carpet", "orange", 171, 1, "blocks/carpet_orange.png", 0xffdb7d3e, false),
